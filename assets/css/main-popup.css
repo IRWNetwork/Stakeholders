@@ -1,0 +1,155 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 13px;
+	color: #333333;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Roboto Slab', serif;
+	font-weight: bold;
+	margin: 0 0 13px;
+}
+h1 {
+	font-size: 50px;
+}
+h2 {
+	font-size: 36px;
+}
+h3 {
+	font-size: 24px;
+}
+h4 {
+	font-size: 20px;
+}
+h5 {
+	font-size: 18px;
+}
+h6 {
+	font-size: 16px;
+}
+.color-blue {
+	color: #073855;
+}
+
+/*hedaer css start*/
+ul {
+	list-style: none;
+}
+p {
+	font-size: 13px;
+	margin: 0 0 10px;
+}
+a {
+	
+}
+
+/*span {
+	color: #a0a0a0;
+	font-size: 24px;
+}*/
+.ruler-section {
+	background: url(../images/section-bg-1.jpg) no-repeat center center;
+	padding: 30px 0;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+}
+.ruler-section h1 {
+	color: #de2833;
+	margin: 0 0 25px;
+}
+.ruler-section p {
+	color: #fff;
+	margin: 0;
+	font-size: 20px;
+	line-height: 32px;
+}
+.ruler-section p a {
+	color: #de2833;
+}
+.ruler-boxs-section {
+	padding: 30px 0;
+}
+.ruler-boxs-section h2 {
+	margin: 0 0 6px;
+}
+.ruler-boxs-section h4 {
+	margin: 0px 0 25px;
+	color: #de2833;
+}
+.ruler-boxs-section h5 {
+	margin: 0px 0 12px;
+	font-size: 20px;
+	font-weight: normal;
+}
+.rule-box {
+}
+.rule-box img {
+	width: 100%;
+}
+.rule-box-txt {
+	padding: 15px 0;
+}
+.rule-box-txt p {
+	font-size: 12px;
+}
+.golden-ruler-section {
+	background: url(../images/section-bg-2.jpg) no-repeat center center;
+	padding: 30px 0;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+}
+.golden-ruler-section h2 {
+	color: #fff;
+	margin: 0 0 15px;
+}
+.golden-ruler-section h4 {
+	color: #de2833;
+	margin: 0 0;
+}
+.golden-ruler-section img {
+	max-width: 100%;
+}
+.disc-ruler-section {
+	padding: 0;
+}
+.disc-ruler-section-img img {
+	max-width: 100%;
+}
+.disc-ruler-section h2 {
+	margin: 0 0 6px;
+}
+.disc-ruler-section h4 {
+	color: #de2833;
+	margin: 0 0 20px;
+}
+.disc-ruler-section p {
+	font-size: 20px;
+	line-height: 32px;
+}
+.subcribe-btn {
+	display: inline-block;
+	padding: 8px 20px;
+	color: #fff;
+	text-shadow: 0 0 1px #3333;
+	border-radius: 10px;
+	background: #de2833;
+	border-bottom: 6px solid #9f1d24;
+	font-family: 'Roboto Slab', serif;
+	font-size: 28px;
+}
+.subcribe-btn:hover {
+	color: #fff;
+	text-decoration: none;
+}
+.disc-ruler-inner {
+	padding: 80px 0 30px;
+}
+.golden-ruler-inner {
+	padding: 80px 0 30px;
+}
+@media(max-width: 767px) {
+	body {
+		text-align: center;
+	}
+}
