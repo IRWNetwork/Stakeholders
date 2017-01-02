@@ -9,7 +9,11 @@ class Content extends CI_Controller
 		$this->load->model('Users_model');
 		$this->load->model('Content_model');
 		$this->load->library("pagination");
+		$this->load->library('ion_auth');
 		$this->load->model("Common_model");
+		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
+			redirect(site_url('admin/'), 'refresh');
+		}
     }
     
 	public function index()
@@ -210,6 +214,7 @@ class Content extends CI_Controller
 					$full_picture_path = $path.$picture_name;
 
 					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array('469',469),"thumb_469_".$picture_name);
 					$this->Common_model->generateThumb($full_picture_path,array('153',153),"thumb_153_".$picture_name);
 					
 

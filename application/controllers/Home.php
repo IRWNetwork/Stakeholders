@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-class Home extends CI_Controller
+
+class Home extends MY_Controller
 {
 	function __construct()
     {
@@ -7,20 +8,19 @@ class Home extends CI_Controller
 		$this->load->model('Users_model');
 		$this->load->model('Common_model');
 		$this->load->model('Emailtemplates_model');
-		$this->load->model('Content_model');
 		$this->load->library("pagination");
-		$this->load->library('ion_auth');
 		$this->load->model('Events_model');
     }
     
 	public function audio()
 	{
-		$data['page_title'] 	= 'Home';
-		$data['page_heading'] 	= 'Home';
+		$this->data['page_title'] 	= 'Home';
+		$this->data['page_heading'] 	= 'Home';
 		
 		
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
         $arr['name']           = $search;
+		$arr['type']		   = "Audio";
 		$config 			   = array();
 		$config["base_url"]    = base_url() . "home/audio";
         $config["total_rows"]  = $this->Content_model->countTotalRows($arr);
@@ -47,8 +47,8 @@ class Home extends CI_Controller
 
 	public function index()
 	{
-		$data['page_title'] 	= 'Home';
-		$data['page_heading'] 	= 'Home';
+		$this->data['page_title'] 	= 'Home';
+		$this->data['page_heading'] 	= 'Home';
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
         $arr['name']           = $search;
 		$config 			   = array();
@@ -63,14 +63,13 @@ class Home extends CI_Controller
 		$config['reuse_query_string']   = true;
         $this->pagination->initialize($config);
         $page 		        = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$data['contents']	= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
-		$data['contents1']	= $this->Content_model->getAudio($arr,$page,$config["per_page"]);
-		$data['featured']	= $this->Content_model->getFeaturedData($arr);
+		$this->data['contents']	= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
+		$this->data['contents1']	= $this->Content_model->getAudio($arr,$page,$config["per_page"]);
+		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
 		
-		
-		//$data['audio']=$this->output->set_content_type('application/json')->set_output(json_encode($data['contents1']));
-		$data["links"]   = $this->pagination->create_links();
-        $parser['content']		=  $this->load->view('main',$data,TRUE);
+		$this->data["links"]   = $this->pagination->create_links();
+
+        $parser['content']		=  $this->load->view('main',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -79,12 +78,26 @@ class Home extends CI_Controller
 		$id = $this->input->get('id');
 		$video_row = $this->Content_model->getRow($id);
 
-		$data['video_row']		= $video_row;
-		$data['page_title'] 	= $video_row['title'];
-		$data['page_heading'] 	= $video_row['title'];
-		$data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
+		$this->data['dataRow']			= $video_row;
+		$this->data['page_title'] 		= $video_row['title'];
+		$this->data['page_heading'] 		= $video_row['title'];
+		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
 		
-		$parser['content']		=  $this->load->view('playvideo',$data,TRUE);
+		$parser['content']			=  $this->load->view('playvideo',$this->data,TRUE);
+        $this->parser->parse('template', $parser);
+	}
+	
+	public function playaudio(){
+	
+		$id = $this->input->get('id');
+		$video_row = $this->Content_model->getRow($id);
+
+		$this->data['dataRow']			= $video_row;
+		$this->data['page_title'] 		= $video_row['title'];
+		$this->data['page_heading'] 		= $video_row['title'];
+		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
+		
+		$parser['content']			=  $this->load->view('playvideo',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -93,19 +106,79 @@ class Home extends CI_Controller
 		$id = $this->input->get('id');
 		$article_row = $this->Content_model->getRow($id);
 
-		$data['article_row']	= $article_row;
-		$data['page_title'] 	= $article_row['title'];
-		$data['page_heading'] 	= $article_row['title'];
-		$data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
+		$this->data['dataRow']			= $article_row;
+		$this->data['page_title'] 		= $article_row['title'];
+		$this->data['page_heading'] 		= $article_row['title'];
+		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
 		
-		$parser['content']		=  $this->load->view('article-detail',$data,TRUE);
+		$parser['content']			=  $this->load->view('article-detail',$this->data,TRUE);
         $this->parser->parse('template', $parser);
+	}
+	
+	public function add_remove_to_favorite(){
+		$id 		= $this->input->post('id');
+		if ($this->ion_auth->logged_in()) {
+			$user_id 	= $this->ion_auth->user()->row()->id;
+			$array = array("user_id"=>$user_id,"song_id"=>$id);
+			if($this->Content_model->checkFavoriteSong($id,$user_id)){	
+				$this->Content_model->saveToFavorite($array);
+				echo json_encode(array("msg"=>'Add to favorite successfully'));
+			}else{
+				$this->Content_model->removeFromFavorite($id,$user_id);
+				echo json_encode(array("msg"=>"Remove from favorite successfully"));
+			}
+		}else{
+			echo json_encode(array("msg"=>"Please login to add to Favorite"));
+		}
+	}
+	
+	public function add_playlist(){
+		if ($this->ion_auth->logged_in()) {
+			$user_id 		= $this->ion_auth->user()->row()->id;
+			$title 			= $this->input->post('title');
+			$description 	= $this->input->post('description');
+			$array = array("user_id"=>$user_id,"title"=>$title,"description"=>$description);
+			$this->Content_model->saveToPlaylist($array);
+			echo json_encode(array("msg"=>'Playlist added successfully'));			
+		}else{
+			echo json_encode(array("msg"=>"Please login to create playlist"));
+		}
+	}
+	
+	function add_song_to_playlist(){
+		if ($this->ion_auth->logged_in()) {
+			$user_id 		= $this->ion_auth->user()->row()->id;
+			$playlistid		= $this->input->post('playlistid');
+			$song_id 		= $this->input->post('songid');
+		
+			$array = array("user_id"=>$user_id,"playlist_id"=>$playlistid,"song_id"=>$song_id);
+			
+			if($this->Content_model->checkSongInPlaylist($song_id,$user_id,$playlistid)){	
+				$this->Content_model->saveSongToPlaylist($array);
+				echo json_encode(array("msg"=>'Song added to playlist successfully'));
+			}else{
+				echo json_encode(array("msg"=>'Song already added in playlist'));
+			}
+			
+			
+		}else{
+			echo json_encode(array("msg"=>"Please login to add song in playlist"));
+		}
+	}
+	
+	public function showpopup(){
+		
+		$id = $this->input->post('id');
+		
+		$row = $this->Content_model->getRow($id);
+		$this->data['dataRow']			= $row;
+		$this->load->view('share_popup',$this->data);
 	}
 
 	public function map()
 	{
-		$data['page_title'] 	= 'Map';
-		$data['page_heading'] 	= 'Map';
+		$this->data['page_title'] 	= 'Map';
+		$this->data['page_heading'] 	= 'Map';
 		
 		$events	   		= $this->Events_model->getAllEvents();
 		$new_array = array();
@@ -116,9 +189,9 @@ class Home extends CI_Controller
 			$new_array[] = $event;
 
 		}
-		$data['events'] 		= json_encode($new_array);
-		$data['categories']	   	= $this->Events_model->getAllCategories();
-		$parser['content']		= $this->load->view('map/map-view',$data,TRUE);
+		$this->data['events'] 		= json_encode($new_array);
+		$this->data['categories']	   	= $this->Events_model->getAllCategories();
+		$parser['content']		= $this->load->view('map/map-view',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -145,9 +218,9 @@ class Home extends CI_Controller
 	public function mainpopup()
 	{
 		$this->session->set_userdata(array('websiteloaded'=>'yes'));
-		$data['page_title'] 	= 'Popup';
-		$data['page_heading'] 	= 'Popup';
-		$parser['content']		=  $this->load->view('popup',$data);		
+		$this->data['page_title'] 	= 'Popup';
+		$this->data['page_heading'] 	= 'Popup';
+		$parser['content']		=  $this->load->view('popup',$this->data);		
 	}
 	
 	public function showchart(){

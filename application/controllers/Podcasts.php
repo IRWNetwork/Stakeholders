@@ -1,23 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Podcasts extends CI_Controller
+class Podcasts extends MY_Controller
 {
 	function __construct()
     {
         parent::__construct();
-		$this->load->model('Users_model');
-		$this->load->model('Common_model');
-		$this->load->model('Emailtemplates_model');
-		$this->load->model('Content_model');
-		$this->load->library("pagination");
-		$this->load->library('ion_auth');
     }
     
 	public function index()
 	{
-		$data['page_title'] 	= 'Podcasts';
-		$data['page_heading'] 	= 'Podcasts';
+		$this->data['page_title'] 	= 'Podcasts';
+		$this->data['page_heading'] 	= 'Podcasts';
 		
 		
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
@@ -37,11 +31,12 @@ class Podcasts extends CI_Controller
         $this->pagination->initialize($config);
         $page 		           = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-		$data['contents']= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
-		$data["links"]   = $this->pagination->create_links();
+		$this->data['contents']= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
+		$this->data["links"]   = $this->pagination->create_links();
+		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
 		
 		
-        $parser['content']	=  $this->load->view('podcasts',$data,TRUE);
+        $parser['content']	=  $this->load->view('podcasts',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 }

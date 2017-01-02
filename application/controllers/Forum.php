@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Forum extends CI_Controller
+class Forum extends MY_Controller
 {
 	function __construct()
     {
@@ -16,11 +16,11 @@ class Forum extends CI_Controller
     
 	public function index()
 	{
-		$data['page_title'] 	= 'Forum';
-		$data['page_heading'] 	= 'Forum';
+		$this->data['page_title'] 	= 'Forum';
+		$this->data['page_heading'] 	= 'Forum';
 		
 		
-        $parser['content']		=  $this->load->view('forums',$data,TRUE);
+        $parser['content']		=  $this->load->view('forums',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 }

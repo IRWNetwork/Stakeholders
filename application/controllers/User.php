@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once APPPATH."/third_party/braintree-php/lib/Braintree.php";
-class User extends CI_Controller
+class User extends MY_Controller
 {
 	var $clientToken;
 	function __construct() {
@@ -24,8 +24,8 @@ class User extends CI_Controller
 			redirect(site_url('/'), 'refresh');
 		}
 		
-		$data['page_title'] 	= 'User Login';
-		$data['page_heading'] 	= 'User Login';
+		$this->data['page_title'] 	= 'User Login';
+		$this->data['page_heading'] 	= 'User Login';
 		
 		if($this->input->post()) {
 			$rules = array(
@@ -68,7 +68,7 @@ class User extends CI_Controller
 			}
 		}
 
-		$this->load->view('user/login',$data);
+		$this->load->view('user/login',$this->data);
 	}
 	
 	function register(){
@@ -76,8 +76,8 @@ class User extends CI_Controller
 			redirect(site_url('/'), 'refresh');
 		}
 		
-		$data['page_title'] 	= 'User Registeration';
-		$data['page_heading'] 	= 'User Registeration';
+		$this->data['page_title'] 	= 'User Registeration';
+		$this->data['page_heading'] 	= 'User Registeration';
 		
 		if($this->input->post()) {
 			$rules = array(
@@ -144,7 +144,7 @@ class User extends CI_Controller
 		}
 
 		
-		$this->load->view('user/register',$data);
+		$this->load->view('user/register',$this->data);
 	}
 	
 	
@@ -162,8 +162,8 @@ class User extends CI_Controller
 			redirect(site_url('/'), 'refresh');
 		}
 		
-		$data['page_title'] 	= 'Forgot Password';
-		$data['page_heading'] 	= 'Forgot Password';
+		$this->data['page_title'] 	= 'Forgot Password';
+		$this->data['page_heading'] 	= 'Forgot Password';
 		
 		if($this->input->post()) {
 			$rules = array(
@@ -198,11 +198,11 @@ class User extends CI_Controller
 					
 					// Send activation email to user
 					$subject = 'Leaders Portal Password Reset';
-					$data['full_name'] = $firstName . ' ' . $lastName;
-					$data['email'] = $emailAddress;
-					$data['url'] = site_url('user/reset_password').'/'.$ucode;
+					$this->data['full_name'] = $firstName . ' ' . $lastName;
+					$this->data['email'] = $emailAddress;
+					$this->data['url'] = site_url('user/reset_password').'/'.$ucode;
 						
-					$result = $this->Emailtemplates_model->sendMail('forgot_password',$data);
+					$result = $this->Emailtemplates_model->sendMail('forgot_password',$this->data);
 					$this->session->set_flashdata(
 						'success',
 						'A password reset email has been sent to you'
@@ -219,7 +219,7 @@ class User extends CI_Controller
 			}
 		}
 
-		$this->load->view('user/forgot-password',$data);
+		$this->load->view('user/forgot-password',$this->data);
 	}
 
 	public function reset_password($code) {
@@ -228,15 +228,15 @@ class User extends CI_Controller
 			redirect(site_url('/'), 'refresh');
 		}
 		
-		$data['page_title'] 	= 'Reset Password';
-		$data['page_heading'] 	= 'Reset Password';
+		$this->data['page_title'] 	= 'Reset Password';
+		$this->data['page_heading'] 	= 'Reset Password';
 		
-		$data['title'] = "Leaders Portal";
-		$data['code'] = $code;
+		$this->data['title'] = "Leaders Portal";
+		$this->data['code'] = $code;
 		$user = $this->ion_auth->forgotten_password_check($code);
 		if ($user)
 		{
-			$data['user_id'] = $user->id;
+			$this->data['user_id'] = $user->id;
 			if($_POST) 
 			{
 
@@ -280,17 +280,17 @@ class User extends CI_Controller
 			$this->session->set_flashdata('message', $this->ion_auth->errors());
 			redirect(site_url('users'), 'refresh');
 		}
-		$this->load->view('user/resetpassword',$data);
+		$this->load->view('user/resetpassword',$this->data);
 	}
 	
 	public function changepassword() {
 		if (!$this->ion_auth->logged_in()) {
 			redirect(site_url(''), 'refresh');
 		}
-		$data['page_title'] 	= 'Change Password';
-		$data['page_heading'] 	= 'Change Password';
+		$this->data['page_title'] 	= 'Change Password';
+		$this->data['page_heading'] 	= 'Change Password';
 		
-		$data['title'] = "Leaders Portal";
+		$this->data['title'] = "Leaders Portal";
 		if($_POST) 
 		{
 
@@ -326,7 +326,7 @@ class User extends CI_Controller
 			}			
 		}
 		
-		$parser['content'] = $this->load->view('user/changepassword',$data,true);
+		$parser['content'] = $this->load->view('user/changepassword',$this->data,true);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -334,8 +334,8 @@ class User extends CI_Controller
 		if (!$this->ion_auth->logged_in()) {
 			redirect(site_url(''), 'refresh');
 		}
-		$data['page_title'] 	= 'Profile';
-		$data['page_heading'] 	= 'Profile';
+		$this->data['page_title'] 	= 'Profile';
+		$this->data['page_heading'] 	= 'Profile';
 		
 
 		if($this->input->post()) {
@@ -388,8 +388,8 @@ class User extends CI_Controller
 				redirect(site_url('user/profile'), 'refresh');
 			}
 		}
-		$data['user'] = $this->ion_auth->user()->row();
-		$parser['content'] = $this->load->view('user/profile',$data,true);
+		$this->data['user'] = $this->ion_auth->user()->row();
+		$parser['content'] = $this->load->view('user/profile',$this->data,true);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -397,8 +397,8 @@ class User extends CI_Controller
 		if (!$this->ion_auth->logged_in()) {
 			redirect(site_url(''), 'refresh');
 		}
-		$data['page_title'] 	= 'Upgrade Package';
-		$data['page_heading'] 	= 'Upgrade Package';
+		$this->data['page_title'] 	= 'Upgrade Package';
+		$this->data['page_heading'] 	= 'Upgrade Package';
 		$this->init_braintree();
 
 		if($this->input->post()) {
@@ -443,14 +443,46 @@ class User extends CI_Controller
 				}
 			
 		}
-		$data['clientToken']= $this->clientToken;
-		$data['user'] 		= $this->ion_auth->user()->row();
-		$parser['content'] 	= $this->load->view('user/upgradepackage',$data,true);
+		$this->data['clientToken']= $this->clientToken;
+		$this->data['user'] 		= $this->ion_auth->user()->row();
+		$parser['content'] 	= $this->load->view('user/upgradepackage',$this->data,true);
         $this->parser->parse('template', $parser);
 	}
 	
 	private function init_braintree(){
 		$this->clientToken =  init_Braintree();
+	}
+	
+	function favorite(){
+		
+		if (!$this->ion_auth->logged_in()) {
+			redirect(site_url('/'), 'refresh');
+		}
+		
+		$user_id 	= $this->ion_auth->user()->row()->id;
+		$this->data['page_title'] 		= 'Favorite';
+		$this->data['page_heading'] 	= 'Favorite';
+		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
+        $arr['name']           = $search;
+		$config 			   = array();
+        $config["base_url"]    = base_url() . "products/search";
+        $config["total_rows"]  = $this->Content_model->countFavoriteSongs($user_id,$arr);
+		if($this->input->get('per_page')){
+			$config["per_page"]= $this->input->get('per_page');
+		}else{
+        	$config["per_page"]= 20;
+		}
+        $config["uri_segment"] = 3;
+		$config['reuse_query_string']   = true;
+        $this->pagination->initialize($config);
+        $page 		= ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$this->data['contents']	= $this->Content_model->getAllFavoriteSongs($user_id,$arr,$page,$config["per_page"]);
+		
+		$this->data["links"]   = $this->pagination->create_links();
+		
+		
+		$parser['content'] 	= $this->load->view('user/favorite',$this->data,true);
+        $this->parser->parse('template', $parser);
 	}
 
 }

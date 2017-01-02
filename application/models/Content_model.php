@@ -10,6 +10,148 @@ class Content_model extends CI_Model
 		$this->tablename = 'contents';
     }
 	
+	function getPlaylist($user_id){
+
+		$this->db->where('user_id',$user_id);
+		$query = $this->db->get('playlists');
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	function saveSongToPlaylist($data){
+		$this->db->insert('playlists_songs',$data);
+		return $this->db->insert_id();
+	}
+	
+	function saveToPlaylist($data){
+		$this->db->insert('playlists',$data);
+		return $this->db->insert_id();
+	}
+	
+	function checkIsFeatured($id){
+		if ($this->ion_auth->logged_in()) {
+			$user_id = $this->ion_auth->user()->row()->id;
+			if(!$this->checkFavoriteSong($id,$user_id)){
+				return 'fa fa-star text-green';
+			}else{
+				return 'fa fa-star-o text-white';
+			}
+		}else{
+			return 'fa fa-star-o text-white';
+		}
+	}
+	
+	public function checkFavoriteSong($id,$user_id){
+		$this->db->where("song_id",$id);
+		$this->db->where("user_id",$user_id);
+		$query  =   $this->db->get('favorite_songs');
+		
+		if($query->num_rows())
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	function countSongsInPlaylist($user_id,$playlist_id){
+		$this->db->where("playlist_id",$playlist_id);
+		$this->db->where("user_id",$user_id);
+		$query  =   $this->db->get('playlists_songs');
+		
+		return $query->num_rows();
+		
+	}
+	
+	function checkPlaylistByUser($user_id,$playlist_id){
+		$this->db->where("id",$playlist_id);
+		$this->db->where("user_id",$user_id);
+		$query  =   $this->db->get('playlists');
+		
+		return $query->num_rows();
+		
+	}
+	
+	public function getPlaylistSongs($user_id,$playlist_id){
+				
+		$query = "select * from playlists_songs, contents where 1 and playlists_songs.song_id=contents.id and playlists_songs.user_id=$user_id order by playlists_songs.id desc";
+		$query = $this->db->query($query);
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+		
+		
+	}
+	
+	public function checkSongInPlaylist($song_id,$user_id,$playlist_id){
+		$this->db->where("song_id",$song_id);
+		$this->db->where("user_id",$user_id);
+		$this->db->where("playlist_id",$playlist_id);
+		$query  =   $this->db->get('playlists_songs');
+		
+		if($query->num_rows())
+		{
+			return false;
+		}
+		return true;
+	}
+	public function getPlaylistRow($user_id,$playlist_id){
+		$where = "  where 1 ";	
+		$query = "select * from playlists where user_id=$user_id and id=$playlist_id";
+		$query = $this->db->query($query);
+		if($query->num_rows())
+		{
+			return $query->row();
+		}
+		return array();
+	}
+	
+	public function saveToFavorite($data){	
+		$this->db->insert('favorite_songs',$data);
+		return $this->db->insert_id();
+	}
+	
+	public function getAllFavoriteSongs($user_id,$data,$start,$limit){
+		$where = "  where 1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and contents.type='". $data['type']."'";
+		}
+		$query = "select * from favorite_songs, contents $where and favorite_songs.song_id=contents.id and favorite_songs.user_id=$user_id order by favorite_songs.id desc limit $start,$limit";
+		$query = $this->db->query($query);
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	public function countFavoriteSongs($user_id,$data){
+		
+		$where = "where 1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and contents.type='". $data['type']."'";
+		}
+		$query = "select * from favorite_songs, contents $where and favorite_songs.song_id=contents.id and favorite_songs.user_id=$user_id ";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
+	public function removeFromFavorite($id,$user_id){
+		$this->db->where('song_id', $id);
+		$this->db->where('user_id', $user_id);
+		$this->db->delete('favorite_songs');
+	}
+	
 	public function save($data){	
 		$this->db->insert('contents',$data);
 		return $this->db->insert_id();
@@ -24,7 +166,6 @@ class Content_model extends CI_Model
 	public function getRow($id){
 		$sSQL   =   $this->db->where("id",$id);
 		$query  =   $this->db->get('contents');
-		
 		if($query->num_rows())
 		{
 			$row = $query->row_array();
@@ -57,7 +198,7 @@ class Content_model extends CI_Model
 	public function getFeaturedData($data){
 		$this->db->limit(3, 0);
 		$this->db->order_by('id','desc');
-		$where = "  1=1 and is_featured='yes'";	
+		$where = "  1=1 and is_featured='yes'";
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
 		}
@@ -88,28 +229,16 @@ class Content_model extends CI_Model
 		
 		$this->db->select('contents.*');
 		$query = $this->db->get('contents');
-
-		
-		
-		
 		if($query->num_rows())
 		{
-			
-		
-		
-		
-		$r=array();
-		foreach ($query->result_array() as $row)
-{
-	$title=$row["title"];
-	
-	$src=site_url().'/uploads/files/'.$row["file"];
-	$r[]=array('src' => $src, 'type' =>'audio/mp3', 'artist'=>$title, 'title'=>$title);
-    
-}
-
+			$r=array();
+			foreach ($query->result_array() as $row){
+				$title=$row["title"];
+				$src=site_url().'/uploads/files/'.$row["file"];
+				$r[]=array('src' => $src, 'type' =>'audio/mp3', 'artist'=>$title, 'title'=>$title);
+			}
 		}
- return $r;
+		return $r;
 	}
 	
 	public function countTotalRows($data)
@@ -127,7 +256,6 @@ class Content_model extends CI_Model
 		$query  =   $this->db->get();
 		return $query->num_rows();
 	}
-	
 
 	public function delete($id){
 		$this->deleteFiles($id);

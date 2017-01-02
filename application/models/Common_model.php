@@ -16,18 +16,36 @@ class Common_model extends CI_Model
 			$url = "";
 			if($row->is_premium){
 				if($user_row->is_premium=='yes'){
-					$url = site_url('uploads/files/'.$row->file);
+					if($row->type=='Video'){
+						$url = site_url('home/playvideo/?id='.$row->id);
+					}else if($row->type=='Text'){
+						$url = site_url('home/showArticle/?id='.$row->id);
+					}else{
+						$url = "javascript:void(0)";
+					}
 				}else{
 					$url = site_url('user/upgradepackage');
 				}
 			}else{
-				$url = site_url('uploads/files/'.$row->file);
+				if($row->type=='Video'){
+					$url = site_url('home/playvideo/?id='.$row->id);
+				}else if($row->type=='Text'){
+					$url = site_url('home/showArticle/?id='.$row->id);
+				}else{
+					$url = "javascript:void(0)";
+				}
 			}
 		}else{
 			if($row->is_premium){
 				$url = site_url('user/login/');
 			}else{
-				$url = site_url('uploads/files/'.$row->file);
+				if($row->type=='Video'){
+					$url = site_url('home/playvideo/?id='.$row->id);
+				}else if($row->type=='Text'){
+					$url = site_url('home/showArticle/?id='.$row->id);
+				}else{
+					$url = "javascript:void(0)";
+				}
 			}
 		}
 		return $url;
