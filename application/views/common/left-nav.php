@@ -33,28 +33,26 @@
 				<ul class="nav dk">
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>Discovery</span> </li>
 					<li ui-sref-active="active" class="active"> <a href="<?php echo base_url()?>"> <i class="icon-disc icon"></i> <span>New</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>podcasts"> <i class="fa fa-podcast"></i> <span>Podcasts</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>podcasts"> <i class="fa fa-gamepad"></i> <span>Arcade</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#"> <i class="icon-list icon"></i> <span>Editorial</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#"> <i class="icon-social-youtube icon"></i> <span>Videos</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>podcasts"> <i class="fa fa-microphone" ></i> <span>Podcasts</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>page/Arcade"> <i class="fa fa-gamepad"></i> <span>Arcade</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>editorial"> <i class="icon-list icon"></i> <span>Editorial</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>videos"> <i class="icon-social-youtube icon"></i> <span>Videos</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>page/fantasy-league"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>
 					<li ui-sref-active="active"> <a href="<?php echo base_url()?>home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
 					<li ui-sref-active="active"> <a href="<?php echo base_url()?>forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>faq"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
 				</ul>
 				<ul class="nav">
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>YOUR VAULT</span> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/bookmarkd"> <i class="icon-star icon"></i> <span>Bookmarked</span> </a> </li>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>user/favorite"> <i class="icon-star icon"></i> <span>Favorite</span> </a> </li>
 					<li ui-sref-active="active"> <a href="#/music/playlist/loved"> <i class="icon-heart icon"></i> <span>Loved</span> </a> </li>
 					<li ui-sref-active="active"> <a href="#/music/playlist/history"> <i class="icon-clock icon"></i> <span>History</span> </a> </li>
+					<?php if($this->ion_auth->logged_in()){?>
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>Playlists</span> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/nature"> <b class="badge bg-info pull-right">3</b> <i class="icon-playlist icon"></i> <span>Wrestling Docs</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/nature"> <b class="badge bg-info pull-right">3</b> <i class="icon-playlist icon"></i> <span>Backyard</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/nature"> <b class="badge bg-info pull-right">3</b> <i class="icon-playlist icon"></i> <span>WCW</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/nature"> <b class="badge bg-info pull-right">3</b> <i class="icon-playlist icon"></i> <span>Politics</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/nature"> <b class="badge bg-info pull-right">3</b> <i class="icon-playlist icon"></i> <span>Music</span> </a> </li>
-					<li ui-sref-active="active"> <a href="#/music/playlist/soundtracks"> <b class="badge dk pull-right">5</b> <i class="icon-playlist icon"></i> <span>CoolCasts</span> </a> </li>
+					<?php foreach($playlists as $playlist_row){?>
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>playlist/<?php echo $playlist_row->id?>"> <b class="badge bg-info pull-right"><?php echo $this->Content_model->countSongsInPlaylist($user_id,$playlist_row->id)?></b> <i class="icon-playlist icon"></i> <span><?php echo $playlist_row->title?></span> </a> </li>
+					<?php }}?>
 				</ul>
 				<!-- / list --> 
 			</nav>

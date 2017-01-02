@@ -1,9 +1,30 @@
-<<<<<<< HEAD
-<footer id="footer" class="app-footer" role="footer">
+<footer id="footer">
 	<div class="wrapper b-t bg-light"> <span class="pull-right">2.2.0 <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span> &copy; 2016 Copyright. </div>
 </footer>
-=======
-<footer id="footer" class="app-footer" role="footer">
-	<div class="wrapper b-t bg-light"> 	<span class="pull-right"> &copy; 2016 Copyright. </span>  <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a> </div>
-</footer>
->>>>>>> origin/master
+<div id="share-pop" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+	<div id="share_popup_detail"></div>
+</div>
+<div class="modal fade" id="createPlayList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel"><i class="fa fa-music"></i> Create New Playlist</h4>
+			</div>
+			<div class="modal-body">
+				<form method="post" name="frm_playlist">
+					<div class="form-group">
+						<input type="text" class="form-control" id="playlist_tilte" placeholder="Title" required>
+					</div>
+					<div class="form-group">
+						<textarea class="form-control" id="playlist_description" placeholder="Write a description" rows="3" required></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="btn-create-playlist">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

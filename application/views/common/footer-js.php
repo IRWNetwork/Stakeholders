@@ -5,3 +5,4 @@
 <script src="<?php echo base_url(); ?>assets/js/ui-nav.js"></script> 
 <script src="<?php echo base_url(); ?>assets/js/ui-toggle.js"></script> 
 <script src="<?php echo base_url(); ?>assets/js/ui-client.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/myscript.js?t=<?php echo time();?>"></script>

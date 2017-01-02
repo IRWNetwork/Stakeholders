@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8" />
 <title><?php echo $page_title;?></title>
-<meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="icon" href="<?php echo base_url(); ?>assets/images/favicon.png"  />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/animate.css/animate.css" type="text/css" />
@@ -14,81 +13,56 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css" type="text/css" />
 <script src="<?php echo base_url(); ?>assets/libs/jquery/jquery/dist/jquery.js"></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/js/app/music/theme.css">
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/app/music/videogular.css">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/audio-player/angular-media-player.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/soundmanager2.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/bar-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bar-ui.css" />
+<script src="<?php echo base_url(); ?>assets/js/demo.js"></script>
 <script type="text/javascript">
+var BASE_URL = '<?php echo base_url()?>';
 $(document).ready(function(){
-	$('.field').click(function () {
-    	var value=$(this).attr('data-fullText');
-  		$("#title_1").html(value);
+	$(".playSong").click(function(){
+		var title = $(this).attr('data-title');
+		var song = $(this).attr('data-song');
+		var id = $(this).attr('data-id');
+		addSong(song,title,id);
 	});
-	$('.someclass').click(function() {
-    	$varName = $(this).data('fulltext');
-    	console.log($varName);
+	$(".playNext").click(function(){
+		var title = $(this).attr('data-title');
+		var song = $(this).attr('data-song');
+		var id = $(this).attr('data-id');
+		addNextPlay(song,title,id);
+	});
+	$(".add_in_queue").click(function(){
+		var title = $(this).attr('data-title');
+		var song = $(this).attr('data-song');
+		var id = $(this).attr('data-id');
+		addInQueue(song,title,id);
 	});
 });
-</script>
-<style>
-.progress {
-	height: 5px;
-	margin-bottom: 0px;
-	overflow: hidden;
-	background-color: #f5f5f5;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-	overflow: hidden;
-	width: 80%;
+function addSong(song,title,id){
+	$(".sm2-playlist-bd").html("<li id='song"+id+"' data-id='song"+id+"'><a href='<?php echo base_url()?>uploads/files/"+song+"'>"+title+"</a></li>");
+	window.sm2BarPlayers[0].actions.play(0);
 }
-</style>
-<script type="text/javascript">
-angular.module('docs', ['mediaPlayer']).config(function ($interpolateProvider) {
-	$interpolateProvider.startSymbol('[[');
-  	$interpolateProvider.endSymbol(']]');
-})
-.run(function ($rootScope) {
-	$rootScope.seekPercentage = function ($event) {
-    	var percentage = ($event.offsetX / $event.target.offsetWidth);
-    	if (percentage <= 1) {
-      		return percentage;
-    	} else {
-      		return 0;
-    	}
-  	};
-});
+function addNextPlay(song,title,id){
+	var liNumber = $('.sm2-playlist-bd li.selected').attr('data-id');
+	$("#"+liNumber ).after( "<li id='song"+id+"' data-id='song"+id+"'> <a href='<?php echo base_url()?>uploads/files/"+song+"'>"+title+"</a></li>");
+}
+function addInQueue(song,title,id){
+	$(".sm2-playlist-bd" ).append( "<li id='song"+id+"' data-id='song"+id+"'> <a href='<?php echo base_url()?>uploads/files/"+song+"'>"+title+"</a></li>");
+}
 </script>
-<script type="text/javascript">
-  //angular.module('docs')
-     var myApp = angular.module('docs');
-    //var post_params = $.param({ request_type: "getListOfUsersWithRolesInfo" });
-    var dataObj = {
-        task_to_perform: 'getListOfUsersWithRolesInfo'
-    };
-    myApp.controller('RepeatController', function ($scope, $http) {
-        $http({
-            method: 'Get',
-            dataType: 'json',
-            url: '<?php echo site_url('home/audio'); ?>',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-          //  data: dataObj,
-            //transformRequest: function(){},
-            timeout: 30000,
-            cache: false
-        }).
-        success(function (rsp) {
-            //console.log("success");
-            //console.log(JSON.stringify(rsp));
-			
-			$scope.audioPlaylist =  rsp;
-        }).
-        error(function (rsp) {
-            console.log("error");
-        });
-    });
-</script>
+<?php if(isset($dataRow)){?>
+<meta name="description" content="<?php echo $dataRow['description'];?>" />
+<meta name="twitter:card" content="player">
+<meta name="twitter:title" content="<?php echo $dataRow['title'];?>">
+<meta name="twitter:description" content="<?php echo $dataRow['description'];?>">
+<meta name="twitter:image:src" content="<?php echo base_url() ?>uploads/files/<?php echo $dataRow['picture']?>">
+<meta property="og:title" content="<?php echo $dataRow['title'];?>">
+<meta property="og:image" content="<?php echo base_url() ?>uploads/files/thumb_469_<?php echo $dataRow['picture']?>">
+<meta property="og:url" content="<?php echo current_url();?>">
+<meta property="og:type" content="article"/>
+<meta property="og:description" content="<?php echo $dataRow['description'];?>">
+<?php }?>
 </head>
 <body>
 <div class="app app-header-fixed "> 
@@ -99,29 +73,82 @@ angular.module('docs', ['mediaPlayer']).config(function ($interpolateProvider) {
 	<?php $this->load->view('common/left-nav');?>
 	<!-- / aside --> 
 	<!-- content -->
-	<div ng-controller="RepeatController">
+	<div>
 		<div id="content" class="app-content" role="main"> {content} </div>
-		<!-- /content -->
-		<audio media-player="mediaPlayer" playlist="audioPlaylist"></audio>
 		<!-- footer -->
-		<div class="app-footer app-footer-fixed ">
-			<div class="progress" ng-click="mediaPlayer.seek(mediaPlayer.duration * seekPercentage($event))">
-				<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{ width: mediaPlayer.currentTime*100/mediaPlayer.duration + '%' }"></div>
-				<div class="time" ng-show="mediaPlayer.formatTime"> <span>[[ mediaPlayer.formatTime ]]</span><b>/</b><span>[[ mediaPlayer.formatDuration ]]</span> </div>
+		<div class="sm2-bar-ui full-width fixed">
+			<div class="bd sm2-main-controls">
+				<div class="sm2-inline-texture"></div>
+				<div class="sm2-inline-gradient"></div>
+				<div class="sm2-inline-element sm2-button-element">
+					<div class="sm2-button-bd"> <a href="#play" class="sm2-inline-button play-pause" id="paly">Play / pause</a> </div>
+				</div>
+				<div class="sm2-inline-element sm2-inline-status">
+					<div class="sm2-playlist">
+						<div class="sm2-playlist-target"> 
+							<!-- playlist <ul> + <li> markup will be injected here --> 
+							<!-- if you want default / non-JS content, you can put that here. -->
+							<noscript>
+							<p>JavaScript is required.</p>
+							</noscript>
+						</div>
+					</div>
+					<div class="sm2-progress">
+						<div class="sm2-row">
+							<div class="sm2-inline-time">0:00</div>
+							<div class="sm2-progress-bd">
+								<div class="sm2-progress-track">
+									<div class="sm2-progress-bar"></div>
+									<div class="sm2-progress-ball">
+										<div class="icon-overlay"></div>
+									</div>
+								</div>
+							</div>
+							<div class="sm2-inline-duration">0:00</div>
+						</div>
+					</div>
+				</div>
+				<div class="sm2-inline-element sm2-button-element sm2-volume">
+					<div class="sm2-button-bd"> <span class="sm2-inline-button sm2-volume-control volume-shade"></span> <a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a> </div>
+				</div>
+				<div class="sm2-inline-element sm2-button-element">
+					<div class="sm2-button-bd"> <a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a> </div>
+				</div>
+				<div class="sm2-inline-element sm2-button-element">
+					<div class="sm2-button-bd"> <a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a> </div>
+				</div>
+				<div class="sm2-inline-element sm2-button-element">
+					<div class="sm2-button-bd"> <a href="#repeat" title="Repeat playlist" class="sm2-inline-button repeat">&infin; repeat</a> </div>
+				</div>
+				<div class="sm2-inline-element sm2-button-element sm2-menu">
+					<div class="sm2-button-bd"> <a href="#menu" class="sm2-inline-button menu">menu</a> </div>
+				</div>
 			</div>
-			<div class="player-control" style="background-color:#F0F3F4">
-				<div class="btn" ng-click="mediaPlayer.play()"></div>
-				<div class="btn" ng-click="mediaPlayer.prev()"> <i class="fa fa-step-backward"></i> <span></span> </div>
-				<div class="btn" ng-click="mediaPlayer.playPause()"> <i class="fa" ng-class="{ 'fa-pause': mediaPlayer.playing, 'fa-play': !mediaPlayer.playing }"></i> </div>
-				<div class="btn" ng-click="mediaPlayer.next()"> <span></span> <i class="fa fa-step-forward"></i>&nbsp;<span id="title_1"></span> </div>
-				<div class="btn btn-noclick"> <span> <span class="badge">[[ mediaPlayer.formatTime ]]</span></span> </div>
-				<div class="btn" ng-click="mediaPlayer.toggleMute()"> <span><i class="fa fa-volume-down"></i></span> </div>
+			<div class="bd sm2-playlist-drawer sm2-element">
+				<div class="sm2-inline-texture">
+					<div class="sm2-box-shadow"></div>
+				</div>
+				<!-- playlist content is mirrored here -->
+				<div class="sm2-playlist-wrapper">
+					<ul class="sm2-playlist-bd">
+						<!-- item with "download" link -->
+						<!--<li>
+							<div class="sm2-row">
+								<div class="sm2-col sm2-wide"> <a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20LA%20%28Prod%20Chin%20Injetti%29.mp3"><b>SonReal</b> - LA<span class="label">Explicit</span></a> </div>
+								<div class="sm2-col"> <a href="http://freshly-ground.com/data/audio/sm2/SonReal%20-%20LA%20%28Prod%20Chin%20Injetti%29.mp3" target="_blank" title="Download &quot;LA&quot;" class="sm2-icon sm2-music sm2-exclude">Download this track</a> </div>
+							</div>
+						</li>-->
+						<!-- standard one-line items -->
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
-	<?php $this->load->view('admin/common/footer');?>
+	<div class="general-msg-bar"></div>
+	<?php $this->load->view('common/footer');?>
 	<!-- / footer -->
 </div>
-<?php $this->load->view('admin/common/footer-js');?>
+<?php $this->load->view('common/footer-js');?>
+<script id="dsq-count-scr" src="//irw-1.disqus.com/count.js" async></script>
 </body>
 </html>

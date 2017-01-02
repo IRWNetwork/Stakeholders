@@ -3,11 +3,32 @@
 	<div class="blog-post">
 		<div class="panel no-border">
 			<div class="wrapper-lg">
-				<h2 class="m-t-none"><a href=""><?php echo $article_row['title'] ?></a></h2>
+				<h2 class="m-t-none"><a href=""><?php echo $dataRow['title'] ?></a></h2>
+				<a data-item="share" data-toggle="modal" data-target="#share-pop" onclick="showSharePopup('<?php echo $dataRow['id']?>')">Share</a>
 				<div>
-					<img src="<?php echo base_url() ?>uploads/files/thumb_400_<?php echo $article_row['picture']?>" align="left" style="margin-right:20px" />
-					<?php echo $article_row['description']?>
+					<img src="<?php echo base_url() ?>uploads/files/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />
+					<?php echo $dataRow['description']?>
 					<div style="clear:both"></div>
+					<div id="disqus_thread"></div>
+					<script>
+					
+					/**
+					*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+					*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+					
+					var disqus_config = function () {
+						this.page.url = '<?php echo current_url();?>';
+						this.page.identifier = '<?php echo $dataRow['id']?>';
+						this.page.title = '<?php echo $dataRow['title'] ?>';
+					};
+					
+					(function() { // DON'T EDIT BELOW THIS LINE
+					var d = document, s = d.createElement('script');
+					s.src = '//irw-1.disqus.com/embed.js';
+					s.setAttribute('data-timestamp', +new Date());
+					(d.head || d.body).appendChild(s);
+					})();
+					</script>
 				</div>
 			</div>
 		</div>

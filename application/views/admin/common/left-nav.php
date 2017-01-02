@@ -36,6 +36,18 @@
 							<li> <a href="<?php echo base_url()?>admin/categories/add"> <span>Add Category</span> </a> </li>
 						</ul>
 					</li>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Pages</span> </a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/pages"> <span>Pages</span> </a> </li>
+							<li> <a href="<?php echo base_url()?>admin/pages/add"> <span>Add Page</span> </a> </li>
+						</ul>
+					</li>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>FAQ</span> </a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/faq"> <span>FAQ</span> </a> </li>
+							<li> <a href="<?php echo base_url()?>admin/faq/add"> <span>Add FAQ</span> </a> </li>
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</div>
