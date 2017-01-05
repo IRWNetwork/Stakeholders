@@ -76,7 +76,7 @@ class Categories extends CI_Controller
 							'success',
 							"Added Successfully"
 					);
-					redirect(base_url().'admin/categories');
+					ciredirect(base_url().'admin/categories');
 				}else {
 					$this->session->set_flashdata(
 							'error',
@@ -122,7 +122,7 @@ class Categories extends CI_Controller
 							'success',
 							"Updated Successfully"
 					);
-					redirect(base_url().'admin/categories');
+					ciredirect(base_url().'admin/categories');
 				}else {
 					
 					$this->session->set_flashdata(
@@ -151,7 +151,7 @@ class Categories extends CI_Controller
 							'success',
 							"Deleted Successfully"
 					);
-		redirect(base_url().'admin/categories?msg=Deleted Successfully');
+		ciredirect(base_url().'admin/categories?msg=Deleted Successfully');
 	}
 	
 }

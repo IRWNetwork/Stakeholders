@@ -42,16 +42,6 @@
 														<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 															<div class="item-actions__count" data-bind="bundleCount"></div>
 															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
-														<li class="item-actions__item" data-item="play"> <a href="#" class="js-item-action js-play-now" data-test-id="contextmenu-play-now"> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
-														<li class="item-actions__item" data-item="play" data-sub-item="play-next"> <a href="#" class="js-item-action js-play-next" data-test-id="contextmenu-play-next"> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
-														<li class="item-actions__item" data-item="play" data-sub-item="add-to-queue"> <a href="javascript:void(0)" class="js-item-action js-play-last" data-test-id="contextmenu-play-last"> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
-														<li class="item-actions__divider" data-item="play"></li>
-														<?php if(!$this->ion_auth->logged_in()){?>
-														<li class="item-actions__item"> <a href="javascript:void(0)" onclick="showLoginMsg()"> <i class="item-actions__icon icon-playlist-add fa fa-file-audio-o"></i> <span class="smallText" data-i18n="t-add-to-playlist">Add to Playlist</span> </a> </li>
-														<?php }else{?>
-														<li class="item-actions__item add-play-list-btn" data-item="add-to-playlist"> <a href="javascript:void(0)" class="js-item-action js-add-to-playlist" data-test-id="contextmenu-add-to-playlist"> <i class="item-actions__icon icon-playlist-add fa fa-file-audio-o"></i> <span class="smallText" data-i18n="t-add-to-playlist">Add to Playlist</span> </a> </li>
-														<?php }?>
-														<li class="item-actions__divider" data-item="add-to-playlist"></li>
 														<li class="item-actions__item" data-item="favorite"> <a href="javascript:void(0)" class="favorite" data-id="<?php echo $row->id?>"> <i class="item-actions__icon icon-star <?php echo $featured_class ?>" data-bind-class="favorite-star"></i> <span class="smallText" data-i18n="t-add-to-favorites">Add to Favorites</span> </a> </li>
 														<li class="item-actions__divider" data-item="favorite"></li>
 														<li class="item-actions__item share_click" data-item="share" data-toggle="modal" data-target="#share-pop"> <a href="javascript:void(0)" class="js-item-action js-share share_click" data-test-id="contextmenu-share" onclick="showSharePopup('<?php echo $row->id?>')"> <i class="item-actions__icon icon-links fa fa-share-alt-square"></i> <span class="smallText" >Share</span> </a> </li>

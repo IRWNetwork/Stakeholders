@@ -20,6 +20,6 @@ class Home extends CI_Controller
 	{
 		$this->session->sess_destroy();
 		$this->session->set_flashdata('success', 'Logout Successfully');
-		redirect(base_url()."user");
+		ciredirect(base_url()."user");
 	}
 }

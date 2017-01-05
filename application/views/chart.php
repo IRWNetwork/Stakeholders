@@ -32,7 +32,7 @@ var config = {
             HTMLclass: 'nodeExample1'
         }
     },
-	<?php echo $charts_data;?>
+	<?php echo $charts_data;?>,
     ALTERNATIVE = [
         config,
 		<?php echo $ids?>

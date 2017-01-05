@@ -6,6 +6,7 @@
 			<?php 
 			if(count($contents)>0){
 				foreach($contents as $row){
+					$url = $this->Common_model->getUrl($row);
 			?>
 			<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2-4 field float_none" >
 				<div class="item">
@@ -13,14 +14,14 @@
 						<?php if($row->is_premium=='yes'){?>
 						<div class="top"> <span class="badge bg-info m-l-sm m-t-sm">Premium</span> </div>
 						<?php }?>
-						<div class="item-overlay bg-black-opacity r r-2x r r-2x">
+						<div class="item-overlay bg-black-opacity r r-2x r r-2x" data-url='<?php echo $url; ?>'>
 							<div class="center text-center m-t-n w-full dropdown">
 								<?php 
-									$url = $this->Common_model->getUrl($row);
+									
 									$featured_class = $this->Content_model->checkIsFeatured($row->id);
 								?>
 								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class?>"></i></a> 
-								<a href="javascript:void(0)" onclick="play('<?php echo $url ?>')"><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
+								<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<div class="ui-widget ui-widget-content ui-corner-all ui-front ui-dialog ui-dialog--context-menu undefined contextmenu__arrow-top-left" tabindex="-1" role="dialog" aria-describedby="ui-id-3" aria-labelledby="ui-id-4" style="height: auto; width: 215px; top: 105px; left: 628px;"> 
@@ -43,15 +44,15 @@
 															<div class="item-actions__count" data-bind="bundleCount"></div>
 															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
-														<li class="item-actions__item" data-item="play"> <a href="javascript:void(0)" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
-														<li class="item-actions__item" data-item="play"> <a href="javascript:void(0)" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
-														<li class="item-actions__item" data-item="play"> <a href="javascript:void(0)" class="js-item-action js-play-last add_in_queue" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-last add_in_queue" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
 														<?php }?>
 														<li class="item-actions__divider" data-item="play"></li>
 														<?php if(!$this->ion_auth->logged_in()){?>
-														<li class="item-actions__item"> <a href="javascript:void(0)" onclick="showLoginMsg()"> <i class="item-actions__icon icon-playlist-add fa fa-file-audio-o"></i> <span class="smallText" data-i18n="t-add-to-playlist">Add to Playlist</span> </a> </li>
+														<li class="item-actions__item"> <a href="<?php echo $url;?>" onclick="showLoginMsg()"> <i class="item-actions__icon icon-playlist-add fa fa-file-audio-o"></i> <span class="smallText" data-i18n="t-add-to-playlist">Add to Playlist</span> </a> </li>
 														<?php }else{?>
-														<li class="item-actions__item add-play-list-btn" data-item="add-to-playlist"> <a href="javascript:void(0)" class="js-item-action js-add-to-playlist" data-test-id="contextmenu-add-to-playlist"> <i class="item-actions__icon icon-playlist-add fa fa-file-audio-o"></i> <span class="smallText" data-i18n="t-add-to-playlist">Add to Playlist</span> </a> </li>
+														<li class="item-actions__item add-play-list-btn" data-item="add-to-playlist"> <a href="<?php echo $url;?>" class="js-item-action js-add-to-playlist" data-test-id="contextmenu-add-to-playlist"> <i class="item-actions__icon icon-playlist-add fa fa-file-audio-o"></i> <span class="smallText" data-i18n="t-add-to-playlist">Add to Playlist</span> </a> </li>
 														<?php }?>
 														<li class="item-actions__divider" data-item="add-to-playlist"></li>
 														<li class="item-actions__item" data-item="favorite"> <a href="javascript:void(0)" class="favorite" data-id="<?php echo $row->id?>"> <i class="item-actions__icon icon-star <?php echo $featured_class ?>" data-bind-class="favorite-star"></i> <span class="smallText" data-i18n="t-add-to-favorites">Add to Favorites</span> </a> </li>
@@ -66,8 +67,8 @@
 								</ul>
 							</div>
 						</div>
-						<a href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"><img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="javascript:void(0)" onclick="play('<?php echo $url ?>',,'<?php echo $row->title?>')" class="text-ellipsis"><?php echo $row->title;?></a> </div>
+						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> </div>
 				</div>
 			</div>
 			<?php }
@@ -89,10 +90,10 @@
 		<div class="wrapper-md">
 			<div class="m-b-sm text-md">Top Plays</div>
 			<ul class="list-group no-bg no-borders pull-in">
-				<?php $i=0;foreach($featured as $row){$i++; if($i==5) break;?>
-				<li class="list-group-item"> <a herf href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"> <img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" class="r" style="width:30px"> </a>
+				<?php $i=0;foreach($featured as $row){$url = $this->Common_model->getUrl($row);$i++; if($i==5) break;?>
+				<li class="list-group-item"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" class="r" style="width:30px"> </a>
 					<div class="clear">
-						<div><a href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"><?php echo substr($row->title,0,15);?></a></div>
+						<div><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,15);?></a></div>
 					</div>
 				</li>
 				<?php }?>

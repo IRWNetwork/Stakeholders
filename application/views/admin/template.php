@@ -8,10 +8,14 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/animate.css/animate.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/font-awesome/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/simple-line-icons/css/simple-line-icons.css" type="text/css" />
+<link rel="stylesheet" href="https://code.highcharts.com/css/highcharts.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery/bootstrap/dist/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css" type="text/css" />
 <script src="<?php echo base_url(); ?>assets/libs/jquery/jquery/dist/jquery.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 </head>
 <body>
 <div class="app app-header-fixed ">

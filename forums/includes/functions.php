@@ -14,10 +14,10 @@
 /**
 * @ignore
 */
-if (!defined('IN_PHPBB'))
+/*if (!defined('IN_PHPBB'))
 {
 	exit;
-}
+}*/
 
 // Common global functions
 /**
@@ -2691,6 +2691,29 @@ function check_form_key($form_name, $timespan = false)
 	return false;
 }
 
+/**
+* Change password
+*
+* @param string $username
+* @param string $newPassword
+* @return boolean
+*/
+function user_edit($username, $newPassword)
+{
+ global $db, $user, $auth, $config, $phpbb_root_path, $phpEx;
+
+ if (empty($username) || empty($newPassword))
+ {
+   return false;
+ }
+
+ $sql = 'UPDATE ' . USERS_TABLE . ' SET user_password=\'' . $db->sql_escape(md5($newPassword)) . '\' WHERE username = \''.$db->sql_escape($username).'\'';
+ $db->sql_query($sql);
+
+ return true;
+}
+
+
 // Message/Login boxes
 
 /**
@@ -2897,10 +2920,13 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 
 		// If admin authentication and login, we will log if it was a success or not...
 		// We also break the operation on the first non-success login - it could be argued that the user already knows
+
 		if ($admin)
 		{
 			if ($result['status'] == LOGIN_SUCCESS)
 			{
+				print_r($_SESSION);
+				die();
 				add_log('admin', 'LOG_ADMIN_AUTH_SUCCESS');
 			}
 			else

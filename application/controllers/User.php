@@ -12,16 +12,48 @@ class User extends MY_Controller
 		$this->load->model('Emailtemplates_model');
 		$this->load->library("pagination");
 		$this->load->library('ion_auth');
-
+		//$this->load->library('Phpbb_bridge');
     }
 	public function index() {
-		redirect(site_url('user/login'), 'refresh');
+		ciredirect(site_url('user/login'), 'refresh');
+	}
+	
+	public function phpbb_login(){
+		define('IN_PHPBB', true);
+		global $request;
+		global $phpbb_container;
+		global $phpbb_root_path, $phpEx, $user, $auth, $cache, $db, $config, $template, $table_prefix;
+		global $request;
+		global $phpbb_dispatcher;
+		global $symfony_request;
+		global $phpbb_filesystem;
+		$phpbb_root_path = '../irw/forums/'; //the path to your phpbb relative to this script
+		$phpEx = substr(strrchr(__FILE__, '.'), 1);
+		include("forums/common.php"); ////the path to your phpbb relative to this script
+		// Start session management
+		$user->session_begin();
+		$auth->acl($user->data);
+		$user->setup();
+		
+		$username = 'admin';
+		$password = 'atif$$786';
+		if(isset($username) && isset($password))
+		{
+			$result=$auth->login($username, $password, true);
+		  	if ($result['status'] == LOGIN_SUCCESS) {
+				//echo "You're logged in";
+		  	} else {
+				//echo $user->lang[$result['error_msg']];
+		  	}
+		}
 	}
     
 	public function login() {
 		
+		
+		
 		if ($this->ion_auth->logged_in()) {
-			redirect(site_url('/'), 'refresh');
+			ciredirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'User Login';
@@ -49,16 +81,32 @@ class User extends MY_Controller
 				$password = $this->input->post("password");
 				
 				if($this->ion_auth->login($identity,$password)) {
-					$user = $this->ion_auth->user()->row();
+					
+					
+					//$this->phpbb_login($identity,$password);
 
+					$user = $this->ion_auth->user()->row();
+					//$this->Phpbb->user_login($identity,$password);
+					$this->session->set_userdata(
+							'email',
+							$user->username
+					);
+					$this->session->set_userdata(
+							'id',
+							$user->id
+					);
 					$this->session->set_userdata(
 							'uname',
 							$user->first_name." ".$user->last_name
 					);
+					$this->session->set_userdata(
+							'username',
+							$user->first_name."_".$user->last_name
+					);
 						$this->session->set_userdata(
 							'profile_pic',
 							$user->picture);
-					redirect(site_url('/'), 'refresh');
+					ciredirect(site_url('/'), 'refresh');
 				} else {
 					$this->session->set_flashdata(
 						'error',
@@ -73,11 +121,11 @@ class User extends MY_Controller
 	
 	function register(){
 		if ($this->ion_auth->logged_in()) {
-			redirect(site_url('/'), 'refresh');
+			ciredirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'User Registeration';
-		$this->data['page_heading'] 	= 'User Registeration';
+		$this->data['page_heading'] = 'User Registeration';
 		
 		if($this->input->post()) {
 			$rules = array(
@@ -123,11 +171,15 @@ class User extends MY_Controller
 				{
 					$group_name = array(2);
 					$this->ion_auth->register($username, $password, $email, $additional_data, $group_name);
+					
+					//$this->Phpbb->user_add($identity,$identity,$password);
+					
+					
 					$this->session->set_flashdata(
 						'success',
 						'Register Successfully'
 					);
-					redirect("home/");
+					ciredirect("home/");
 					
 				}else{
 					$this->session->set_flashdata(
@@ -152,14 +204,14 @@ class User extends MY_Controller
 
 		$this->ion_auth->logout();
 
-		redirect('/');
+		ciredirect('/');
 		
 	}
 	
 	public function forgotpassword() {
 		
 		if ($this->ion_auth->logged_in()) {
-			redirect(site_url('/'), 'refresh');
+			ciredirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'Forgot Password';
@@ -207,14 +259,14 @@ class User extends MY_Controller
 						'success',
 						'A password reset email has been sent to you'
 					);
-					redirect(base_url().'user/forgotpassword', 'refresh');
+					ciredirect(base_url().'user/forgotpassword', 'refresh');
 				} else {
 					$this->session->set_flashdata(
 							'error',
 							'Email not found'
 					);
 					
-					redirect(base_url().'user/forgotpassword', 'refresh');
+					ciredirect(base_url().'user/forgotpassword', 'refresh');
 				}				
 			}
 		}
@@ -225,7 +277,7 @@ class User extends MY_Controller
 	public function reset_password($code) {
 		
 		if ($this->ion_auth->logged_in()) {
-			redirect(site_url('/'), 'refresh');
+			ciredirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'Reset Password';
@@ -265,12 +317,12 @@ class User extends MY_Controller
 							//if the password was successfully changed
 							$this->session->set_flashdata('success', $this->ion_auth->messages());
 							//$this->logout();
-							redirect(site_url(''), 'refresh');
+							ciredirect(site_url(''), 'refresh');
 						}
 						else
 						{
 							$this->session->set_flashdata('error', $this->ion_auth->errors());
-							redirect(site_url('user/reset_password') . '/'.$code, 'refresh');
+							ciredirect(site_url('user/reset_password') . '/'.$code, 'refresh');
 						}
 					}
 				}
@@ -278,14 +330,14 @@ class User extends MY_Controller
 		} else {
 			//if the code is invalid then send them back to the forgot password page
 			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			redirect(site_url('users'), 'refresh');
+			ciredirect(site_url('users'), 'refresh');
 		}
 		$this->load->view('user/resetpassword',$this->data);
 	}
 	
 	public function changepassword() {
 		if (!$this->ion_auth->logged_in()) {
-			redirect(site_url(''), 'refresh');
+			ciredirect(site_url(''), 'refresh');
 		}
 		$this->data['page_title'] 	= 'Change Password';
 		$this->data['page_heading'] 	= 'Change Password';
@@ -316,12 +368,12 @@ class User extends MY_Controller
 					//if the password was successfully changed
 					$this->session->set_flashdata('success', "Password updated successfully");
 					//$this->logout();
-					redirect(site_url('user/changepassword'), 'refresh');
+					ciredirect(site_url('user/changepassword'), 'refresh');
 				}
 				else
 				{
 					$this->session->set_flashdata('error', $this->ion_auth->errors());
-					redirect(site_url('user/changepassword') . '/'.$code, 'refresh');
+					ciredirect(site_url('user/changepassword') . '/'.$code, 'refresh');
 				}
 			}			
 		}
@@ -332,12 +384,12 @@ class User extends MY_Controller
 	
 	public function profile() {
 		if (!$this->ion_auth->logged_in()) {
-			redirect(site_url(''), 'refresh');
+			ciredirect(site_url(''), 'refresh');
 		}
 		$this->data['page_title'] 	= 'Profile';
 		$this->data['page_heading'] 	= 'Profile';
 		
-
+print_r($this->session->all_userdata());
 		if($this->input->post()) {
 			$rules = array(
               	array(
@@ -385,7 +437,7 @@ class User extends MY_Controller
 								
 				$change = $this->ion_auth->update($user_id, $data);
 				$this->session->set_flashdata('success', 'Updated successfully');
-				redirect(site_url('user/profile'), 'refresh');
+				ciredirect(site_url('user/profile'), 'refresh');
 			}
 		}
 		$this->data['user'] = $this->ion_auth->user()->row();
@@ -395,7 +447,7 @@ class User extends MY_Controller
 	
 	public function upgradepackage() {
 		if (!$this->ion_auth->logged_in()) {
-			redirect(site_url(''), 'refresh');
+			ciredirect(site_url(''), 'refresh');
 		}
 		$this->data['page_title'] 	= 'Upgrade Package';
 		$this->data['page_heading'] 	= 'Upgrade Package';
@@ -436,10 +488,10 @@ class User extends MY_Controller
 					
 					$this->ion_auth->update($user_id,$data_update);
 					$this->session->set_flashdata('success', "Package updated successfully");
-					redirect(base_url()."user/upgradepackage");
+					ciredirect(base_url()."user/upgradepackage");
 				}else{
 					$this->session->set_flashdata('error', $result->message);
-					redirect(base_url()."user/upgradepackage");
+					ciredirect(base_url()."user/upgradepackage");
 				}
 			
 		}
@@ -456,7 +508,7 @@ class User extends MY_Controller
 	function favorite(){
 		
 		if (!$this->ion_auth->logged_in()) {
-			redirect(site_url('/'), 'refresh');
+			ciredirect(site_url('/'), 'refresh');
 		}
 		
 		$user_id 	= $this->ion_auth->user()->row()->id;

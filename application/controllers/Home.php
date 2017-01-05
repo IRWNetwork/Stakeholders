@@ -11,6 +11,8 @@ class Home extends MY_Controller
 		$this->load->library("pagination");
 		$this->load->model('Events_model');
     }
+	
+	
     
 	public function audio()
 	{

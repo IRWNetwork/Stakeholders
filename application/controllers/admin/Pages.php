@@ -10,7 +10,7 @@ class Pages extends CI_Controller
 		$this->load->model('Common_model');
 		$this->load->library('ion_auth');
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
-			redirect(site_url('admin/'), 'refresh');
+			ciredirect(site_url('admin/'), 'refresh');
 		}
     }
     
@@ -61,7 +61,7 @@ class Pages extends CI_Controller
 				
 				$user_record			=	$this->Pages_model->save($array);
 				if($user_record) {
-					redirect('admin/pages?msg=Added Successfully');
+					ciredirect('admin/pages?msg=Added Successfully');
 				}else {
 					$data['error']	    = 'Some Error try later';
 					$data['pageDetail'] = $_REQUEST;
@@ -85,7 +85,7 @@ class Pages extends CI_Controller
 		if($pageRow) {
 			$data['pageDetail']  = $pageRow;
 		}else {
-			redirect(base_url()."admin/pages?msg=Invalid Page");
+			ciredirect(base_url()."admin/pages?msg=Invalid Page");
 		}
 		$data['page_title']       = 'Edit Page';
 		$data['page_heading']     = 'Edit Page';
@@ -121,7 +121,7 @@ class Pages extends CI_Controller
 						 );
 				$user_record	=	$this->Pages_model->update($array,$this->input->post('id'));
 				if($user_record) {
-					redirect('admin/pages?msg=Updated Successfully');
+					ciredirect('admin/pages?msg=Updated Successfully');
 				}else {
 					$data['error']	    = 'Some Error try later';
 					$data['pageDetail'] = $_REQUEST;
@@ -145,6 +145,6 @@ class Pages extends CI_Controller
 
 	public function delete($id) {
 		$data['user'] = $this->Pages_model->delete($id);
-		redirect('admin/pages?msg=Deleted Successfully');
+		ciredirect('admin/pages?msg=Deleted Successfully');
 	}
 }

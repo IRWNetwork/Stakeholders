@@ -86,6 +86,15 @@ class Content_model extends CI_Model
 		
 		
 	}
+
+	public function remove_song($user_id, $song_id, $playlist_id) {
+		$query = "DELETE FROM playlists_songs WHERE playlists_songs.song_id = $song_id AND  playlists_songs.user_id = $user_id AND playlists_songs.playlist_id = $playlist_id";
+		$query = $this->db->query($query);
+		if (count($query > 0)) {
+			echo "true";
+		}
+	}
+
 	
 	public function checkSongInPlaylist($song_id,$user_id,$playlist_id){
 		$this->db->where("song_id",$song_id);

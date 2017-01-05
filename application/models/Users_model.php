@@ -274,13 +274,13 @@ class Users_model extends CI_Model
 
 	public function is_login(){
 		if(!$this->session->userdata('user_id')) {
-			redirect(base_url().'user/login');
+			ciredirect(base_url().'user/login');
 		}
 		/*if($this->session->userdata('type')=='super_admin' && $this->uri->segment('1')!='admin'){
-			redirect(base_url().'admin');
+			ciredirect(base_url().'admin');
 		}*/
 		if($this->session->userdata('type')!='super_admin' && $this->uri->segment('1')=='admin'){
-			redirect(base_url().'user');
+			ciredirect(base_url().'user');
 		}
 		
 	}
@@ -301,7 +301,7 @@ class Users_model extends CI_Model
 
 			$this->session->set_userdata($login_data);
 			$this->Users_model->update($update_user_data,$user_record->id);
-			redirect(base_url()."user/dashboard");
+			ciredirect(base_url()."user/dashboard");
 		}
 	}
 	

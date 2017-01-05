@@ -12,7 +12,7 @@ class Content extends CI_Controller
 		$this->load->library('ion_auth');
 		$this->load->model("Common_model");
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
-			redirect(site_url('admin/'), 'refresh');
+			ciredirect(site_url('admin/'), 'refresh');
 		}
     }
     
@@ -125,7 +125,7 @@ class Content extends CI_Controller
 							'success',
 							"Added Successfully"
 					);
-					redirect(base_url()."admin/content");
+					ciredirect(base_url()."admin/content");
 				}else{
 					$data['contentRow'] = $this->input->post();
 				}
@@ -226,7 +226,7 @@ class Content extends CI_Controller
 							'success',
 							"Updated Successfully"
 					);
-					redirect(base_url()."admin/content");
+					ciredirect(base_url()."admin/content");
 				}
 			}
 		}
@@ -244,6 +244,6 @@ class Content extends CI_Controller
 						'success',
 						"Deleted Successfully"
 				);
-		redirect(base_url().'admin/content');
+		ciredirect(base_url().'admin/content');
 	}
 }

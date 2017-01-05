@@ -1,3 +1,6 @@
+<?php 
+//echo "<pre>"; print_r($contents);exit;
+ ?>
 <div class="app-content-body fade-in-up ng-scope" ui-view="">
 	<div class="hbox hbox-auto-xs hbox-auto-sm ng-scope"> 
 		<!-- main -->
@@ -7,7 +10,7 @@
 				<?php $count=0;foreach($contents as $row){?>
 				<li class="list-group-item">
 					<div class="pull-right m-l"> <a ><i class="icon-close"></i></a> </div>
-					<a class="m-r-sm pull-left" href="javascript:void(0)" data-fullText="<?php echo $row->title?>" ng-click="mediaPlayer.playPause(<?php echo $count; ?>)" ng-class="{ active: mediaPlayer.playing && mediaPlayer.currentTrack-1 === $index }"> <i class="icon-control-play text"></i> <i class="icon-control-pause text-active"></i> </a>
+					<a class="m-r-sm pull-left play_list_song" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title; ?>" data-song="<?php echo $row->file; ?>" data-id="<?php echo $row->song_id; ?>" playlist-id="<?php echo $row->playlist_id; ?>" href="javascript:void(0)" data-fullText="<?php echo $row->title; ?>" ng-click="mediaPlayer.playPause(<?php echo $count; ?>)" ng-class="{ active: mediaPlayer.playing && mediaPlayer.currentTrack-1 === $index }"> <i class="icon-control-play text"></i> <i class="icon-control-pause text-active"></i> </a>
 					<div class="clear text-ellipsis"> <span><?php echo substr($row->title,0,35)?></span> </div>
 				</li>
 				<?php ++$count;}?>

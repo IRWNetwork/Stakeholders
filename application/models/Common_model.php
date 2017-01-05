@@ -1,8 +1,6 @@
 <?php
-
 class Common_model extends CI_Model
 {
-
   	function __construct()
     {
         // Call the Model constructor
@@ -135,17 +133,13 @@ class Common_model extends CI_Model
 		}
 		return true;
 	}
-
     function uploadImageAndResize($picname,$path,$new_width,$new_height){
     	
-
     	$config['upload_path']   = $path; //'uploads/data/';
 		$config['allowed_types'] = 'jpeg|jpg|png|JPG|JPEG|PNG';
 		$config['max_size'] 	 = '1000000';
 		$config['file_name']     = $picname;  // 'sliderimage_' . time() 
-
 		$this->load->library('upload', $config);
-
 		if ($this->upload->do_upload('file')){
 			
 			$image_details  = $this->upload->data();
@@ -176,14 +170,11 @@ class Common_model extends CI_Model
 	
 	function uploadImage($picname,$path){
     	
-
     	$config['upload_path']   = $path; //'uploads/data/';
 		$config['allowed_types'] = 'jpeg|jpg|png|JPG|JPEG|PNG';
 		$config['max_size'] 	 = '1000000';
 		$config['file_name']     = $picname;  // 'sliderimage_' . time() 
-
 		$this->load->library('upload', $config);
-
 		if ($this->upload->do_upload('file')){
 			
 			$image_details  = $this->upload->data();
@@ -197,14 +188,11 @@ class Common_model extends CI_Model
 	
 	function uploadImageByFieldName($field_name,$picname,$path){
     	
-
     	$config['upload_path']   = $path; //'uploads/data/';
 		$config['allowed_types'] = 'jpeg|jpg|png|JPG|JPEG|PNG';
 		$config['max_size'] 	 = '1000000';
 		$config['file_name']     = $picname;  // 'sliderimage_' . time() 
-
 		$this->load->library('upload', $config);
-
 		if ($this->upload->do_upload($field_name)){
 			
 			$image_details  = $this->upload->data();
@@ -217,15 +205,12 @@ class Common_model extends CI_Model
     }
 	
 	
-
     function uploadImageAndThumbNail($picname,$path,$new_width,$new_height){
     	$config['upload_path']   = $path; //'uploads/data/';
 		$config['allowed_types'] = 'jpeg|jpg|png|JPG|JPEG|PNG';
 		$config['max_size'] 	 = '1000000';
 		$config['file_name']     = $picname;  // 'sliderimage_' . time()
-
 		$this->load->library('upload', $config);
-
 		if ($this->upload->do_upload('file')){
 			
 			$image_details  = $this->upload->data();
@@ -253,7 +238,6 @@ class Common_model extends CI_Model
 			return false;
 		}
     }
-
     public function uploadFile($name,$path,$field_name){
     	$config['upload_path']   = $path; //'uploads/data/';
 		$config['allowed_types'] = 'mkv|ogv|ogg|m4v|wmv|avi|mp3|flv|mp4|doc|docx|pdf|csv|ppt|pptx|jpeg|jpg|png|JPG|JPEG|PNG|rv|wav|mpeg|mpg|mov|avi|mp3|mp4|Svlc';
@@ -290,20 +274,16 @@ class Common_model extends CI_Model
 			return false;
 		}
     }
-
-
 	public function decryptIt( $q ) {
 	    $cryptKey  = 'qJB0rGtIn5UB1xG03efyCp';
 	    $qDecoded  = rtrim( mcrypt_decrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), base64_decode( $q ), MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ), "\0");
 	    return( $qDecoded );
 	}
-
 	public function encryptIt( $q ) {
 	    $cryptKey  = 'qJB0rGtIn5UB1xG03efyCp';
 	    $qEncoded  = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), $q, MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ) );
 	    return( $qEncoded );
 	}
-
 	public function convertJqueryDateToSqlDate($date){
 		$time_array = array(
 						'00:00'=> 'AM 0:00',
@@ -455,7 +435,6 @@ class Common_model extends CI_Model
 		$key = array_search($date_array[1]." ".$date_array[2],$time_array);
 		return $date_array[0]." ".$key;
 	}
-
 	function getStatesArray(){
 		$states=array(
 			'AL'=>'Alabama',

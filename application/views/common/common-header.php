@@ -11,6 +11,6 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/jquery/bootstrap/dist/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font.css" type="text/css" />
 <script src="<?php echo base_url(); ?>assets/libs/jquery/jquery/dist/jquery.js"></script>
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css?t=<?php echo time();?>" type="text/css" />
 <link rel="icon" href="<?php echo base_url(); ?>assets/images/favicon.png"  />
 </head>

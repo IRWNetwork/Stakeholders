@@ -108,7 +108,7 @@ class Events extends CI_Controller
 							'success',
 							"Added Successfully"
 					);
-					redirect(base_url().'admin/events');
+					ciredirect(base_url().'admin/events');
 				}else {
 					$this->session->set_flashdata(
 							'error',
@@ -189,7 +189,7 @@ class Events extends CI_Controller
 							'success',
 							"Updated Successfully"
 					);
-					redirect(base_url().'admin/events');
+					ciredirect(base_url().'admin/events');
 				}else {
 					
 					$this->session->set_flashdata(
@@ -219,7 +219,6 @@ class Events extends CI_Controller
 							'success',
 							"Deleted Successfully"
 					);
-		redirect(base_url().'admin/events');
-	}
-	
+		ciredirect(base_url().'admin/events');
+	}	
 }

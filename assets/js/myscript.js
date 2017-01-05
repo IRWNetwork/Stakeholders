@@ -38,6 +38,13 @@ function favorite(id){
 	});	
 }
 
+function response_messages(message) {
+	$(".general-msg-bar").show().text(message);
+	setTimeout(function(){ 
+			$(".general-msg-bar").hide().text("");
+	}, 3000);
+}
+
 $(document).ready(function(){
 	$("#btn-create-playlist").click(function(){
 		var title 		= $("#playlist_tilte").val();
