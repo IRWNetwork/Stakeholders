@@ -11,22 +11,15 @@ class Stats extends CI_Controller
 		$this->load->helper('csv');
     }
 
-	public function statistics() {
+	public function analytics() {
 
 		$data = array();
-		$data['page_title']   = 'Statistics';
-		$data['page_heading'] = 'Statistics';
-		$parser['content'] = $this->load->view('admin/stats/stats',$data,TRUE);
-	    $this->parser->parse('admin/template', $parser);	
-	}
-
-	public function charts() {
-
-		$data = array();
-		$data['page_title']   = 'Graphs';
-		$data['page_heading'] = 'Graphs';
+		$data['page_title']   = 'Analytics';
+		$data['page_heading'] = 'Analytics';
 		$parser['content'] = $this->load->view('admin/stats/graphs',$data,TRUE);
-	    $this->parser->parse('admin/template', $parser);	
+	    $this->parser->parse('admin/template', $parser);
+		//$parser['content'] = $this->load->view('admin/stats/stats',$data,TRUE);
+	    //$this->parser->parse('admin/template', $parser);	
 	}
 }
 

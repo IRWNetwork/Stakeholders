@@ -122,4 +122,31 @@
 	</div>
 	<!-- / right col --> 
 	
+<input type="hidden" name="limit_count" id="limit_count" value="20">
+<input type="hidden" name="limit_count" id="max_limit" value="<?php echo $total_rows; ?>">
 </div>
+<script type="text/javascript">
+$(window).scroll(function() {
+
+if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+    var value = parseInt(document.getElementById('limit_count').value, 10);
+    var max_limit = $("#max_limit").val();
+		value = isNaN(value) ? 0 : value;
+	    var base_url = window.location.origin;
+	    my_url = base_url+"/videos/videos_ajax/"+value;
+
+	    $.ajax({
+	        url: my_url,
+	        type: "get",
+	        success: function (response) {
+	    		value = value+20;
+	    		document.getElementById('limit_count').value = value;
+	    		$("#content").append(response);
+	        }
+	    });
+	   }
+	   else{
+	   		return false;
+	   }
+});	
+</script>

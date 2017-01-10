@@ -17,8 +17,16 @@ class Faq extends Common_Controller {
 		$data['page_title']    	= 'FAQ';
 		$data['page_heading']  	= 'FAQ';
 		
-        $parser['content']				=  $this->load->view('faq',$data,TRUE);
-        $this->parser->parse('template', $parser);
+		
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('faq',$data,TRUE);
+		}
+		else {
+			$parser['content']	=  $this->load->view('faq',$data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
+        // $parser['content'] = $this->load->view('faq',$data,TRUE);
+        // $this->parser->parse('template', $parser);
 	}
 	
 }

@@ -20,7 +20,14 @@ class Forum extends MY_Controller
 		$this->data['page_heading'] 	= 'Forum';
 		
 		
-        $parser['content']		=  $this->load->view('forums',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('forums',$this->data,TRUE);
+		}
+		else {
+			$parser['content']	=  $this->load->view('forums',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
+        // $parser['content']		=  $this->load->view('forums',$this->data,TRUE);
+        // $this->parser->parse('template', $parser);
 	}
 }

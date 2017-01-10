@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
 /*
 | -------------------------------------------------------------------------
 | URI ROUTING
@@ -50,13 +51,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller']          			= 'home';
-$route['404_override'] 				  			= '';
-$route['admin'] 								= 'admin/users';
-$route['admin/content/(:num)'] 					= 'admin/content/index/$1';
-$route['admin/events/(:num)'] 					= 'admin/events/index/$1';
-$route['playlist/(:num)'] 						= 'playlist/index/$1';
-$route['home/map'] 								= 'home/map';
+$route['404_override'] 				  		  = '';
+$route['admin'] 								 = 'admin/users';
+$route['admin/content/(:num)'] 				  = 'admin/content/index/$1';
+$route['admin/events/(:num)'] 				   = 'admin/events/index/$1';
+$route['playlist/(:num)'] 					   = 'playlist/index/$1';
+$route['home/map'] 							  = 'home/map';
 $route['Save_Excel'] 							= 'Save_Excel/index';
 $route['home/audio'] 							= 'home/audio';
-$route['page/(:any)'] 				  			= 'page/index';
-$route['translate_uri_dashes'] 		  			= FALSE;
+$route['page/(:any)'] 				  		   = 'page/index';
+$route['translate_uri_dashes'] 		  		  = FALSE;

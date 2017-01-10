@@ -1,7 +1,6 @@
 <div class="hbox hbox-auto-xs hbox-auto-sm"> 
 	<!-- main -->
 	<div class="col wrapper-lg">
-		<h3 class="font-thin m-t-n-xs m-b">Editorial</h3>
 		<div class="row row-sm">
 			<?php 
 			if(count($contents)>0){
@@ -59,83 +58,17 @@
 				</div>
 			</div>
 			<?php }
-			}else{
-			?>
-			<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2-4">
-				<div class="item">
-					<div class="pos-rlt">
-					No Record Found
-					</div>
-				</div>
-			</div>
-			<?php }?>
+			}?>
 		</div>
 	</div>
 	<!-- / main --> 
 	<!-- right col -->
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
 		<div class="wrapper-md">
-			<div class="m-b-sm text-md">Top Plays</div>
-			<ul class="list-group no-bg no-borders pull-in">
-				<?php $i=0;foreach($featured as $row){$i++; if($i==5) break;?>
-				<li class="list-group-item"> <a herf href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"> <img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" class="r" style="width:30px"> </a>
-					<div class="clear">
-						<div><a href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"><?php echo substr($row->title,0,15);?></a></div>
-					</div>
-				</li>
-				<?php }?>
-			</ul>
-			<div class="text-center"> <a href class="btn btn-sm btn-info padder-md m-b">More</a> </div>
+			<div class="m-b-sm text-md"></div>
+			<ul class="list-group no-bg no-borders pull-in"></ul>
 		</div>
-		<!-- streamline -->
-		<div class="text-md wrapper-md">Activity</div>
-		<div class="list-group no-borders no-bg m-l-xs m-r-xs m-t-n">
-			<div class="list-group-item">
-				<div class="text-muted">5 minutes ago</div>
-				<div><a href class="text-info">Jessi</a> commented your post.</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">11:30</div>
-				<div><a ui-sref="music.detail">Jone</a> published a song</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">Sun, 11 Feb</div>
-				<div><a href class="text-info">Jessi</a> upload a video <a href class="text-info">Cat</a>.</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">Thu, 17 Jan</div>
-				<div>Mike Followed you</div>
-			</div>
-		</div>
-		<!-- / streamline --> 
 	</div>
 	<!-- / right col --> 
 	
 </div>
-<input type="hidden" name="limit_count" id="limit_count" value="20">
-<input type="hidden" name="limit_count" id="max_limit" value="<?php echo $total_rows; ?>">
-<script type="text/javascript">
-$(window).scroll(function() {
-
-if ($(window).scrollTop() + $(window).height() == $(document).height()) {
-    var value = parseInt(document.getElementById('limit_count').value, 10);
-    var max_limit = $("#max_limit").val();
-		value = isNaN(value) ? 0 : value;
-	    var base_url = window.location.origin;
-	    my_url = base_url+"/editorial/editorial_ajax/"+value;
-
-	    $.ajax({
-	        url: my_url,
-	        type: "get",
-	        success: function (response) {
-	    		value = value+20;
-	    		document.getElementById('limit_count').value = value;
-	    		$("#content").append(response);
-	        }
-	    });
-	   }
-	   else{
-	   		return false;
-	   }
-});	
-</script>

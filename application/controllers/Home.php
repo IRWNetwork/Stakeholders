@@ -12,8 +12,33 @@ class Home extends MY_Controller
 		$this->load->model('Events_model');
     }
 	
-	
-    
+	public function home2(){
+		$this->data['page_title'] 	= 'Home';
+		$this->data['page_heading'] 	= 'Home';
+		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
+        $arr['name']           = $search;
+		$config 			   = array();
+        $config["base_url"]    = base_url() . "products/search";
+        $config["total_rows"]  = $this->Content_model->countTotalRows($arr);
+		if($this->input->get('per_page')){
+			$config["per_page"]= $this->input->get('per_page');
+		}else{
+        	$config["per_page"]= 20;
+		}
+        $config["uri_segment"] = 3;
+		$config['reuse_query_string']   = true;
+        $this->pagination->initialize($config);
+        $page 		        = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->data['contents']	= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
+		$this->data['contents1']	= $this->Content_model->getAudio($arr,$page,$config["per_page"]);
+		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
+		
+		$this->data["links"]   = $this->pagination->create_links();
+
+        $parser['content']		=  $this->load->view('main2',$this->data,TRUE);
+        $this->parser->parse('template2', $parser);
+	}
+	    
 	public function audio()
 	{
 		$this->data['page_title'] 	= 'Home';
@@ -48,7 +73,7 @@ class Home extends MY_Controller
 	}
 
 	public function index()
-	{
+	{	
 		$this->data['page_title'] 	= 'Home';
 		$this->data['page_heading'] 	= 'Home';
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
@@ -76,13 +101,11 @@ class Home extends MY_Controller
 	}
 	
 	public function playvideo(){
-	
 		$id = $this->input->get('id');
 		$video_row = $this->Content_model->getRow($id);
-
 		$this->data['dataRow']			= $video_row;
-		$this->data['page_title'] 		= $video_row['title'];
-		$this->data['page_heading'] 		= $video_row['title'];
+		$this->data['page_title'] 		 = $video_row['title'];
+		$this->data['page_heading'] 	   = $video_row['title'];
 		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
 		
 		$parser['content']			=  $this->load->view('playvideo',$this->data,TRUE);
@@ -94,11 +117,10 @@ class Home extends MY_Controller
 		$id = $this->input->get('id');
 		$video_row = $this->Content_model->getRow($id);
 
-		$this->data['dataRow']			= $video_row;
-		$this->data['page_title'] 		= $video_row['title'];
+		$this->data['dataRow']			 = $video_row;
+		$this->data['page_title'] 		  = $video_row['title'];
 		$this->data['page_heading'] 		= $video_row['title'];
-		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
-		
+		$this->data['featuredcontent']	 = $this->Content_model->getFeaturedData(array());
 		$parser['content']			=  $this->load->view('playvideo',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
@@ -107,13 +129,11 @@ class Home extends MY_Controller
 		
 		$id = $this->input->get('id');
 		$article_row = $this->Content_model->getRow($id);
-
 		$this->data['dataRow']			= $article_row;
-		$this->data['page_title'] 		= $article_row['title'];
-		$this->data['page_heading'] 		= $article_row['title'];
+		$this->data['page_title'] 		 = $article_row['title'];
+		$this->data['page_heading'] 	   = $article_row['title'];
 		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
-		
-		$parser['content']			=  $this->load->view('article-detail',$this->data,TRUE);
+		$parser['content']				=  $this->load->view('article-detail',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -169,9 +189,7 @@ class Home extends MY_Controller
 	}
 	
 	public function showpopup(){
-		
 		$id = $this->input->post('id');
-		
 		$row = $this->Content_model->getRow($id);
 		$this->data['dataRow']			= $row;
 		$this->load->view('share_popup',$this->data);
@@ -191,10 +209,17 @@ class Home extends MY_Controller
 			$new_array[] = $event;
 
 		}
-		$this->data['events'] 		= json_encode($new_array);
+		$this->data['events'] 			= json_encode($new_array);
 		$this->data['categories']	   	= $this->Events_model->getAllCategories();
-		$parser['content']		= $this->load->view('map/map-view',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+
+		
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('map/map-view',$this->data,TRUE);
+		}
+		else {
+			$parser['content']	=  $this->load->view('map/map-view',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
 	}
 	
 	public function get_events_by_categories(){

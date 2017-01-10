@@ -77,6 +77,10 @@ $(document).ready(function(){
 	});
 });
 
+function show_code(){
+	$("#embed_code").show(350);
+}
+	
 function showSharePopup(id){
 	$.post( BASE_URL+"home/showpopup/",{id:id}, function( data ) {
 		$("#share_popup_detail").html( data );

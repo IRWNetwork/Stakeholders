@@ -32,13 +32,26 @@
 							<li>
 								<a href="javascript:void(0)" onclick="window.open('http://twitter.com/home?status=<?php echo $dataRow['title']; ?>+<?php echo $url?>', 'sharer', 'toolbar=0,status=0,width=548,height=325')"><button type="submit" class="btn">Twitter</button></a>
 							</li>
+                            <li>
+								<a href="javascript:void(0)" onclick="show_code();" > <button type="submit" class="btn">Embeded</button></a>
+							</li>
 							<!--<li>
 								<button type="submit" class="btn">Embed</button>
 							</li>-->
 						</ul>
+                        <div id="embed_code" style=" display:none; text-align:center;color:#fff;">
+                        	&lt;iframe width="100%" height="450" scrolling="no" frameborder="no" src="<?php echo base_url()?>embed/play/<?php echo $dataRow['id'];?>"&gt;&lt;/iframe&gt;
+                        </div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		function show_code(){
+			$("#embed_code").hide(1000);
+		}
+	});
+</script>

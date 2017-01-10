@@ -224,7 +224,7 @@ class Content_model extends CI_Model
 		}
 		return array();
 	}
-	
+
 	public function getAudio($data,$start,$limit){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');

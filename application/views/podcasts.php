@@ -21,7 +21,7 @@
 									$featured_class = $this->Content_model->checkIsFeatured($row->id);
 								?>
 								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class?>"></i></a> 
-								<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
+								<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-image="<?php echo $row->picture;?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<div class="ui-widget ui-widget-content ui-corner-all ui-front ui-dialog ui-dialog--context-menu undefined contextmenu__arrow-top-left" tabindex="-1" role="dialog" aria-describedby="ui-id-3" aria-labelledby="ui-id-4" style="height: auto; width: 215px; top: 105px; left: 628px;"> 
@@ -83,7 +83,9 @@
 			</div>
 			<?php }?>
 		</div>
+		<?php //echo $links; ?>
 	</div>
+
 	<!-- / main --> 
 	<!-- right col -->
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
@@ -122,6 +124,33 @@
 		</div>
 		<!-- / streamline --> 
 	</div>
-	<!-- / right col --> 
+	<!-- / right col -->
+	<input type="hidden" name="limit_count" id="limit_count" value="20">
+	<input type="hidden" name="limit_count" id="max_limit" value="<?php echo $total_rows; ?>">
 	
 </div>
+<script type="text/javascript">
+$(window).scroll(function() {
+
+if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+    var value = parseInt(document.getElementById('limit_count').value, 10);
+    var max_limit = $("#max_limit").val();
+		value = isNaN(value) ? 0 : value;
+	    var base_url = window.location.origin;
+	    my_url = base_url+"/podcasts/podcasts_ajax/"+value;
+
+	    $.ajax({
+	        url: my_url,
+	        type: "get",
+	        success: function (response) {
+	    		value = value+20;
+	    		document.getElementById('limit_count').value = value;
+	    		$("#content").append(response);
+	        }
+	    });
+	   }
+	   else{
+	   		return false;
+	   }
+});	
+</script>

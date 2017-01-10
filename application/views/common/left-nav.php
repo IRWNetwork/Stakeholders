@@ -1,3 +1,4 @@
+<script src="<?php echo base_url(); ?>assets/js/ajax_data.js"></script>
 <aside id="aside" class="app-aside hidden-xs bg-dark" style="height:100%">
 	<div class="aside-wrap">
 		<div class="navi-wrap"> 
@@ -11,7 +12,7 @@
 				<?php }?>
 				<a href="#" data-toggle="dropdown" class="dropdown-toggle hidden-folded"> <span class="clear"> <span class="block m-t-sm">
 				<strong class="font-bold text-lt"><?php echo $this->session->userdata('uname');?></strong> <b class="caret"></b> </span>
-				<span class="text-muted text-xs block">Ruler     Level 76</span> </span> </a> 
+				<span class="text-muted text-xs block">Ruler Level 76</span> </span> </a> 
 					<!-- dropdown -->
 					<ul class="dropdown-menu animated fadeInRight w hidden-folded">
 						<li> <a href="<?php echo base_url()?>user/profile">Profile</a> </li>
@@ -30,22 +31,27 @@
 			<!-- nav -->
 			<nav ui-nav="" class="navi clearfix"> 
 				<!-- list -->
-				<ul class="nav dk">
+				<ul class="nav dk load_data_ajax">
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>Discovery</span> </li>
 					<li ui-sref-active="active" class="active"> <a href="<?php echo base_url()?>"> <i class="icon-disc icon"></i> <span>New</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>podcasts"> <i class="fa fa-microphone" ></i> <span>Podcasts</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>page/Arcade"> <i class="fa fa-gamepad"></i> <span>Arcade</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>editorial"> <i class="icon-list icon"></i> <span>Editorial</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>videos"> <i class="icon-social-youtube icon"></i> <span>Videos</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>page/fantasy-league"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>faq"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
+					<li ui-sref-active="active">
+						<a href="javascript:void(0)" data-for="podcasts">
+							<i class="fa fa-microphone" ></i>
+							<span>Podcasts</span>
+						</a>
+						</li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="page/Arcade"> <i class="fa fa-gamepad"></i> <span>Arcade</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="editorial"> <i class="icon-list icon"></i> <span>Editorial</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="videos"> <i class="icon-social-youtube icon"></i> <span>Videos</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="page/fantasy-league"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="faq"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
 				</ul>
-				<ul class="nav">
+				<ul class="nav load_data_ajax">
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>YOUR VAULT</span> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>user/favorite"> <i class="icon-star icon"></i> <span>Favorite</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="user/favorite"> <i class="icon-star icon"></i> <span>Favorite</span> </a> </li>
 					<li ui-sref-active="active"> <a href="#/music/playlist/loved"> <i class="icon-heart icon"></i> <span>Loved</span> </a> </li>
 					<li ui-sref-active="active"> <a href="#/music/playlist/history"> <i class="icon-clock icon"></i> <span>History</span> </a> </li>
 					<?php if($this->ion_auth->logged_in()){?>
@@ -61,4 +67,27 @@
 			<!-- nav --> 
 		</div>
 	</div>
+	
 </aside>
+
+<script type="text/javascript">
+$("document").ready(function() {
+$("ul.load_data_ajax li").click(function() {
+	var my_url = $(this).children('a').attr("data-for");
+	var base_url = window.location.origin;
+	my_url = base_url+"/"+my_url;
+	//alert(my_url);
+	$.ajax({
+        url: my_url,
+        type: "POST",
+        data : {flag:1},
+        success: function (response) {
+    		$("#content").empty();
+    		$("#content").append(response);
+    		history.pushState(null, null, my_url);
+        }
+    });
+});
+});
+
+</script>

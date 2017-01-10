@@ -532,9 +532,9 @@ print_r($this->session->all_userdata());
 		
 		$this->data["links"]   = $this->pagination->create_links();
 		
-		
-		$parser['content'] 	= $this->load->view('user/favorite',$this->data,true);
-        $this->parser->parse('template', $parser);
+		echo $this->load->view('user/favorite',$this->data,true);
+		//$parser['content'] 	= $this->load->view('user/favorite',$this->data,true);
+        //$this->parser->parse('template', $parser);
 	}
 
 }

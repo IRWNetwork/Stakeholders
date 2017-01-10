@@ -18,9 +18,13 @@ class Page extends MY_Controller {
 		$this->data['page_title']    	= $row['title'];
 		$this->data['page_heading']  	= $row['title'];
 		
-		
-        $parser['content']				=  $this->load->view('page',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('page',$this->data,TRUE);
+		}
+		else {
+			$parser['content']	=  $this->load->view('page',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
 	}
 	
 }
