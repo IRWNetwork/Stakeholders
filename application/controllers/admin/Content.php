@@ -11,6 +11,7 @@ class Content extends CI_Controller
 		$this->load->library("pagination");
 		$this->load->library('ion_auth');
 		$this->load->model("Common_model");
+		$this->gallery_path = realpath(APPPATH . '../uploads');
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
 			ciredirect(site_url('admin/'), 'refresh');
 		}
@@ -40,7 +41,11 @@ class Content extends CI_Controller
         $parser['content']	   = $this->load->view('admin/contents/listing',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
 	}
-	
+	public function convert_images() {
+		$results = $this->Common_model->convert_images();
+		//$this->load->library('image_lib');
+		
+	}
 	public function addcontent()
 	{
 		$data['page_title'] 	= 'Add Content';

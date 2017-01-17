@@ -286,5 +286,18 @@ class Content_model extends CI_Model
 			}	
 		}
 	}
+	
+	public function getTotalEpisode($type){
+		$query = $this->db->query('SELECT COUNT(*) As total from contents where type = "'.$type.'" ');
+		//echo $this->db->last_query();		
+		//die();
+		if($query->num_rows())
+		{
+			$row = $query->result_array();
+			return $row[0]; 
+		}
+		return array();
+
+	}
 }
 ?>

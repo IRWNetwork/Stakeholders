@@ -9,7 +9,7 @@ class Categories extends CI_Controller
 		$this->load->model('Categories_model');
 		$this->load->model('Common_model');
 		$this->load->library("pagination");
-		
+		$this->load->library('ion_auth');
 		$this->load->helper('csv');
 
     }

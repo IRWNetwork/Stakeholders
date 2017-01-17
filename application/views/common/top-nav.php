@@ -1,3 +1,6 @@
+<?php //echo '<pre>';
+// var_dump($_SESSION);
+// echo '</pre>';exit; ?>
 <header id="header" class="app-header navbar" role="menu"> 
 		<!-- navbar header -->
 		<div class="navbar-header bg-dark">

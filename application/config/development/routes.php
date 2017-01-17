@@ -59,5 +59,6 @@ $route['playlist/(:num)'] 					   = 'playlist/index/$1';
 $route['home/map'] 							  = 'home/map';
 $route['Save_Excel'] 							= 'Save_Excel/index';
 $route['home/audio'] 							= 'home/audio';
+$route['embed/exapmle'] 						 = 'embed/iframe';
 $route['page/(:any)'] 				  		   = 'page/index';
 $route['translate_uri_dashes'] 		  		  = FALSE;

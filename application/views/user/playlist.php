@@ -74,7 +74,7 @@
 															<ul class="main-grid-menu grid__item__menu item-actions">
 																<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 																	<div class="item-actions__count" data-bind="bundleCount"></div>
-																	<img class="item-actions__cover" src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
+																	<img class="item-actions__cover" src="<?php echo base_url()?>uploads/listi<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 																<li class="item-actions__item" data-item="play"> <a href="#" class="js-item-action js-play-now" data-test-id="contextmenu-play-now"> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
 																<li class="item-actions__item" data-item="play" data-sub-item="play-next"> <a href="#" class="js-item-action js-play-next" data-test-id="contextmenu-play-next"> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
 																<li class="item-actions__item" data-item="play" data-sub-item="add-to-queue"> <a href="javascript:void(0)" class="js-item-action js-play-last" data-test-id="contextmenu-play-last"> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
@@ -97,7 +97,7 @@
 										</ul>
 									</div>
 								</div>
-								<a href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"><img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+								<a href="javascript:void(0)" onclick="play('<?php echo $url ?>','<?php echo $row->title?>')"><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="r r-2x" ></a> </div>
 							<div class="padder-v"><a href="javascript:void(0)" onclick="play('<?php echo $url ?>',,'<?php echo $row->title?>')" class="text-ellipsis"><?php echo $row->title;?></a> </div>
 						</div>
 					</div>

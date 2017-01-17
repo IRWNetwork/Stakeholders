@@ -96,8 +96,13 @@ class Home extends MY_Controller
 		
 		$this->data["links"]   = $this->pagination->create_links();
 
-        $parser['content']		=  $this->load->view('main',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('main',$this->data,TRUE);
+		}
+		else {
+			$parser['content']		=  $this->load->view('main',$this->data,TRUE);
+        	$this->parser->parse('template', $parser);
+		}
 	}
 	
 	public function playvideo(){

@@ -1,5 +1,4 @@
-<div class="hbox hbox-auto-xs hbox-auto-sm"> 
-	<!-- main -->
+<!-- main -->
 	<div class="col wrapper-lg">
 		<h3 class="font-thin m-t-n-xs m-b">Podcasts</h3>
 		<div class="row row-sm">
@@ -42,7 +41,7 @@
 													<ul class="main-grid-menu grid__item__menu item-actions">
 														<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 															<div class="item-actions__count" data-bind="bundleCount"></div>
-															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
+															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
@@ -67,7 +66,7 @@
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
 					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> </div>
 				</div>
 			</div>
@@ -81,7 +80,11 @@
 					</div>
 				</div>
 			</div>
+
 			<?php }?>
+		</div>
+		<div class="loader" style="margin: 0 auto;text-align: center;display: none">
+			<img src="<?php echo base_url()?>uploads/files/loading.gif" width="200" height="200">
 		</div>
 		<?php //echo $links; ?>
 	</div>
@@ -124,6 +127,7 @@
 		</div>
 		<!-- / streamline --> 
 	</div>
+	
 	<!-- / right col -->
 	<input type="hidden" name="limit_count" id="limit_count" value="20">
 	<input type="hidden" name="limit_count" id="max_limit" value="<?php echo $total_rows; ?>">
@@ -136,18 +140,29 @@ if ($(window).scrollTop() + $(window).height() == $(document).height()) {
     var value = parseInt(document.getElementById('limit_count').value, 10);
     var max_limit = $("#max_limit").val();
 		value = isNaN(value) ? 0 : value;
-	    var base_url = window.location.origin;
-	    my_url = base_url+"/podcasts/podcasts_ajax/"+value;
-
-	    $.ajax({
-	        url: my_url,
-	        type: "get",
-	        success: function (response) {
-	    		value = value+20;
-	    		document.getElementById('limit_count').value = value;
-	    		$("#content").append(response);
-	        }
-	    });
+	    
+		//var base_url = window.location.origin;
+	    //my_url = base_url+"/podcasts/podcasts_ajax/"+value;
+		my_url = BASE_URL+"/podcasts/podcasts_ajax/"+value;
+		if(value){
+			$.ajax({
+				url: my_url,
+				type: "get",
+				success: function (response) {
+					if (response != "") {
+						$(".loader").show().delay(2000).fadeOut();
+					}
+					value = value+20;
+					if(max_limit<value){
+						document.getElementById('limit_count').value = 0;
+					}
+					else{
+						document.getElementById('limit_count').value = value;
+					}
+					$("#content").append(response);
+				}
+			});
+		}
 	   }
 	   else{
 	   		return false;

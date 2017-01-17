@@ -6,6 +6,7 @@ class Common_model extends CI_Model
         // Call the Model constructor
         parent::__construct();
         $this->load->library('image_lib');
+        $this->gallery_path = realpath(APPPATH . '../uploads');
     }
 	
 	function getUrl($row){
@@ -247,12 +248,73 @@ class Common_model extends CI_Model
 		$this->load->library('upload', $config);
 		if ($this->upload->do_upload($field_name)){
 			$image_details  = $this->upload->data();
+			//echo "<pre>"; print_r($image_details);exit;
+			$image_sizes = array(
+		        'listing' => array(150, 150),
+		        'admin_listing' => array(100, 100),
+		        'featured' => array(270, 270),
+		        'detail_page' => array(400, 400),
+		        'player_image' => array(43, 43),
+		    );
+			
+		    $this->load->library('image_lib');
+			foreach ($image_sizes as $key => $resize) {
+
+			    $config = array(
+			        'source_image' => $image_details['full_path'],
+			        'new_image' => $this->gallery_path . "/".$key."/" . $image_details['raw_name'].$image_details['file_ext'],
+			        'maintain_ration' => true,
+			        'width' => $resize[0],
+			        'height' => $resize[1]
+			    );
+			    //echo "<pre>"; print_r($config);exit;
+			    $this->image_lib->initialize($config);
+			    $this->image_lib->resize();
+			    $this->image_lib->clear();
+			    //exit;
+			}
 			$file_name 	= $image_details['file_name'];
 			return $file_name;
 		}else{
 			return false;
 		}
     }
+
+	    public function convert_images() {
+			//echo "hi";exit;
+			$this->db->select('contents.picture');
+			$query = $this->db->get('contents');
+			//echo $this->db->last_query();exit;
+			$results = $query->result_array();
+			//echo "<pre>"; print_r($results);exit;
+			$image_sizes = array(
+	        'listing' => array(150, 150),
+	        'admin_listing' => array(100, 100),
+	        'featured' => array(270, 270),
+	        'detail_page' => array(400, 400),
+	        'player_image' => array(43, 43),
+	    );
+		foreach ($results as $key => $result) {
+			$source_image = $result['picture'];
+			$image_details = explode('.', $source_image);
+			foreach ($image_sizes as $key => $resize) {
+
+		    $config = array(
+		        'source_image' => $this->gallery_path.'/files/'.$source_image,
+		        'new_image' => $this->gallery_path . "/".$key."/" . $image_details[0].'.'.$image_details[1],
+		        'maintain_ration' => true,
+		        'width' => $resize[0],
+		        'height' => $resize[1]
+		    );
+		    //echo $config['source_image'];exit;
+		    //echo "<pre>"; print_r($config);exit;
+		    $this->image_lib->initialize($config);
+		    $this->image_lib->resize();
+		    $this->image_lib->clear();
+		    }
+		}
+				//echo "<pre>"; print_r();exit;
+		}
 	
 	 public function uploadsenderFile($name,$path){
     	$config['upload_path']   = $path; //'uploads/data/';
@@ -264,7 +326,6 @@ class Common_model extends CI_Model
 		
 		$config['max_size'] 	 = (!empty($row[0]['value']))?$row[0]['value']*1000000:'1000000';
 		$config['file_name']     = $name;  // 'sliderimage_' . time()
-		
 		$this->load->library('upload', $config);
 		if ($this->upload->do_upload('file')){
 			$image_details  = $this->upload->data();

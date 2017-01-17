@@ -16,7 +16,8 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
-</head>
+
+<link rel="icon" href="<?php echo base_url(); ?>assets/images/favicon.png"  /></head>
 <body>
 <div class="app app-header-fixed ">
 	<!-- header -->

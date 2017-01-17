@@ -10,6 +10,7 @@ class Events extends CI_Controller
 		$this->load->model('Common_model');
 		$this->load->library("pagination");
 		$this->load->helper('csv');
+		$this->load->library('ion_auth');
     }
     
 	public function index() {

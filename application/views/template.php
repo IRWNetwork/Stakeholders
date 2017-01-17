@@ -16,6 +16,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/soundmanager2.js"></script>
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bar-ui.css" />
 <script src="<?php echo base_url(); ?>assets/js/demo.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/bar-ui.js"></script>
 <script type="text/javascript">
 var BASE_URL = '<?php echo base_url()?>';
 $(document).ready(function(){
@@ -34,8 +35,15 @@ $(document).ready(function(){
 		var song = $(this).attr('data-song');
 		var id = $(this).attr('data-id');
 		var image = $(this).attr("data-image");
+<<<<<<< HEAD
 		var base_url = window.location.origin;
-		var current_song_image = '<img src='+base_url+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+		var current_song_image = '<img src='+base_url+'/uploads/player_image/'+image+' class="r r-2x"/>';
+=======
+		
+		//var base_url = window.location.origin;
+		
+		var current_song_image = '<img src='+BASE_URL+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+>>>>>>> 98f68bade9765f84e47e98ccd297ac2ffa438cce
 		$(".song-img").empty();
 		$(".song-img").append(current_song_image);
 		
@@ -44,9 +52,11 @@ $(document).ready(function(){
 		$(".sm2-playlist-target ul.sm2-playlist-bd").hide();
 		var playlist_id = $(this).attr('playlist-id');
 		playlist_id = { id : playlist_id };
-		var base_url = window.location.origin;
+		
+		//var base_url = window.location.origin;
+		
 		$.ajax({
-	        url: base_url+"/playlist/get_playlist_by_id_json",
+	        url: BASE_URL+"/playlist/get_playlist_by_id_json",
 	        type: "post",
 	        data: playlist_id,
 	        success: function (response) {
@@ -71,9 +81,10 @@ $(document).ready(function(){
 		var song_id = song_id.parent("div.pull-right").next("a").attr("data-id");
 		delete_song_data = { playlistId : playlist_id, songId : song_id };
 
-		var base_url = window.location.origin;
+		//var base_url = window.location.origin;
+		
 		$.ajax({
-	        url: base_url+"/playlist/remove_song_from_playlist",
+	        url: BASE_URL+"/playlist/remove_song_from_playlist",
 	        type: "post",
 	        data: delete_song_data,
 	        success: function (response) {
@@ -97,8 +108,15 @@ $(document).on('click', '.playSong', function() {
 		var song = $(this).attr('data-song');
 		var id = $(this).attr('data-id');
 		var image = $(this).attr("data-image");
+<<<<<<< HEAD
 		var base_url = window.location.origin;
-		var current_song_image = '<img src='+base_url+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+		var current_song_image = '<img src='+base_url+'/uploads/player_image/'+image+' class="r r-2x"/>';
+=======
+		
+		//var base_url = window.location.origin;
+		
+		var current_song_image = '<img src='+BASE_URL+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+>>>>>>> 98f68bade9765f84e47e98ccd297ac2ffa438cce
 		$(".song-img").empty();
 		$(".song-img").append(current_song_image);
 		
@@ -138,8 +156,12 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 	var image = $(this).attr('data-image');
 	var title = $(this).find('a').text();
 	$(".song-name h3").text(title);
+<<<<<<< HEAD
 	var base_url = window.location.origin;
-	var current_song_image = '<img src='+base_url+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+	var current_song_image = '<img src='+base_url+'/uploads/player_image/'+image+' class="r r-2x"/>';
+=======
+	var current_song_image = '<img src='+BASE_URL+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+>>>>>>> 98f68bade9765f84e47e98ccd297ac2ffa438cce
 	$(".song-img").empty();
 	$(".song-img").append(current_song_image);
 
@@ -168,6 +190,9 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 	<!-- / aside --> 
 	<!-- content -->
 	<div>
+	<div class="loader" style="margin: 0 auto;text-align: center;margin-right:265px;display: none">
+		<img src="<?php echo base_url()?>uploads/files/loading.gif" width="50" height="50">
+	</div>
 		<div id="content" class="app-content" role="main"> {content} </div>
 		<!-- footer -->
 		<div class="sm2-bar-ui full-width fixed player-custom" style="display: none">

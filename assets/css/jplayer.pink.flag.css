@@ -572,3 +572,20 @@ span.jp-artist {
   font-weight: bold; }
 
 /* @end */
+jp-audio {
+    width: 100% !important;
+    padding: 10px 14px 52px 20px;
+    box-sizing: border-box;
+    margin-top: -33px;
+}
+.jp-controls {
+ height: 12px;
+}
+.jp-controls button {
+     height: 20px;
+}
+.jp-volume-bar {
+ display: none;
+}
+
+

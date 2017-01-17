@@ -71,6 +71,9 @@
 			<?php }
 			}?>
 		</div>
+		<div class="loader" style="margin: 0 auto;text-align: center;display: none">
+			<img src="<?php echo base_url()?>uploads/files/loading.gif" width="200" height="200">
+		</div>
 	</div>
 	<!-- / main --> 
 	<!-- right col -->
