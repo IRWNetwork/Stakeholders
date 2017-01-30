@@ -182,6 +182,18 @@ class Content_model extends CI_Model
 		}
 		return array();
 	}
+	public function getContentByUserId($id){
+		$sSQL   =   $this->db->where("user_id",$id);
+		$query  =   $this->db->get('contents');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows())
+		{
+			$row = $query->result();
+			return $row;
+		}
+		return array();
+	}
 	
 	public function getAllData($data,$start,$limit){
 		$this->db->limit($limit, $start);
@@ -193,6 +205,28 @@ class Content_model extends CI_Model
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
 		}
+		$this->db->where($where,NULL,false);
+		$this->db->select('contents.*');
+		$query = $this->db->get('contents');
+		//echo $this->db->last_query();
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	public function getAllDataByUserId($user_id,$data,$start,$limit){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and type='". $data['type']."'";
+		}
+		$where.=" and user_id='". $user_id."'";
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*');
 		$query = $this->db->get('contents');
@@ -265,6 +299,23 @@ class Content_model extends CI_Model
 		$query  =   $this->db->get();
 		return $query->num_rows();
 	}
+	
+	public function countTotalRowsByUserId($user_id,$data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and type='". $data['type']."'";
+		}
+		$where.=" and user_id='". $user_id."'";
+		$this->db->where($where,NULL,false);
+		$this->db->select('contents.*');
+		$this->db->from('contents');
+		$query  =   $this->db->get();
+		return $query->num_rows();
+	}
 
 	public function delete($id){
 		$this->deleteFiles($id);
@@ -298,6 +349,22 @@ class Content_model extends CI_Model
 		}
 		return array();
 
+	}
+
+	public function countUserContentByIds($ids){
+		$this->db->select('user_id, type, count(*) as TOTAL ');
+		$this->db->from('contents'); 
+		$this->db->where_in('user_id',$ids);
+		//$this->db->where('contents.type',$type);
+		$this->db->group_by('user_id,type');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row;	
+		}
+		return array();
 	}
 }
 ?>

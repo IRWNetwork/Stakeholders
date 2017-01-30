@@ -9,13 +9,14 @@ class User extends MY_Controller
         parent::__construct();
 		$this->load->model('Users_model');
 		$this->load->model('Common_model');
+		$this->load->model('Content_model');
 		$this->load->model('Emailtemplates_model');
 		$this->load->library("pagination");
 		$this->load->library('ion_auth');
 		//$this->load->library('Phpbb_bridge');
     }
 	public function index() {
-		ciredirect(site_url('user/login'), 'refresh');
+		redirect(site_url('user/login'), 'refresh');
 	}
 	
 	public function phpbb_login(){
@@ -53,7 +54,7 @@ class User extends MY_Controller
 		
 		
 		if ($this->ion_auth->logged_in()) {
-			ciredirect(site_url('/'), 'refresh');
+			redirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'User Login';
@@ -106,7 +107,22 @@ class User extends MY_Controller
 						$this->session->set_userdata(
 							'profile_pic',
 							$user->picture);
-					ciredirect(site_url('/'), 'refresh');
+
+					$this->session->set_userdata(
+							'password',
+							$password
+					);
+
+					$_SESSION['customer_id'] =  $user->id;
+					//echo "<pre>"; print_r($_SESSION);exit;
+					setcookie('customer_id', $user->id, time()+30*3600*24, '/');
+					//print_r($_COOKIE['customer_id']);exit;
+					// 	$this->session->set_userdata(
+					// 		'profile_pic',
+					// 		$user->picture);
+				 // print_r($_SESSION);
+					// die();
+					redirect(site_url('/'), 'refresh');
 				} else {
 					$this->session->set_flashdata(
 						'error',
@@ -119,16 +135,18 @@ class User extends MY_Controller
 		$this->load->view('user/login',$this->data);
 	}
 	
-	function register(){
+	function register($flag=-1){
 		if ($this->ion_auth->logged_in()) {
-			ciredirect(site_url('/'), 'refresh');
+			redirect(site_url('/'), 'refresh');
 		}
-		
-		$this->data['page_title'] 	= 'User Registeration';
+		//die($index);
+		$this->data['page_title']   = 'User Registeration';
 		$this->data['page_heading'] = 'User Registeration';
-		
+		$this->data['flag']		 = $flag; 
+		//print_r( $this->input->post()); die();
 		if($this->input->post()) {
-			$rules = array(
+			if($this->input->post('flag')==2){
+				$rules = array(
               	array(
                      'field'   => 'firstname',
                      'label'   => 'First Name',
@@ -149,12 +167,78 @@ class User extends MY_Controller
                      'label'   => 'Password',
                      'rules'   => 'trim|required'
                 ),
+				array(
+						 'field'   => 'confirmPassword',
+						 'label'   => 'Confirm Password',
+						 'rules'   => 'trim|required|matches[password]'
+					),
                	array(
                      'field'   => 'terms',
                      'label'   => 'Terms',
                      'rules'   => 'trim|required'
+                ),
+               	array(
+                     'field'   => 'brand',
+                     'label'   => 'Brand',
+                     'rules'   => 'trim|required'
+                ),
+               	array(
+                     'field'   => 'channel',
+                     'label'   => 'Channel',
+                     'rules'   => 'trim|required'
+                ),
+               	array(
+                     'field'   => 'salespitch',
+                     'label'   => 'Sales Pitch',
+                     'rules'   => 'trim|required'
                 )
+				
             );
+
+				
+			}
+			else if($this->input->post('flag') ==1){
+				$rules = array(
+					array(
+						 'field'   => 'firstname',
+						 'label'   => 'First Name',
+						 'rules'   => 'trim|required'
+					),
+					array(
+						 'field'   => 'lastname',
+						 'label'   => 'Last Name',
+						 'rules'   => 'trim|required'
+					),
+					array(
+						 'field'   => 'email',
+						 'label'   => 'Email',
+						 'rules'   => 'trim|required|valid_email'
+					),
+					array(
+						 'field'   => 'password',
+						 'label'   => 'Password',
+						 'rules'   => 'trim|required'
+					),
+					array(
+						 'field'   => 'confirmPassword',
+						 'label'   => 'Confirm Password',
+						 'rules'   => 'trim|required|matches[password]'
+					),
+					array(
+						 'field'   => 'terms',
+						 'label'   => 'Terms',
+						 'rules'   => 'trim|required'
+					)
+					
+				);
+			}
+			else{
+				$this->session->set_flashdata(
+						'error',
+						'Please Select Type'
+				);
+				redirect(site_url('/user/type'), 'refresh'); 
+			}
 
 			$this->form_validation->set_rules($rules);
 
@@ -163,23 +247,43 @@ class User extends MY_Controller
 				$password 	= $this->input->post('password');
 				$email 		= $this->input->post('email');
 				$username 	= $this->input->post('email');
-				$additional_data = array(
-										'first_name' 	=> $this->input->post('firstname'),
-										'last_name' 	=> $this->input->post('lastname'),
-									);
+				if($flag==2){
+					$additional_data = array(
+						'first_name'   => $this->input->post('firstname'),
+						'last_name' 	=>  $this->input->post('lastname'),
+						'brand_name'   =>  $this->input->post('brand'),
+						'channel_name' =>  $this->input->post('channel'),
+						'sales_pitch'  =>  $this->input->post('salespitch'),
+						'channel_subscription_price' =>  floatval($this->input->post('channel_price')),
+						'description' =>  floatval($this->input->post('description'))
+					);
+				}
+				else{
+					$additional_data = array(
+						'first_name'   => $this->input->post('firstname'),
+						'last_name' 	=>  $this->input->post('lastname')
+					);
+				}
 				if (!$this->ion_auth->email_check($email))
 				{
-					$group_name = array(2);
-					$this->ion_auth->register($username, $password, $email, $additional_data, $group_name);
+					$group_name = array($this->input->post('flag')+1);
+					$last_id = $this->ion_auth->register($username, $password, $email, $additional_data, $group_name,$flag);
 					
 					//$this->Phpbb->user_add($identity,$identity,$password);
 					
+					//salted password for OC customers
+					$salt = substr(md5(uniqid(rand(), true)), 0, 9);
+					$oc_password = sha1($salt . sha1($salt . sha1($password)));
+					$first_name = $this->input->post('firstname');
+					$last_name = $this->input->post('lastname');
+
+					$this->register_oc($last_id, $first_name, $last_name, $email, $salt ,$oc_password);
 					
 					$this->session->set_flashdata(
 						'success',
 						'Register Successfully'
 					);
-					ciredirect("home/");
+					redirect("home/");
 					
 				}else{
 					$this->session->set_flashdata(
@@ -198,20 +302,46 @@ class User extends MY_Controller
 		
 		$this->load->view('user/register',$this->data);
 	}
+	function register_oc($last_id, $first_name, $last_name,$email ,$salt , $oc_password) {
+		$data = array(
+			'customer_id' => $last_id,
+			'firstname'	=> $first_name,
+			'lastname'	=> $last_name,
+			'email'	=> $email,
+			'salt'	=> $salt,
+			'password'	=>	$oc_password,
+			'status'	=> 1,
+			'approved'	=> 1,
+			'date_added'	=> date('Y-m-d H:i:s')
+		);
+		$this->db->insert('oc_customer', $data); 
+	}
+	public function type(){
+	//die("afdf");
+		//if ($this->ion_auth->logged_in()) {
+	//		redirect(site_url('/'), 'refresh');
+	//	}
+		
+		$this->data['page_title'] 	= 'User Type';
+		$this->data['page_heading']  = 'User Type';
+		
+		$this->load->view('user/type',$this->data);
+	}
 	
 	
 	function logout() {   //Basic Ion_Auth Logout function
 
 		$this->ion_auth->logout();
+		setcookie('customer_id', '', 1, '/');
 
-		ciredirect('/');
+		redirect('/');
 		
 	}
 	
 	public function forgotpassword() {
 		
 		if ($this->ion_auth->logged_in()) {
-			ciredirect(site_url('/'), 'refresh');
+			redirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'Forgot Password';
@@ -259,14 +389,14 @@ class User extends MY_Controller
 						'success',
 						'A password reset email has been sent to you'
 					);
-					ciredirect(base_url().'user/forgotpassword', 'refresh');
+					redirect(base_url().'user/forgotpassword', 'refresh');
 				} else {
 					$this->session->set_flashdata(
 							'error',
 							'Email not found'
 					);
 					
-					ciredirect(base_url().'user/forgotpassword', 'refresh');
+					redirect(base_url().'user/forgotpassword', 'refresh');
 				}				
 			}
 		}
@@ -277,7 +407,7 @@ class User extends MY_Controller
 	public function reset_password($code) {
 		
 		if ($this->ion_auth->logged_in()) {
-			ciredirect(site_url('/'), 'refresh');
+			redirect(site_url('/'), 'refresh');
 		}
 		
 		$this->data['page_title'] 	= 'Reset Password';
@@ -317,12 +447,12 @@ class User extends MY_Controller
 							//if the password was successfully changed
 							$this->session->set_flashdata('success', $this->ion_auth->messages());
 							//$this->logout();
-							ciredirect(site_url(''), 'refresh');
+							redirect(site_url(''), 'refresh');
 						}
 						else
 						{
 							$this->session->set_flashdata('error', $this->ion_auth->errors());
-							ciredirect(site_url('user/reset_password') . '/'.$code, 'refresh');
+							redirect(site_url('user/reset_password') . '/'.$code, 'refresh');
 						}
 					}
 				}
@@ -330,14 +460,14 @@ class User extends MY_Controller
 		} else {
 			//if the code is invalid then send them back to the forgot password page
 			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			ciredirect(site_url('users'), 'refresh');
+			redirect(site_url('users'), 'refresh');
 		}
 		$this->load->view('user/resetpassword',$this->data);
 	}
 	
 	public function changepassword() {
 		if (!$this->ion_auth->logged_in()) {
-			ciredirect(site_url(''), 'refresh');
+			redirect(site_url(''), 'refresh');
 		}
 		$this->data['page_title'] 	= 'Change Password';
 		$this->data['page_heading'] 	= 'Change Password';
@@ -368,12 +498,12 @@ class User extends MY_Controller
 					//if the password was successfully changed
 					$this->session->set_flashdata('success', "Password updated successfully");
 					//$this->logout();
-					ciredirect(site_url('user/changepassword'), 'refresh');
+					redirect(site_url('user/changepassword'), 'refresh');
 				}
 				else
 				{
 					$this->session->set_flashdata('error', $this->ion_auth->errors());
-					ciredirect(site_url('user/changepassword') . '/'.$code, 'refresh');
+					redirect(site_url('user/changepassword') . '/'.$code, 'refresh');
 				}
 			}			
 		}
@@ -384,25 +514,48 @@ class User extends MY_Controller
 	
 	public function profile() {
 		if (!$this->ion_auth->logged_in()) {
-			ciredirect(site_url(''), 'refresh');
+			redirect(site_url(''), 'refresh');
 		}
 		$this->data['page_title'] 	= 'Profile';
 		$this->data['page_heading'] 	= 'Profile';
 		
-print_r($this->session->all_userdata());
+//print_r($this->session->all_userdata());
 		if($this->input->post()) {
-			$rules = array(
-              	array(
-                     'field'   => 'first_name',
-                     'label'   => 'First Name',
-                     'rules'   => 'trim|required'
-                ),
-               	array(
-                     'field'   => 'last_name',
-                     'label'   => 'Last Name',
-                     'rules'   => 'trim|required'
-                )
-            );
+			if($this->ion_auth->user()->row()->id==3){
+				$rules = array(
+					array(
+						 'field'   => 'first_name',
+						 'label'   => 'First Name',
+						 'rules'   => 'trim|required'
+					),
+					array(
+						 'field'   => 'last_name',
+						 'label'   => 'Last Name',
+						 'rules'   => 'trim|required'
+					)
+					,
+					array(
+						 'field'   => 'channel_subscription_price',
+						 'label'   => 'Channel Subscription Price',
+						 'rules'   => 'trim|required'
+					)
+				);
+			}
+			else{
+				$rules = array(
+					array(
+						 'field'   => 'first_name',
+						 'label'   => 'First Name',
+						 'rules'   => 'trim|required'
+					),
+					array(
+						 'field'   => 'last_name',
+						 'label'   => 'Last Name',
+						 'rules'   => 'trim|required'
+					)
+				);
+
+			}
 
 			$this->form_validation->set_rules($rules);
 
@@ -410,13 +563,21 @@ print_r($this->session->all_userdata());
 				
 				$user_id = $this->ion_auth->user()->row()->id;
 				// finally change the password
-	
-				$data = array(
-							"first_name" 	=> $this->input->post('first_name'),
-							"last_name" 	=> $this->input->post('last_name'),
-							"phone" 		=> $this->input->post('phone')
-						);
-				
+			 	if($this->ion_auth->user()->row()->id==3){ 
+					$data = array(
+						"first_name" 				   => $this->input->post('first_name'),
+						"last_name" 					=> $this->input->post('last_name'),
+						"phone" 						=> $this->input->post('phone'),
+						"channel_subscription_price"   => $this->input->post('channel_subscription_price')
+					);
+				}
+				else{
+					$data = array(
+						"first_name" 				   => $this->input->post('first_name'),
+						"last_name" 					=> $this->input->post('last_name'),
+						"phone" 						=> $this->input->post('phone')
+					);
+				}
 				if(isset($_FILES['picture']) and $_FILES['picture']['name']!=''){
 					
 					$file_name = time().$_FILES['picture']['name'];
@@ -437,7 +598,7 @@ print_r($this->session->all_userdata());
 								
 				$change = $this->ion_auth->update($user_id, $data);
 				$this->session->set_flashdata('success', 'Updated successfully');
-				ciredirect(site_url('user/profile'), 'refresh');
+				redirect(site_url('user/profile'), 'refresh');
 			}
 		}
 		$this->data['user'] = $this->ion_auth->user()->row();
@@ -445,9 +606,48 @@ print_r($this->session->all_userdata());
         $this->parser->parse('template', $parser);
 	}
 	
+	public function channelmarketplace() {
+		/*if (!$this->ion_auth->logged_in()) {
+			redirect(site_url(''), 'refresh');
+		}*/
+		$this->data['page_title'] 	= 'Channel Marketplace';
+		$this->data['page_heading']  = 'Channel Marketplace';
+		$this->data['user_ids']      = $this->Users_model->getUserIdByGroupId();
+		$data   						= $this->Users_model->getUserDetailByIds( $this->data['user_ids']);
+		$contents = $this->Content_model->countUserContentByIds($this->data['user_ids']);
+	
+		$customArray = array();
+		foreach($data as $newArray){
+			$customArray [$newArray['id']] = $newArray;
+		}
+		
+		foreach($contents as $totals){
+			$customArray[$totals['user_id']][$totals['type'].'Total'] = $totals['TOTAL']; 
+		}
+		$this->data['ContentList'] = $customArray;
+		//print_r($this->data['ContentList']);
+		//print_r($customArray); 
+		//die();
+		
+		$parser['content']      = $this->load->view('user/channel_area',$this->data,true);
+        $this->parser->parse('template', $parser);
+	}
+	public function channeldescription($id=NULL){
+		$this->data['page_title']    = "Channel Description";
+		$this->data['page_heading']  = "Channel Description";
+		$this->data['channelDetail'] = $this->Users_model->getUserDetailById($id);
+		$this->data['contents']      = $this->Content_model->getContentByUserId($id);
+		//print_r($this->data['channelDetail']); echo "<hr>";
+		//print_r($this->data['contents']);
+		 //die();
+        $parser['content']	       =  $this->load->view('user/channel_description',$this->data,TRUE);
+        $this->parser->parse('template', $parser);
+	}
+
+	
 	public function upgradepackage() {
 		if (!$this->ion_auth->logged_in()) {
-			ciredirect(site_url(''), 'refresh');
+			redirect(site_url(''), 'refresh');
 		}
 		$this->data['page_title'] 	= 'Upgrade Package';
 		$this->data['page_heading'] 	= 'Upgrade Package';
@@ -488,10 +688,10 @@ print_r($this->session->all_userdata());
 					
 					$this->ion_auth->update($user_id,$data_update);
 					$this->session->set_flashdata('success', "Package updated successfully");
-					ciredirect(base_url()."user/upgradepackage");
+					redirect(base_url()."user/upgradepackage");
 				}else{
 					$this->session->set_flashdata('error', $result->message);
-					ciredirect(base_url()."user/upgradepackage");
+					redirect(base_url()."user/upgradepackage");
 				}
 			
 		}
@@ -508,7 +708,7 @@ print_r($this->session->all_userdata());
 	function favorite(){
 		
 		if (!$this->ion_auth->logged_in()) {
-			ciredirect(site_url('/'), 'refresh');
+			redirect(site_url('/'), 'refresh');
 		}
 		
 		$user_id 	= $this->ion_auth->user()->row()->id;

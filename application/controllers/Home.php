@@ -14,7 +14,7 @@ class Home extends MY_Controller
 	
 	public function home2(){
 		$this->data['page_title'] 	= 'Home';
-		$this->data['page_heading'] 	= 'Home';
+		$this->data['page_heading']  = 'Home';
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
         $arr['name']           = $search;
 		$config 			   = array();

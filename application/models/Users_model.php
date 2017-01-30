@@ -54,12 +54,11 @@ class Users_model extends CI_Model
 		$row    = $result->result();
 		return $row[0]->firstname." ".$row[0]->lastname;
 	}
-
-
+	
 	public function getAllUsers($data,$start,$limit){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
-		if($data['name']!=''){
+		if(isset($data['name'])){
 			$this->db->like('users.firstname', $data['name']);
 			$this->db->or_like('users.lastname', $data['name']);
 			$this->db->or_like('users.email', $data['name']);
@@ -74,7 +73,7 @@ class Users_model extends CI_Model
 		}
 		return array();
 	}
-
+	
 	public function getLatestUsersForDashboard(){
 		$this->db->limit(5, 0);
 		$this->db->order_by('id','desc');
@@ -777,6 +776,72 @@ class Users_model extends CI_Model
 		$result = $this->db->query($query);
 		$row    = $result->result();
 		return $row[0]->AUTO_INCREMENT;
+	}
+	// by me 
+	public function getUserIdByGroupId(){
+		$query  = "SELECT user_id FROM users_groups WHERE group_id = 3";
+		$result = $this->db->query($query);
+		$rows = $result->result_array();
+		foreach( $rows as $values){
+			$new[] = $values['user_id'];
+		}
+		//print_r($new); die();
+		return $new;
+	}
+	
+	public function getUserDetailByIds($ids){
+		$this->db->select('id, channel_subscription_price, channel_name, picture');
+		$this->db->where_in('id',$ids);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row;	
+		}
+		return array();
+	}
+	
+	public function getUserDetailById($id){
+		$this->db->select('channel_subscription_price, channel_name, description, picture, sales_pitch');
+		$this->db->where('id',$id);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
+	
+	
+	
+	
+	public function countTotalRows($data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
+		
+		$this->db->where($where,NULL,false);
+		$this->db->select('users.*');
+		$this->db->from('users');
+		$query  =  $this->db->get();
+		return $query->num_rows();
+	}
+	public function email_check($email, $id )
+	{
+		$where=" email= '".$email."' and id !=".$id;
+		$this->db->where($where,NULL,false);
+		$this->db->select('users.*');
+		$this->db->from('users');
+		$query  =  $this->db->get();
+		if( $query->num_rows()){
+		 return true;
+		}
+		return false;
 	}
 }
 ?>

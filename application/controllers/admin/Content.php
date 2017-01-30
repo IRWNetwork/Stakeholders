@@ -13,7 +13,7 @@ class Content extends CI_Controller
 		$this->load->model("Common_model");
 		$this->gallery_path = realpath(APPPATH . '../uploads');
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
-			ciredirect(site_url('admin/'), 'refresh');
+			redirect(site_url('admin/'), 'refresh');
 		}
     }
     
@@ -123,6 +123,7 @@ class Content extends CI_Controller
 								"is_featured" 	=> $is_featured,
 								"file" 			=> $file_name,
 								"picture" 		=> $picture_name,
+								"user_id"	   => $this->ion_auth->user()->row()->id
 							);
 				$result = $this->Content_model->save($data);
 				if($result){
@@ -130,7 +131,7 @@ class Content extends CI_Controller
 							'success',
 							"Added Successfully"
 					);
-					ciredirect(base_url()."admin/content");
+					redirect(base_url()."admin/content");
 				}else{
 					$data['contentRow'] = $this->input->post();
 				}
@@ -231,7 +232,7 @@ class Content extends CI_Controller
 							'success',
 							"Updated Successfully"
 					);
-					ciredirect(base_url()."admin/content");
+					redirect(base_url()."admin/content");
 				}
 			}
 		}
@@ -249,6 +250,6 @@ class Content extends CI_Controller
 						'success',
 						"Deleted Successfully"
 				);
-		ciredirect(base_url().'admin/content');
+		redirect(base_url().'admin/content');
 	}
 }

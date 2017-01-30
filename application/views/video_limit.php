@@ -64,7 +64,7 @@
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x"></a> </div>
+						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/lisitng/<?php echo $row->picture?>" alt="" class="img-full r r-2x"></a> </div>
 					<div class="padder-v"> <a href="<?php echo $url;?>"><?php echo $row->title;?></a> </div>
 				</div>
 			</div>

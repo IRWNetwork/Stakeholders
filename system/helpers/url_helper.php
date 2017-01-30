@@ -514,7 +514,7 @@ if ( ! function_exists('url_title'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('ciredirect'))
+if ( ! function_exists('redirect'))
 {
 	/**
 	 * Header Redirect
@@ -529,7 +529,7 @@ if ( ! function_exists('ciredirect'))
 	 * @param	int	$code	HTTP Response status code
 	 * @return	void
 	 */
-	function ciredirect($uri = '', $method = 'auto', $code = NULL)
+	function redirect($uri = '', $method = 'auto', $code = NULL)
 	{
 		if ( ! preg_match('#^(\w+:)?//#i', $uri))
 		{

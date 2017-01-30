@@ -35,6 +35,12 @@ define('FOPEN_WRITE_CREATE', 'ab');
 define('FOPEN_READ_WRITE_CREATE', 'a+b');
 define('FOPEN_WRITE_CREATE_STRICT', 'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
+define('TBL_CATEGORIES', 'cibb_categories');
+define('TBL_POSTS',      'cibb_posts');
+define('TBL_THREADS',    'cibb_threads');
+define('TBL_USERS',      'users');
+define('TBL_ROLES',      'cibb_roles');
+define('CIBB_TITLE',     ' &mdash; CIBB Forum');
 
 /*
 |--------------------------------------------------------------------------

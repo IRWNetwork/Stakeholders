@@ -28,6 +28,13 @@
 							<li> <a href="<?php echo base_url()?>admin/content/addcontent"> <span>Add Content</span> </a> </li>
 						</ul>
 					</li>
+                    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Channels</span> </a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/channel"> <span>Channels</span> </a> </li>
+							<li> <a href="<?php echo base_url()?>admin/channel/addchannel"> <span>Add Channel</span> </a> </li>
+						</ul>
+					</li>
+
 					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Map</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/events"> <span>Events</span> </a> </li>
@@ -51,7 +58,7 @@
 
 					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Analytics</span> </a>
 						<ul class="nav nav-sub dk">
-							<li> <a href="<?php echo base_url()?>admin/stats/Analytics"><span>Analytics</span> </a></li>
+							<!--<li> <a href=""><span>Analytics</span> </a></li>-->
 						</ul>
 					</li>
 				</ul>

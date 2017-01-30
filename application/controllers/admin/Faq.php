@@ -10,7 +10,7 @@ class Faq extends CI_Controller
 		$this->load->model('Common_model');
 		$this->load->library('ion_auth');
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
-			ciredirect(site_url('admin/'), 'refresh');
+			redirect(site_url('admin/'), 'refresh');
 		}
     }
     
@@ -54,7 +54,7 @@ class Faq extends CI_Controller
 				
 				$user_record			=	$this->Faq_model->save($array);
 				if($user_record) {
-					ciredirect('admin/faq?msg=Added Successfully');
+					redirect('admin/faq?msg=Added Successfully');
 				}else {
 					$data['error']	    = 'Some Error try later';
 					$data['questionDetail'] = $_REQUEST;
@@ -78,7 +78,7 @@ class Faq extends CI_Controller
 		if($pageRow) {
 			$data['questionDetail']  = $pageRow;
 		}else {
-			ciredirect(base_url()."admin/faq?msg=Invalid Page");
+			redirect(base_url()."admin/faq?msg=Invalid Page");
 		}
 		$data['page_title']       = 'Edit FAQ';
 		$data['page_heading']     = 'Edit FAQ';
@@ -106,7 +106,7 @@ class Faq extends CI_Controller
 						 );
 				$user_record	=	$this->Faq_model->update($array,$this->input->post('id'));
 				if($user_record) {
-					ciredirect('admin/faq?msg=Updated Successfully');
+					redirect('admin/faq?msg=Updated Successfully');
 				}else {
 					$data['error']	    = 'Some Error try later';
 					$data['questionDetail'] = $_REQUEST;
@@ -123,6 +123,6 @@ class Faq extends CI_Controller
 
 	public function delete($id) {
 		$data['user'] = $this->Faq_model->delete($id);
-		ciredirect('admin/faq?msg=Deleted Successfully');
+		redirect('admin/faq?msg=Deleted Successfully');
 	}
 }

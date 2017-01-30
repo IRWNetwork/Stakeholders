@@ -29,7 +29,14 @@
 										<input type="text" class="form-control" name="phone" value="<?php echo $user->phone?>" placeholder="Phone">
 									</div>
 								</div>
-                                
+                                <?php if($this->ion_auth->user()->row()->id==3){ ?>
+                                <div class="form-group">
+									<label class="col-lg-3 control-label">Channel Subscription Price</label>
+									<div class="col-lg-6">
+										<input type="text" class="form-control" name="channel_subscription_price" value="<?php echo $user->channel_subscription_price;?>" placeholder="Channel Subscription Price">
+									</div>
+								</div>
+                                <?php }?>
                                 <div class="form-group">
 									<label class="col-lg-3 control-label">Profile Picture</label>
 									<div class="col-lg-6">

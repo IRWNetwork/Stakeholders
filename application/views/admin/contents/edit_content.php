@@ -64,6 +64,7 @@
 										</label>
 									</div>
 								</div>
+                                
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Is Featured</label>
 									<div class="col-lg-6">
@@ -78,7 +79,7 @@
 									<div class="col-sm-9">
 										<input type="file" name="picture" /><br />
 										<?php if($contentRow['picture']!=''){?>
-										<img src="<?php echo base_url()?>uploads/files/<?php echo $contentRow['picture']?>" style="width:100px" /><br />
+										<img src="<?php echo base_url()?>uploads/admin_listing/<?php echo $contentRow['picture']?>" style="width:100px" /><br />
 										<span><a href=""><i class="fa fa-trash"></i>&nbsp;Delete</a></span>
 										<?php }?>
 									</div>

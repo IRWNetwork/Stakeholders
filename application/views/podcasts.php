@@ -1,4 +1,5 @@
-<!-- main -->
+<div class="hbox hbox-auto-xs hbox-auto-sm"> 
+	<!-- main -->
 	<div class="col wrapper-lg">
 		<h3 class="font-thin m-t-n-xs m-b">Podcasts</h3>
 		<div class="row row-sm">
@@ -96,7 +97,7 @@
 			<div class="m-b-sm text-md">Top Plays</div>
 			<ul class="list-group no-bg no-borders pull-in">
 				<?php $i=0;foreach($featured as $row){$url = $this->Common_model->getUrl($row);$i++; if($i==5) break;?>
-				<li class="list-group-item"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" class="r" style="width:30px"> </a>
+				<li class="list-group-item"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" class="r" style="width:30px"> </a>
 					<div class="clear">
 						<div><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,15);?></a></div>
 					</div>
@@ -140,9 +141,6 @@ if ($(window).scrollTop() + $(window).height() == $(document).height()) {
     var value = parseInt(document.getElementById('limit_count').value, 10);
     var max_limit = $("#max_limit").val();
 		value = isNaN(value) ? 0 : value;
-	    
-		//var base_url = window.location.origin;
-	    //my_url = base_url+"/podcasts/podcasts_ajax/"+value;
 		my_url = BASE_URL+"/podcasts/podcasts_ajax/"+value;
 		if(value){
 			$.ajax({

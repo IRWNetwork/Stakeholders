@@ -1,6 +1,31 @@
 <?php
 class ControllerStartupStartup extends Controller {
 	public function index() {
+
+		//echo "<pre>"; print_r($_COOKIE);exit;
+		if (isset($_COOKIE['customer_id'])) {
+			$query = "SELECT oc_customer.customer_id, oc_customer.customer_group_id, oc_customer.email, oc_address.* FROM oc_customer  LEFT JOIN oc_address
+				ON oc_customer.customer_id = oc_address.customer_id
+				WHERE oc_customer.customer_id = ".$_COOKIE['customer_id'];
+				$query = $this->db->query($query);
+				$data = $query->row;
+				//echo "<pre>"; print_r($data);exit;
+				//echo "<pre>"; print_r($customer_query);die();
+				if (count($data > 0)) {
+					$this->session->data['customer_id'] = isset($data['customer_id']) ? $data['customer_id'] :  $_COOKIE['customer_id'];
+					$this->session->data['firstname'] = isset($data['firstname']) ? $data['firstname'] : '' ;
+					$this->session->data['lastname'] = isset($data['lastname']) ? $data['lastname'] : '';
+					$this->session->data['customer_group_id'] = isset($data['customer_group_id']) ? $data['customer_group_id'] : '';
+					$this->session->data['email'] = isset($data['email']) ? $data['email'] : '';
+					$this->session->data['company'] = isset($data['company']) ? $data['company'] : '';
+					$this->session->data['address_1'] = isset($data['address_1']) ? $data['address_1'] : '';
+					$this->session->data['address_2'] = isset($data['address_2']) ? $data['address_2'] : '';
+					$this->session->data['city'] = isset($data['city']) ? $data['city'] : '';
+					$this->session->data['postcode'] = isset($data['postcode']) ? $data['postcode'] : '';
+					$this->session->data['zone_id'] = isset($data['zone_id']) ? $data['zone_id'] : '';
+				}
+				//echo "<pre>"; print_r($_SESSION);die();
+		}
 		// Store
 		if ($this->request->server['HTTPS']) {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store WHERE REPLACE(`ssl`, 'www.', '') = '" . $this->db->escape('https://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");

@@ -16,7 +16,7 @@ class Users extends CI_Controller
     
 	public function index() {
 		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(1)) {
-			ciredirect(site_url('admin/dashboard'), 'refresh');
+			redirect(site_url('admin/dashboard'), 'refresh');
 		}
 		
 		$data['page_title'] 	= 'Admin Login';
@@ -49,13 +49,13 @@ class Users extends CI_Controller
 							'uname',
 							$user->first_name." ".$user->last_name
 					);
-					ciredirect(site_url('admin/dashboard'), 'refresh');
+					redirect(site_url('admin/dashboard'), 'refresh');
 				} else {
 					$this->session->set_flashdata(
 						'error',
 						'Invalid Email or Password'
 					);
-					ciredirect('admin/');
+					redirect('admin/');
 				}
 			}
 		}
@@ -68,14 +68,14 @@ class Users extends CI_Controller
 
 		$this->ion_auth->logout();
 
-		ciredirect('admin/');
+		redirect('admin/');
 		
 	}
 	
 	public function forgotpassword() {
 		
 		if ($this->ion_auth->logged_in()) {
-			ciredirect(site_url('admin/dashboard'), 'refresh');
+			redirect(site_url('admin/dashboard'), 'refresh');
 		}
 		
 		$data['page_title'] 	= 'Forgot Password';
@@ -123,14 +123,14 @@ class Users extends CI_Controller
 						'success',
 						'A password reset email has been sent to you'
 					);
-					ciredirect(base_url().'admin/users/forgotpassword', 'refresh');
+					redirect(base_url().'admin/users/forgotpassword', 'refresh');
 				} else {
 					$this->session->set_flashdata(
 							'error',
 							'Email not found'
 					);
 					
-					ciredirect(base_url().'admin/users/forgotpassword', 'refresh');
+					redirect(base_url().'admin/users/forgotpassword', 'refresh');
 				}				
 			}
 		}
@@ -141,7 +141,7 @@ class Users extends CI_Controller
 	public function reset_password($code) {
 		
 		if ($this->ion_auth->logged_in() && $this->ion_auth->in_group(1)) {
-			ciredirect(site_url('admin/dashboard'), 'refresh');
+			redirect(site_url('admin/dashboard'), 'refresh');
 		}
 		
 		$data['page_title'] 	= 'Reset Password';
@@ -181,12 +181,12 @@ class Users extends CI_Controller
 							//if the password was successfully changed
 							$this->session->set_flashdata('success', $this->ion_auth->messages());
 							//$this->logout();
-							ciredirect(site_url('admin/'), 'refresh');
+							redirect(site_url('admin/'), 'refresh');
 						}
 						else
 						{
 							$this->session->set_flashdata('error', $this->ion_auth->errors());
-							ciredirect(site_url('admin/users/reset_password') . '/'.$code, 'refresh');
+							redirect(site_url('admin/users/reset_password') . '/'.$code, 'refresh');
 						}
 					}
 				}
@@ -194,14 +194,14 @@ class Users extends CI_Controller
 		} else {
 			//if the code is invalid then send them back to the forgot password page
 			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			ciredirect(site_url('users'), 'refresh');
+			redirect(site_url('users'), 'refresh');
 		}
 		$this->load->view('admin/user/resetpassword',$data);
 	}
 	
 	public function changepassword() {
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
-			ciredirect(site_url('admin/'), 'refresh');
+			redirect(site_url('admin/'), 'refresh');
 		}
 		$data['page_title'] 	= 'Change Password';
 		$data['page_heading'] 	= 'Change Password';
@@ -232,12 +232,12 @@ class Users extends CI_Controller
 					//if the password was successfully changed
 					$this->session->set_flashdata('success', "Password updated successfully");
 					//$this->logout();
-					ciredirect(site_url('admin/users/changepassword'), 'refresh');
+					redirect(site_url('admin/users/changepassword'), 'refresh');
 				}
 				else
 				{
 					$this->session->set_flashdata('error', $this->ion_auth->errors());
-					ciredirect(site_url('admin/users/changepassword') . '/'.$code, 'refresh');
+					redirect(site_url('admin/users/changepassword') . '/'.$code, 'refresh');
 				}
 			}			
 		}
@@ -248,7 +248,7 @@ class Users extends CI_Controller
 	
 	public function profile() {
 		if (!$this->ion_auth->logged_in() && !$this->ion_auth->in_group(1)) {
-			ciredirect(site_url('admin/'), 'refresh');
+			redirect(site_url('admin/'), 'refresh');
 		}
 		$data['page_title'] 	= 'Profile';
 		$data['page_heading'] 	= 'Profile';
@@ -288,12 +288,12 @@ class Users extends CI_Controller
 					//if the password was successfully changed
 					$this->session->set_flashdata('success', "Updated successfully");
 					//$this->logout();
-					ciredirect(site_url('admin/users/profile'), 'refresh');
+					redirect(site_url('admin/users/profile'), 'refresh');
 				}
 				else
 				{
 					$this->session->set_flashdata('error', $this->ion_auth->errors());
-					ciredirect(site_url('admin/users/profile') . '/'.$code, 'refresh');
+					redirect(site_url('admin/users/profile') . '/'.$code, 'refresh');
 				}
 			}			
 		}
@@ -301,5 +301,7 @@ class Users extends CI_Controller
 		$parser['content'] = $this->load->view('admin/user/profile',$data,true);
         $this->parser->parse('admin/template', $parser);
 	}
+	
+	
 
 }

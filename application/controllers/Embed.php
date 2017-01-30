@@ -65,7 +65,6 @@ class Embed extends MY_Controller
 			$url = $this->ipinfo->getURL();
 			$info = $this->ipinfo->getCity($userIP);
 			$infoArr = json_decode($info);
-
 			$data = array();
 			$data['ip'] 			= $infoArr->ipAddress;
 			$data['country']   	   = $infoArr->countryName; 
@@ -74,11 +73,11 @@ class Embed extends MY_Controller
 			$data['broswer']	   = $browser;
 			$data['referral_path'] = $url;
 			$data['postal_code']   = $infoArr->countryCode;
-			if($this->input->post())
 			$data['source']		= "";
 			$data['type']		  = $content_row['type'];
 			$data['type_id']	   = $content_row['id'];
 			$data['episode']	   = $content_row['title'];
+			$data['author_id']	 = $content_row['user_id'];
 			$data['date']		  = date("Y-m-d");
 			$this->Analytics_model->saveAnalytics($data);
 

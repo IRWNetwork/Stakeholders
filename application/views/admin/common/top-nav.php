@@ -22,7 +22,9 @@
 	                
                 	<?php if($this->ion_auth->user()->row()->id==7){ ?>
  					<img src="<?php echo base_url()?>assets/images/LForRDFO.jpg" alt="..."> <i class="on md b-white bottom"></i> </span> <span class="hidden-sm hidden-md">Nick Hausman</span> <b class="caret"></b> </a> 
-                    <?php } else{  ?>
+                    <?php } else if($this->ion_auth->user()->row()->id==15){  ?>
+ 					<img src="<?php echo base_url()?>assets/images/Eric.jpg" alt="..."> <i class="on md b-white bottom"></i> </span> <span class="hidden-sm hidden-md">Eric</span> <b class="caret"></b> </a> 
+					<?php }else{?>
                 	<img src="<?php echo base_url()?>assets/images/a0.jpg" alt="..."> <i class="on md b-white bottom"></i> </span> <span class="hidden-sm hidden-md">M.G. Dockery</span> <b class="caret"></b> </a> 
                     <?php } ?>
                 <!-- dropdown -->

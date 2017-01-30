@@ -45,8 +45,11 @@
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="page/fantasy-league"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li>
 					<li ui-sref-active="active"> <a href="<?php echo base_url()?>store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
-					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
-					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="faq"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
+					<!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>-->
+					<li ui-sref-active="active"> <a href="<?php echo base_url()?>forum/thread" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
+                    <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="faq"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
+                   <!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="user/channelmarketplace"> <i class="icon-list icon"></i> <span>Channel Marketplace</span> </a> </li>-->
+                   <li ui-sref-active="active"> <a href="<?php echo base_url()?>user/channelmarketplace" > <i class="icon-list icon"></i> <span>Channel Marketplace</span> </a> </li>
 				</ul>
 				<ul class="nav load_data_ajax">
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>YOUR VAULT</span> </li>
@@ -55,9 +58,11 @@
 					<li ui-sref-active="active"> <a href="#/music/playlist/history"> <i class="icon-clock icon"></i> <span>History</span> </a> </li>
 					<?php if($this->ion_auth->logged_in()){?>
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>Playlists</span> </li>
-					<?php foreach($playlists as $playlist_row){?>
+                    <?php 
+					if(isset($playlists)){
+					 foreach($playlists as $playlist_row){?>
 					<li ui-sref-active="active"> <a href="<?php echo base_url()?>playlist/<?php echo $playlist_row->id?>"> <b class="badge bg-info pull-right"><?php echo $this->Content_model->countSongsInPlaylist($user_id,$playlist_row->id)?></b> <i class="icon-playlist icon"></i> <span><?php echo $playlist_row->title?></span> </a> </li>
-					<?php }}?>
+					<?php }}}?>
 				</ul>
 				<!-- / list --> 
 			</nav>

@@ -143,7 +143,6 @@ class CI_Parser {
 		$replace = array();
 		foreach ($data as $key => $val)
 		{
-
 			$replace = array_merge(
 				$replace,
 				is_array($val)

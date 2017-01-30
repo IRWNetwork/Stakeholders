@@ -873,7 +873,7 @@ class Ion_auth_model extends CI_Model
 		{
 			$this->set_error('account_creation_duplicate_identity');
 			return FALSE;
-		}
+		} 
 		elseif ( !$this->config->item('default_group', 'ion_auth') && empty($groups) )
 		{
 			$this->set_error('account_creation_missing_default_group');
@@ -915,7 +915,7 @@ class Ion_auth_model extends CI_Model
 		// filter out any data passed that doesnt have a matching column in the users table
 		// and merge the set user data and the additional data
 		$user_data = array_merge($this->_filter_data($this->tables['users'], $additional_data), $data);
-
+		//print_r($user_data); die();
 		$this->trigger_events('extra_set');
 
 		$this->db->insert($this->tables['users'], $user_data);

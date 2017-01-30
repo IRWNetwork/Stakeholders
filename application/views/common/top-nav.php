@@ -1,6 +1,3 @@
-<?php //echo '<pre>';
-// var_dump($_SESSION);
-// echo '</pre>';exit; ?>
 <header id="header" class="app-header navbar" role="menu"> 
 		<!-- navbar header -->
 		<div class="navbar-header bg-dark">
@@ -45,10 +42,11 @@
 				<li>
 					<div class="m-t-sm"> 
 						<a href="<?php echo base_url()?>user/login" class="btn btn-link btn-sm">Sign in</a> or 
-						<a href="<?php echo base_url()?>user/register" class="btn btn-sm btn-success btn-rounded m-l"><strong>Sign up</strong></a> &nbsp;
+						<a href="<?php echo base_url()?>user/type" class="btn btn-sm btn-success btn-rounded m-l"><strong>Sign up</strong></a> &nbsp;
 					</div>
 				</li>
 			</ul>
+            
 			<?php }else{?>
 			<!-- nabar right -->
 			<ul class="nav navbar-nav navbar-right">
@@ -64,6 +62,11 @@
 					<!-- dropdown -->
 					<ul class="dropdown-menu animated fadeInRight w">
 						<li> <a href="<?php echo base_url()?>user/profile">Profile</a> </li>
+                        <?php if($this->ion_auth->get_users_groups()->row()->id == 3){ ?>                        
+                            <li> <a href="<?php echo base_url()?>content">Contents</a> </li>
+                            <li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
+                             <li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>
+                        <?php } ?>
 						<li> <a href="<?php echo base_url()?>user/changepassword">Change Password </a> </li>
 						<li class="divider"></li>
 						<li> <a href="<?php echo base_url()?>user/logout">Logout</a> </li>

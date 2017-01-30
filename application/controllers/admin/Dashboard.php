@@ -25,12 +25,14 @@ class Dashboard extends CI_Controller
 	public function index()
 
 	{
+		//echo $this->ion_auth->get_users_groups()->row()->id;
+		///	die('adf');
 		if (!$this->ion_auth->logged_in() || !$this->ion_auth->in_group(1)) {
 			$this->session->set_flashdata(
 				'error',
 				"Invalid User Group"
 			);
-			ciredirect(site_url('admin/'), 'refresh');
+			redirect(site_url('admin/'), 'refresh');
 		}
 		$data['page_title'] 	= 'Dashboard';
 		$data['page_heading'] 	= 'Dashboard';
@@ -48,7 +50,7 @@ class Dashboard extends CI_Controller
 
 		$this->session->set_flashdata('success', 'Logout Successfully');
 
-		ciredirect(base_url()."user");
+		redirect(base_url()."user");
 
 	}
 

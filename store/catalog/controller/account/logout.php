@@ -1,9 +1,12 @@
 <?php
 class ControllerAccountLogout extends Controller {
 	public function index() {
+
 		if ($this->customer->isLogged()) {
 			$this->customer->logout();
-
+			setcookie('customer_id', '', 1, '/', null);
+			session_unset(); 
+			
 			unset($this->session->data['shipping_address']);
 			unset($this->session->data['shipping_method']);
 			unset($this->session->data['shipping_methods']);
