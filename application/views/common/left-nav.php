@@ -44,8 +44,8 @@
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="videos"> <i class="icon-social-youtube icon"></i> <span>Videos</span> </a> </li>
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="page/fantasy-league"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li>
-					<li ui-sref-active="active"> <a href="<?php echo base_url()?>store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
-					<!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>-->
+					<!--<li ui-sref-active="active"> <a href="<?php echo base_url()?>store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
+					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>-->
 					<li ui-sref-active="active"> <a href="<?php echo base_url()?>forum/thread" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
                     <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="faq"> <i class="fa fa-comment-o"></i> <span>FAQ</span> </a> </li>
                    <!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="user/channelmarketplace"> <i class="icon-list icon"></i> <span>Channel Marketplace</span> </a> </li>-->

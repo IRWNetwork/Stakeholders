@@ -54,6 +54,12 @@ class Users_model extends CI_Model
 		$row    = $result->result();
 		return $row[0]->firstname." ".$row[0]->lastname;
 	}
+
+	public function getAllAdmins() {
+		$query = $this->db->query('SELECT * FROM users JOIN users_groups ON users.id = users_groups.user_id WHERE users_groups.group_id=1');
+		$admins = $query->result();
+		return $admins;
+	}
 	
 	public function getAllUsers($data,$start,$limit){
 		$this->db->limit($limit, $start);

@@ -3,6 +3,7 @@ class ControllerAccountLogin extends Controller {
 	private $error = array();
 
 	public function index() {
+		//header("Location: http://irw.yourvteams.com/user/login");
 		$this->load->model('account/customer');
 		
 		if (!empty($this->request->get['token'])) {

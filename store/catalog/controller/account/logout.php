@@ -5,6 +5,7 @@ class ControllerAccountLogout extends Controller {
 		if ($this->customer->isLogged()) {
 			$this->customer->logout();
 			setcookie('customer_id', '', 1, '/', null);
+			setcookie('customer_logout', 1, time()+30*3600*24, '/');
 			session_unset(); 
 			
 			unset($this->session->data['shipping_address']);

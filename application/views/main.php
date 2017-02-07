@@ -1,3 +1,12 @@
+<?php 
+if (isset($_COOKIE['customer_logout'])) {
+	//echo 'hi';exit;
+	session_unset();
+	setcookie('customer_logout', '', 1, '/', null);
+	redirect('/');
+
+}
+?>
 <div class="hbox hbox-auto-xs hbox-auto-sm"> 
 	<!-- main -->
 	<div class="col wrapper-lg">

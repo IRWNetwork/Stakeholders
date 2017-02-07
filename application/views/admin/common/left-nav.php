@@ -28,14 +28,29 @@
 							<li> <a href="<?php echo base_url()?>admin/content/addcontent"> <span>Add Content</span> </a> </li>
 						</ul>
 					</li>
-                    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Channels</span> </a>
+                    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-video-camera"></i><span>Channels</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/channel"> <span>Channels</span> </a> </li>
 							<li> <a href="<?php echo base_url()?>admin/channel/addchannel"> <span>Add Channel</span> </a> </li>
 						</ul>
 					</li>
 
-					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Map</span> </a>
+					<li>
+						<a href class="auto">
+							<span class="pull-right text-muted">
+								<i class="fa fa-fw fa-angle-right text"></i>
+								<i class="fa fa-fw fa-angle-down text-active"></i>
+							</span>
+							<i class="fa fa-user-md"></i>
+							<span>Admins</span>
+						</a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/users/admins"> <span>Admins</span> </a> </li>
+							<li> <a href="<?php echo base_url()?>admin/users/add_admin"> <span>Add Admin</span> </a> </li>
+						</ul>
+					</li>
+
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-map-marker" aria-hidden="true"></i> <span>Map</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/events"> <span>Events</span> </a> </li>
 							<li> <a href="<?php echo base_url()?>admin/events/add"> <span>Add Event</span> </a> </li>
@@ -43,20 +58,21 @@
 							<li> <a href="<?php echo base_url()?>admin/categories/add"> <span>Add Category</span> </a> </li>
 						</ul>
 					</li>
-					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Pages</span> </a>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+<span>Pages</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/pages"> <span>Pages</span> </a> </li>
 							<li> <a href="<?php echo base_url()?>admin/pages/add"> <span>Add Page</span> </a> </li>
 						</ul>
 					</li>
-					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>FAQ</span> </a>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="fa fa-question" aria-hidden="true"></i> <span>FAQ</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/faq"> <span>FAQ</span> </a> </li>
 							<li> <a href="<?php echo base_url()?>admin/faq/add"> <span>Add FAQ</span> </a> </li>
 						</ul>
 					</li>
 
-					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Analytics</span> </a>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="fa fa-flask" aria-hidden="true"></i> <span>Analytics</span> </a>
 						<ul class="nav nav-sub dk">
 							<!--<li> <a href=""><span>Analytics</span> </a></li>-->
 						</ul>

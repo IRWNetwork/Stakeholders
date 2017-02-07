@@ -167,3 +167,19 @@
 2017-01-23 20:09:03 - PHP Warning:  imagejpeg(/var/www/html/irw/store/image/cache/catalog/demo/compaq_presario-182x182.jpg): failed to open stream: Permission denied in /var/www/html/irw/store/system/library/image.php on line 64
 2017-01-24 14:11:35 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_qdom54hrpot30fvug0l4d39c46, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
 2017-01-24 14:11:36 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_qdom54hrpot30fvug0l4d39c46, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 14:16:01 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_5rcmioho2959kipbbkeb4ged53, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 14:16:01 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_5rcmioho2959kipbbkeb4ged53, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 14:16:01 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_5rcmioho2959kipbbkeb4ged53, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 17:40:01 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_5rcmioho2959kipbbkeb4ged53, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 18:20:55 - PHP Warning:  SessionHandler::write(): Session data file is not created by your uid in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 18:20:55 - PHP Warning:  session_write_close(): Failed to write session data (user). Please verify that the current setting of session.save_path is correct (/var/lib/php/sessions) in Unknown on line 0
+2017-01-25 18:37:22 - PHP Warning:  SessionHandler::write(): Session data file is not created by your uid in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 18:37:22 - PHP Warning:  session_write_close(): Failed to write session data (user). Please verify that the current setting of session.save_path is correct (/var/lib/php/sessions) in Unknown on line 0
+2017-01-25 18:38:05 - PHP Warning:  SessionHandler::write(): Session data file is not created by your uid in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-25 18:38:05 - PHP Warning:  session_write_close(): Failed to write session data (user). Please verify that the current setting of session.save_path is correct (/var/lib/php/sessions) in Unknown on line 0
+2017-01-30 18:38:58 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_kmjggo8cjp2le40rd4lg5pp4b2, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-30 18:39:03 - PHP Warning:  SessionHandler::write(): open(/var/lib/php/sessions/sess_kmjggo8cjp2le40rd4lg5pp4b2, O_RDWR) failed: Permission denied (13) in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-01-31 19:57:20 - PHP Notice:  Undefined variable: user in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8
+2017-01-31 19:57:20 - PHP Notice:  Trying to get property of non-object in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8
+2017-01-31 19:57:59 - PHP Notice:  Undefined variable: user in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8
+2017-01-31 19:57:59 - PHP Notice:  Trying to get property of non-object in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8

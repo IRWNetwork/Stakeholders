@@ -71,7 +71,159 @@ class Users extends CI_Controller
 		redirect('admin/');
 		
 	}
-	
+
+
+	public function edit_admin($id) {
+		//echo $id;exit;
+		$user_id = $id;
+		$data['page_title'] 	  = 'Edit Admin';
+		$data['page_heading'] 	= 'Edit Admin';
+		$query =  $this->db->query('Select * from users where users.id = '.$user_id);
+		$data['admin'] = $query->row_array();
+		$old_picture = $data['admin']['picture'];
+		if ($this->input->post()) {
+			//echo "<pre>"; print_r($this->input->post());exit;
+			$rules = array(
+              	array(
+                     'field'   => 'firstname',
+                     'label'   => 'First Name',
+                     'rules'   => 'trim|required'
+                ),
+				array(
+                     'field'   => 'lastname',
+                     'label'   => 'Last Name',
+                     'rules'   => 'trim|required'
+                ),
+				array(
+                     'field'   => 'email',
+                     'label'   => 'Email',
+                     'rules'   => 'trim|required|valid_email'
+                ),
+            );
+
+            $this->form_validation->set_rules($rules);
+            if ($this->form_validation->run()) {
+				$this->ion_auth->update($id, $this->input->post());
+
+				if ($_FILES['picture']['tmp_name']) {
+					if ($old_picture != '') {
+					//echo 'heu';exit;
+						$old_picture = 'uploads/files/'.$old_picture;
+						unlink($old_picture);
+					}
+					
+					$picture_name 	= 'file_' . time();
+					$path       	= 'uploads/files/';
+					$picture_name 	= $this->Common_model->upload_admin_file($picture_name,$path,'picture');
+					$data = array(
+		               'picture' => $picture_name
+		            );
+
+					$this->db->where('id', $user_id);
+					$this->db->update('users', $data); 
+				}
+				$this->session->set_flashdata(
+						'success',
+						'Updated Successfully'
+					);
+				redirect("/admin/users/admins");
+            }
+		}
+
+		$parser['content']	= $this->load->view('admin/user/add_admin',$data,TRUE);
+        $this->parser->parse('admin/template', $parser);
+		
+	}
+	public function add_admin($flag=-1) {
+		$data['page_title'] 	  = 'Add Admin';
+		$data['page_heading'] 	= 'Add Admin';
+		$this->data['flag']		 = $flag; 
+		if ($this->input->post()) {
+			$rules = array(
+              	array(
+                     'field'   => 'firstname',
+                     'label'   => 'First Name',
+                     'rules'   => 'trim|required'
+                ),
+				array(
+                     'field'   => 'lastname',
+                     'label'   => 'Last Name',
+                     'rules'   => 'trim|required'
+                ),
+				array(
+                     'field'   => 'email',
+                     'label'   => 'Email',
+                     'rules'   => 'trim|required|valid_email'
+                ),
+               	array(
+                     'field'   => 'password',
+                     'label'   => 'Password',
+                     'rules'   => 'trim|required'
+                ),
+				array(
+						 'field'   => 'confirmPassword',
+						 'label'   => 'Confirm Password',
+						 'rules'   => 'trim|required|matches[password]'
+					),
+            );
+
+            $this->form_validation->set_rules($rules);
+            if ($this->form_validation->run()) {
+
+				$password 	= $this->input->post('password');
+				$email 		= $this->input->post('email');
+				$username 	= $this->input->post('email');
+				$additional_data = array(
+					'first_name'   => $this->input->post('firstname'),
+					'last_name' 	=>  $this->input->post('lastname')
+				);
+				if (!$this->ion_auth->email_check($email))
+				{
+					$group_name = array($this->input->post('flag')+1);
+					$last_id = $this->ion_auth->register($username, $password, $email, $additional_data, $group_name,$flag);
+					
+					if ($_FILES['picture']['tmp_name']) {
+						$picture_name 	= 'file_' . time();
+						$path       	= 'uploads/files/';
+						$picture_name 	= $this->Common_model->upload_admin_file($picture_name,$path,'picture');
+						$data = array(
+			               'picture' => $picture_name
+			            );
+
+						$this->db->where('id', $last_id);
+						$this->db->update('users', $data); 
+					}
+					$this->session->set_flashdata(
+						'success',
+						'Register Successfully'
+					);
+					redirect("/");
+					
+				}else{
+					$this->session->set_flashdata(
+						'error',
+						'Email Already Exist'
+					);
+				}
+			}else{
+				$this->session->set_flashdata(
+						'error',
+						'Please enter all details'
+					);
+			}
+		}
+
+		$parser['content']	= $this->load->view('admin/user/add_admin',$data,TRUE);
+        $this->parser->parse('admin/template', $parser);
+	}
+
+	public function admins() {
+		$data['page_title'] 	 = 'Admins';
+		$data['page_heading']   = 'Admins';
+		$data['admins']	 = $this->Users_model->getAllAdmins();
+        $parser['content']	= $this->load->view('admin/user/admin_listing',$data,TRUE);
+        $this->parser->parse('admin/template', $parser);
+	}
 	public function forgotpassword() {
 		
 		if ($this->ion_auth->logged_in()) {

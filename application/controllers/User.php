@@ -333,7 +333,6 @@ class User extends MY_Controller
 
 		$this->ion_auth->logout();
 		setcookie('customer_id', '', 1, '/');
-
 		redirect('/');
 		
 	}
