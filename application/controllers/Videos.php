@@ -7,7 +7,9 @@ class Videos extends MY_Controller
     {
         parent::__construct();
 		$this->load->model('Users_model');
-		$this->load->model('Common_model');
+		$this->load->model('Common_model'); 
+		$this->load->model('Content_model');
+		
 		$this->load->library("pagination");
     }
     
@@ -38,7 +40,7 @@ class Videos extends MY_Controller
 		$this->data["links"]   = $this->pagination->create_links();
 		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
 		$this->data['total_rows'] = $config["total_rows"];
-        
+        $this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","videos");
         if (isset($_POST['flag'])) {
 			echo $this->load->view('videos',$this->data,TRUE);
 		}

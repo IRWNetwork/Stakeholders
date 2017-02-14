@@ -8,9 +8,14 @@
        <!-- <div class="panel panel-default">
            <div class="panel-heading"> <?php echo $page_heading?> </div>
          </div> -->
-         <div class="row">
-         	<div class="col-xs-12"><img src="<?php echo base_url()?>assets/images/Marketplace_Banner.png" class="img-responsive"  /></div>
-          </div>
+          <?php if(count($bannerDetail)>0){?>
+             <div style="margin-right:1.2%;" class="row">
+                <div class="col-xs-12">
+                <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
+                    <img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
+                </div>
+              </div>
+           <?php }?>
             <div class="row-fluid" >
             <?php foreach( $ContentList as $list){ ?>
                 <div class="col-md-4" style="margin-top:15px;" >

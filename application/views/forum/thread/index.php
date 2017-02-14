@@ -11,6 +11,14 @@
             <li><button id="btn-new-thread" class="btn btn-primary btn-mini">New Thread</button></li>
      </ul>
 	</div>
+    <?php if(count($bannerDetail)>0){?>
+    <div style="margin:25px 9px;" class="row">
+        <div class="col-xs-12">
+        <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
+            <img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
+        </div>
+    </div>
+    <?php }?>  
 	<div class="wrapper-md" ng-controller="FormDemoCtrl">
         <div class="panel panel-default">
             <div class="panel-heading font-bold">

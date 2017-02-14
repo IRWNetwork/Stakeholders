@@ -9,6 +9,7 @@ class Thread extends MY_Controller {
         parent::__construct();
         $this->load->model('forum/Thread_model');
         $this->load->model('forum/User_model');
+		$this->load->model('Content_model');
 		$this->load->model('forum/Admin_model');
 		$this->load->library("pagination");
         $this->User_model->check_role();
@@ -29,6 +30,7 @@ class Thread extends MY_Controller {
         $this->data['page']    = $this->pagination->create_links();
         $this->data['threads'] = $this->Thread_model->get_all($start, $this->page_config['per_page']);
         $this->data['page_title']   = "IRW Network :: Forum";
+		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","ruler_forums");
 		$parser['content']		 =  $this->load->view('forum/thread/index',$this->data,true);
         $this->parser->parse('template', $parser);
     }

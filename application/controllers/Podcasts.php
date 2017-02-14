@@ -36,7 +36,7 @@ class Podcasts extends MY_Controller
 		$this->data["links"]   = $this->pagination->create_links();
 		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
 		$this->data['total_rows'] = $config["total_rows"];
-		
+		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","podcasts");
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('podcasts',$this->data,TRUE);
 		}

@@ -12,7 +12,16 @@ if (isset($_COOKIE['customer_logout'])) {
 	<div class="col wrapper-lg">
     <?php $this->load->view('common/messages');?>
 		<h3 class="font-thin m-t-n-xs m-b">Featured</h3>
+         <?php if(count($bannerDetail)>0){?>
+        <div style="margin-bottom:25px;" class="row">
+         	<div class="col-xs-12">
+            <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
+            	<img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
+            </div>
+         </div>
+		<?php } ?>
 		<div class="row row-sm">
+        
 			<?php 
 				$count=0; 
 				foreach($featured as $row){

@@ -6,6 +6,7 @@ class Editorial extends MY_Controller
 	function __construct()
     {
         parent::__construct();
+		$this->load->model('Content_model');
     }
     
 	public function index()
@@ -35,7 +36,7 @@ class Editorial extends MY_Controller
 		$this->data["links"]   = $this->pagination->create_links();
 		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
 		$this->data['total_rows'] = $config["total_rows"];
-		
+		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","editorial");
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('editorial',$this->data,TRUE);
 		}

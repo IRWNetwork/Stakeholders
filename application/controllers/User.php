@@ -627,7 +627,8 @@ class User extends MY_Controller
 		//print_r($this->data['ContentList']);
 		//print_r($customArray); 
 		//die();
-		
+		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","channel_marketplace");
+		//print_r($this->data['bannerDetail']);die;
 		$parser['content']      = $this->load->view('user/channel_area',$this->data,true);
         $this->parser->parse('template', $parser);
 	}

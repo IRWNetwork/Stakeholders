@@ -6,6 +6,7 @@ class Faq extends Common_Controller {
 
         parent::__construct();
 		$this->load->model('Faq_model');
+		$this->load->model('Content_model');
 		$this->load->library('ion_auth');
     }
 
@@ -14,9 +15,9 @@ class Faq extends Common_Controller {
 		$data['Allfaq'] = $this->Faq_model->getAll();
 		
 		
-		$data['page_title']    	= 'FAQ';
+		$data['page_title']      = 'FAQ';
 		$data['page_heading']  	= 'FAQ';
-		
+		$data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","faq");
 		
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('faq',$data,TRUE);

@@ -366,5 +366,60 @@ class Content_model extends CI_Model
 		}
 		return array();
 	}
+	
+	// pages banner add or change functionality 
+	 public function countBannersTotalRows($data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (page like '%".$data['name']."%' or banner_link like '%".$data['name']."%')";
+		}
+		$this->db->where($where,NULL,false);
+		$this->db->select('pages_banners_details.*');
+		$this->db->from('pages_banners_details');
+		$query  =   $this->db->get();
+		return $query->num_rows();
+	}
+	
+	public function getAllBannersData($data,$start,$limit){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and type='". $data['type']."'";
+		}
+		$this->db->where($where,NULL,false);
+		$this->db->select('pages_banners_details.*');
+		$query = $this->db->get('pages_banners_details');
+		//echo $this->db->last_query();
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	public function getBannerRowByField($field, $value){
+		$sSQL   =   $this->db->where($field,$value);
+		$query  =   $this->db->get('pages_banners_details');
+		if($query->num_rows())
+		{
+			$row = $query->row_array();
+			return $row;
+		}
+		return array();
+	}
+	public function saveBanner($data){	
+		$this->db->insert('pages_banners_details',$data);
+		return $this->db->insert_id();
+	}
+	
+	public function updateBanner($data,$id){
+		$this->db->where('id',$id);
+		$this->db->update('pages_banners_details',$data);
+		return true;
+	}
 }
 ?>

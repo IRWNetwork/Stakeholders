@@ -95,7 +95,7 @@ class Home extends MY_Controller
 		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
 		
 		$this->data["links"]   = $this->pagination->create_links();
-
+		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","new");
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('main',$this->data,TRUE);
 		}
