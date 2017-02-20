@@ -71,19 +71,45 @@
 							<li> <a href="<?php echo base_url()?>admin/faq/add"> <span>Add FAQ</span> </a> </li>
 						</ul>
 					</li>
-					<li> <a href class="auto"> 
-                        <span class="pull-right text-muted"> 
-                            <i class="fa fa-fw fa-angle-right text"></i> 
-                            <i class="fa fa-fw fa-angle-down text-active"></i> 
-                        </span>  
-                    	<i class="glyphicon glyphicon-th"></i> <span>Analytics</span> </a>
-						
-                        <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Banners Management</span> </a>
-                            <ul class="nav nav-sub dk">
-                                <li> <a href="<?php echo base_url()?>admin/banner"> <span>Banners </span> </a> </li>
-                                <li> <a href="<?php echo base_url()?>admin/banner/addbanner"> <span>add Banner </span> </a> </li>
-                            </ul>
-                        </li>
+					<li> 
+						<a href class="auto">
+							<span class="pull-right text-muted">
+								<i class="fa fa-fw fa-angle-right text"></i>
+								<i class="fa fa-fw fa-angle-down text-active"></i>
+							</span>
+							<i class="fa fa-flag-checkered" aria-hidden="true"></i>
+							<span>Zones</span>
+						</a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/zones"><span>Zones</span></a></li>
+							<li> <a href="<?php echo base_url()?>admin/zones/add_zones"> <span>Add Zone</span></a></li>
+						</ul>
+					</li>
+					<li> 
+						<a href class="auto">
+							<span class="pull-right text-muted">
+								<i class="fa fa-fw fa-angle-right text"></i>
+								<i class="fa fa-fw fa-angle-down text-active"></i>
+							</span>
+							<i class="fa fa-file-video-o" aria-hidden="true"></i>
+							<span>Advertisers</span>
+						</a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/advertisers"><span>Advertisers</span></a></li>
+							<li> <a href="<?php echo base_url()?>admin/advertisers/add_advertisers"> <span>Add Advertisers</span></a></li>
+						</ul>
+					</li>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="glyphicon glyphicon-th"></i> <span>Banners Management</span> </a>
+					<ul class="nav nav-sub dk">
+					<li> <a href="<?php echo base_url()?>admin/banner"> <span>Banners </span> </a> </li>
+					<li> <a href="<?php echo base_url()?>admin/banner/addbanner"> <span>add Banner </span> </a> </li>
+					</ul>
+					</li>
+					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="fa fa-flask" aria-hidden="true"></i> <span>Analytics</span> </a>
+						<ul class="nav nav-sub dk">
+							<!--<li> <a href=""><span>Analytics</span> </a></li>-->
+						</ul>
+					</li>
 				</ul>
 			</nav>
 		</div>

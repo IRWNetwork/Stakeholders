@@ -183,3 +183,5 @@
 2017-01-31 19:57:20 - PHP Notice:  Trying to get property of non-object in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8
 2017-01-31 19:57:59 - PHP Notice:  Undefined variable: user in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8
 2017-01-31 19:57:59 - PHP Notice:  Trying to get property of non-object in /var/www/html/irw/store/catalog/controller/account/logout.php on line 8
+2017-02-15 14:50:50 - PHP Warning:  SessionHandler::write(): Session data file is not created by your uid in /var/www/html/irw/store/system/library/session/native.php on line 21
+2017-02-15 14:50:50 - PHP Warning:  session_write_close(): Failed to write session data (user). Please verify that the current setting of session.save_path is correct (/var/lib/php/sessions) in Unknown on line 0
