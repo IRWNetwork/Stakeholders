@@ -74,7 +74,7 @@ class Home extends MY_Controller
 
 	public function index()
 	{	
-		$this->data['page_title'] 	= 'Home';
+		$this->data['page_title'] 	  = 'Home';
 		$this->data['page_heading'] 	= 'Home';
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
         $arr['name']           = $search;
@@ -89,10 +89,10 @@ class Home extends MY_Controller
         $config["uri_segment"] = 3;
 		$config['reuse_query_string']   = true;
         $this->pagination->initialize($config);
-        $page 		        = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$this->data['contents']	= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
+        $page 		               = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->data['contents']	 = $this->Content_model->getAllData($arr,$page,$config["per_page"]);
 		$this->data['contents1']	= $this->Content_model->getAudio($arr,$page,$config["per_page"]);
-		$this->data['featured']	= $this->Content_model->getFeaturedData($arr);
+		$this->data['featured']	 = $this->Content_model->getFeaturedData($arr);
 		
 		$this->data["links"]   = $this->pagination->create_links();
 		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","new");
@@ -108,12 +108,19 @@ class Home extends MY_Controller
 	public function playvideo(){
 		$id = $this->input->get('id');
 		$video_row = $this->Content_model->getRow($id);
+		//echo "<pre>"; print_r($video_row);exit;
+		//echo $video_row['video_type'];exit;
+		$addvertis_video = "";
+		if ($video_row['video_type'] != '') {
+			$addvertis_video = 'file_1488053747.mp4'; 
+		}
 		$this->data['dataRow']			= $video_row;
+		$this->data['addvertis_video'] = $addvertis_video;
 		$this->data['page_title'] 		 = $video_row['title'];
 		$this->data['page_heading'] 	   = $video_row['title'];
 		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
 		
-		$parser['content']			=  $this->load->view('playvideo',$this->data,TRUE);
+		$parser['content'] = $this->load->view('playvideo',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -324,5 +331,47 @@ class Home extends MY_Controller
 		$data['charts_data'] = $html;
 		$data['ids'] = implode(',',$ids);
 		$parser['content']		= $this->load->view('chart',$data);
+	}
+	
+	public function rss_feeds(){
+		/***** Rss Feed ******/
+		if($this->input->get('id')){
+			$link = $this->Common_model->getFeedLinkByID($this->input->get('id'));
+			$rss_array = array();
+			$this->load->library('rssparser');
+			$rss_data = $this->rssparser->set_feed_url($link)->set_cache_life(30)->getFeed(10);
+			//print_r($rss_data); die;
+			foreach($rss_data as $row){
+				$html = $row['description'];
+				preg_match('@src="([^"]+)"@',$html,$match);
+				$src 			= array_pop($match);
+				$row['image'] 	= $src;
+				$rss_array[] 	= $row;
+			}
+			//print_r($rss_array); die;
+			$html = "<div class='m-b-sm text-md'>".ucwords(str_replace('_', " ", $this->input->get('name')))."</div>";
+			$html .= "<ul class='list-group no-bg no-borders pull-in'>\n";
+                    $i=0;foreach($rss_array as $row){
+						if($row['image']!=''){
+							$html .= "<li class='list-group-item'>\n";
+								$html .= "<a herf='".$row['link']."' class='pull-left thumb-sm m-r' style='width:60px' target='_blank'><img src='".$row['image']."' style='width:300px; !important'></a>\n";							
+								$html .="<div class='clear'>";
+								$html .="<div><a href='".$row['link']."' target='_blank'>".substr($row['title'],0,50)."</a></div>";
+								$html .="</div>";
+							$html .= "</li>";
+						}else{
+							$html .= "<li class='list-group-item'>\n";
+								$html .="<div class='clear'>";
+								$html .="<div><a href='".$row['link']."' target='_blank'>".substr($row['title'],0,50)."</a></div>";
+								$html .="</div>";
+							$html .= "</li>";
+
+						}
+                     }
+           $html .="</ul>";
+		   echo $html;
+		   
+		}
+		
 	}
 }

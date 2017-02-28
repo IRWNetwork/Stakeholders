@@ -53,8 +53,18 @@
 								</ul>
 							</div>
 						</div>
+                        
 						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="<?php echo $url?>" class="text-ellipsis"><?php echo $row->title;?></a> </div>
+					<div class="padder-v"><a href="<?php echo $url?>" class="text-ellipsis"><?php echo $row->title;?></a> 
+                    	<br />
+						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
+                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    	<?php } 
+						  else{
+						?> 
+                       	 <small><strong>Posted by:</strong> Admin</small>
+                    	<?php } ?>
+                    </div>
 				</div>
 			</div>
 			<?php }

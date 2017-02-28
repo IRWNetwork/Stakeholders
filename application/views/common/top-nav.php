@@ -62,7 +62,10 @@
 					<!-- dropdown -->
 					<ul class="dropdown-menu animated fadeInRight w">
 						<li> <a href="<?php echo base_url()?>user/profile">Profile</a> </li>
-                        <?php if($this->ion_auth->get_users_groups()->row()->id == 3){ ?>                        
+                        <li> <a href="<?php echo base_url()?>user/upgradepackage">Become Permium User</a> </li>
+                        <li> <a href="<?php echo base_url()?>user/paymenthistory">Payment History </a></li>
+                        <li> <a href="<?php echo base_url()?>user/subscribechannel">Subscribed Channel </a> </li> 
+                        <?php if($this->ion_auth->get_users_groups()->row()->id == 3){ ?>
                             <li> <a href="<?php echo base_url()?>content">Contents</a> </li>
                             <li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
                              <li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>

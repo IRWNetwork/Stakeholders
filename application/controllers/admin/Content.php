@@ -20,15 +20,15 @@ class Content extends CI_Controller
 	public function index()
 	{
 		
-		$data['page_title'] 	= 'Content';
-		$data['page_heading'] 	= 'Content';
+		$data['page_title'] 	 = 'Content';
+		$data['page_heading']   = 'Content';
 		$arr['name']            = $this->input->get('name') ? $this->input->get('name') : '';
-		$arr['portalUsers']	   	= $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
-		$config 			   	= array();
-        $config["base_url"]    	= base_url() . "admin/content";
-        $config["total_rows"]  	= $this->Content_model->countTotalRows($arr);
-        $config["per_page"]    	= 10;
-        $config["uri_segment"] 	= 3;
+		$arr['portalUsers']	 = $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
+		$config 			   	 = array();
+        $config["base_url"]     = base_url() . "admin/content";
+        $config["total_rows"]   = $this->Content_model->countTotalRows($arr);
+        $config["per_page"]     = 10;
+        $config["uri_segment"]  = 3;
 		$config['reuse_query_string'] = TRUE;
 
         $this->pagination->initialize($config);
@@ -125,6 +125,7 @@ class Content extends CI_Controller
 								"picture" 		=> $picture_name,
 								"user_id"	   => $this->ion_auth->user()->row()->id
 							);
+
 				$result = $this->Content_model->save($data);
 				if($result){
 					$this->session->set_flashdata(
@@ -213,19 +214,21 @@ class Content extends CI_Controller
 				}
 				
 				if($_FILES['picture']['tmp_name']!=''){
+					
 
 					$picture_name 	= 'picture_' . time().rand();
-					$path       	= 'uploads/files/';
+					$path       	= 'uploads/content_listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
 
-					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
-					$this->Common_model->generateThumb($full_picture_path,array('469',469),"thumb_469_".$picture_name);
-					$this->Common_model->generateThumb($full_picture_path,array('153',153),"thumb_153_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(400,400),"thumb_400_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(469,469),"thumb_469_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(153,153),"thumb_153_".$picture_name);
 					
 
 					$data["picture"] = $picture_name;
 				}
+				//echo "<pre>"; print_r($data);exit;
 				$result = $this->Content_model->update($data,$id);
 				if($result){
 					$this->session->set_flashdata(

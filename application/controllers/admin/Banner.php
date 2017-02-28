@@ -56,12 +56,12 @@ class Banner extends CI_Controller
               	array(
                      'field'   => 'banner_link',
                      'label'   => 'Banner Link',
-                     'rules'   => 'trim|required'
+                     'rules'   => 'trim|required|valid_url'
                 ),
                	array(
                      'field'   => 'page',
                      'label'   => 'Type',
-                     'rules'   => 'trim|required|valid_url'
+                     'rules'   => 'trim|required'
                 )
             );
 			

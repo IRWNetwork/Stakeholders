@@ -765,24 +765,8 @@ class Users_model extends CI_Model
 		}
 		return 0;
 	}
+
 	
-	public function getCurrentRenewPakcages($user_id){
-		$d = date("Y-m-d");
-		$this->db->where("next_recharge_date",$d);
-		$query = $this->db->get('user_credits');
-		if($query->num_rows()){
-			$row = $query->result();
-			return $row;
-		}
-		return array();
-	}
-	
-	public function getNextUserIDForCurrentLogs(){
-		$query  = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '".$this->db->database."' AND TABLE_NAME = 'user_credits_logs'";
-		$result = $this->db->query($query);
-		$row    = $result->result();
-		return $row[0]->AUTO_INCREMENT;
-	}
 	// by me 
 	public function getUserIdByGroupId(){
 		$query  = "SELECT user_id FROM users_groups WHERE group_id = 3";
@@ -808,8 +792,9 @@ class Users_model extends CI_Model
 		return array();
 	}
 	
+	
 	public function getUserDetailById($id){
-		$this->db->select('channel_subscription_price, channel_name, description, picture, sales_pitch');
+		$this->db->select('channel_subscription_price, channel_name, description, picture, sales_pitch, banner1, banner2');
 		$this->db->where('id',$id);
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();
@@ -849,5 +834,166 @@ class Users_model extends CI_Model
 		}
 		return false;
 	}
+	
+	
+	public function getChannelSubscribeInfoByChannelId($id){
+		$this->db->select('channel_subscription_price, channel_name');
+		$this->db->where('id',$id);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
+	
+	public function insertChannelSubscriptionDetail($data){
+		$this->db->insert('channel_subscription',$data);
+		//echo $this->db->last_query();
+		return true;
+	}
+	public function checkAlreadyBuy($id){
+		$this->db->select('*');
+		$this->db->where('channel_id',$id);
+		$this->db->where('status','active');
+		$this->db->where('user_id',$this->ion_auth->get_user_id());
+		$this->db->where('next_recharge_date >=',date('Y-m-d'));
+		$query = $this->db->get('channel_subscription');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			
+			return true;	
+		}
+		return false;
+	}
+	
+	public function countTotalChannelRowsByUserId($user_id,$data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (channel_name like '%".$data['name']."%')";
+		}
+		$where.=" and user_id='". $user_id."'";
+		$where.=" and status !='inactive'";
+		$this->db->where($where,NULL,false);
+		$this->db->select('channel_subscription.*, users.channel_name');
+		$this->db->from('users');
+		$this->db->join('channel_subscription','users.id = channel_subscription.channel_id','INNER');
+		$query  =   $this->db->get();
+		return $query->num_rows();
+	}
+	
+	public function getAllChannelByUserId($user_id,$data,$start,$limit){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (channel_name like '%".$data['name']."%')";
+		}
+		$where.=" and user_id='". $user_id."'";
+		$where.=" and status !='inactive'";
+		$this->db->where($where,NULL,false);
+		$this->db->select('channel_subscription.*, users.channel_name');
+		$this->db->from('users');
+		$this->db->join('channel_subscription','users.id = channel_subscription.channel_id','INNER');
+		$query  =   $this->db->get();
+		//echo $this->db->last_query();
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	public function insertpaymentLogs($data){
+		$this->db->insert('payment_logs',$data);
+		//echo $this->db->last_query();
+		return true;
+	}
+	
+	public function countTotalPaymentLogsRowsByUserId($user_id,$data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (channel_name like '%".$data['name']."%')";
+		}
+		$where.=" and user_id='". $user_id."'";
+		$this->db->where($where,NULL,false);
+		$this->db->select('payment_logs.*, users.channel_name');
+		$this->db->from('users');
+		$this->db->join('payment_logs','users.id = payment_logs.channel_id','right outer');
+		$query  =   $this->db->get();
+		return $query->num_rows();
+	}
+	
+	public function getAllPaymentHistoryByUserId($user_id,$data,$start,$limit){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (channel_name like '%".$data['name']."%')";
+		}
+		$where.=" and user_id='". $user_id."'";
+		$this->db->select('payment_logs.*, users.channel_name');
+		$this->db->from('users');
+		$this->db->join('payment_logs','users.id = payment_logs.channel_id','right outer');
+		$query  =   $this->db->get();
+		//echo $this->db->last_query();
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	public function unsubcribeChannelById($id,$data){
+		$data['status'] = 'inactive';
+		$this->db->where('channel_id',$id);
+		$this->db->where('user_id',$this->ion_auth->get_user_id());
+		$this->db->update('channel_subscription',$data);
+		return true;
+	}
+	public function getUserbanner(){
+		$this->db->select(' banner1');
+		$this->db->where('id',$this->ion_auth->get_user_id());
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
+	
+	// function for payment cron jobs //////
+	public function getNextUserIDForCurrentLogs(){
+		$query  = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '".$this->db->database."' AND TABLE_NAME = 'payment_logs'";
+		$result = $this->db->query($query);
+		$row    = $result->result();
+		return $row[0]->AUTO_INCREMENT;
+	}
+	
+	public function getCurrentRenewPakcages($user_id){
+		$d = date("Y-m-d");
+		$this->db->where("next_recharge_date",$d);
+		$query = $this->db->get('channel_subscription');
+		if($query->num_rows()){
+			$row = $query->result();
+			return $row;
+		}
+		return array();
+	}
+	
+	public function updateChannelSubscription($data,$id){
+		$this->db->where('id',$id);
+		$this->db->update('channel_subscription',$data);
+		return true;
+	}
+	
+
 }
 ?>

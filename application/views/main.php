@@ -7,6 +7,14 @@ if (isset($_COOKIE['customer_logout'])) {
 
 }
 ?>
+<script type="text/javascript">
+function loadRssFeed(id){
+		$.post("<?php echo base_url()?>home/rss_feeds?id="+id,function(data){
+			$("#feeds_content").html(data);
+		});
+}
+</script>
+
 <div class="hbox hbox-auto-xs hbox-auto-sm"> 
 	<!-- main -->
 	<div class="col wrapper-lg">
@@ -25,6 +33,7 @@ if (isset($_COOKIE['customer_logout'])) {
 			<?php 
 				$count=0; 
 				foreach($featured as $row){
+					
 					$url = $this->Common_model->getUrl($row);
 			?>
 			<div class="col-xs-6 col-sm-4 col-md-4 field" data-fullText="<?php echo $row->title?>">
@@ -70,7 +79,7 @@ if (isset($_COOKIE['customer_logout'])) {
 													<ul class="main-grid-menu grid__item__menu item-actions">
 														<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 															<div class="item-actions__count" data-bind="bundleCount"></div>
-															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/admin_listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span>
+															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/content_listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span>
 														</li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
@@ -96,9 +105,18 @@ if (isset($_COOKIE['customer_logout'])) {
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/admin_listing/thumb_400_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a>
+						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/content_listing/thumb_400_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a>
 					</div>
-					<div class="padder-v"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,40);?></a> </div>
+					<div class="padder-v"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,40);?></a> 
+                    	<br />
+						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
+                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    	<?php } 
+						  else{
+						?> 
+                       	 <small><strong>Posted by:</strong> Admin</small>
+                    	<?php } ?>
+                    </div>
 				</div>
 			</div>
 			<?php ++$count; }?>
@@ -155,7 +173,7 @@ if (isset($_COOKIE['customer_logout'])) {
 													<ul class="main-grid-menu grid__item__menu item-actions">
 														<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 															<div class="item-actions__count" data-bind="bundleCount"></div>
-															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/admin_listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
+															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/content_listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-image="<?php echo $row->picture; ?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
@@ -180,48 +198,48 @@ if (isset($_COOKIE['customer_logout'])) {
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/admin_listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> </div>
-				</div>
+                        
+						<a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/content_listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> 
+                    	<br />
+						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
+                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    	<?php } 
+						  else{
+						?> 
+                       	 <small><strong>Posted by:</strong> Admin</small>
+                    	<?php } ?>
+                    </div>
+					
+                </div>
 			</div>
 			<?php ++$count; }?>
 		</div>
 	</div>
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
 		<div class="wrapper-md">
-			<div class="m-b-sm text-md">Top Plays</div>
-			<ul class="list-group no-bg no-borders pull-in">
-				<?php $i=0;foreach($contents as $row){$url = $this->Common_model->getUrl($row); $i++; if($i==5) break;?>
-				<li class="list-group-item"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <img src="<?php echo base_url()?>uploads/admin_listing/thumb_153_<?php echo $row->picture?>" class="r" style="width:30px"> </a>
-					<div class="clear">
-						<div><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,15);?></a></div>
-					</div>
-				</li>
+        <div class="m-b-sm text-md">Feed Aggregator</div>
+        	<div class="row">
+				<?php foreach($rssRows as $row){?>
+            	<button class="col-xs-5 new_feeds_link" onclick="loadRssFeed('<?php echo $row->id?>')"><?php echo $row->name?></button>
 				<?php }?>
-			</ul>
-			<div class="text-center"> <a href class="btn btn-sm btn-info padder-md m-b">More</a> </div>
+            </div>
+            <div id="feeds_content">
+            <div class="m-b-sm text-md">Wrestle Zone</div>
+                <ul class="list-group no-bg no-borders pull-in">
+                    <?php $i=0;foreach($rss_data as $row){?>
+                    <li class="list-group-item">
+                    	<?php if($row['image']!=''){?>
+                        <a herf="<?php echo $row['link'];?>" class="pull-left thumb-sm m-r" style="width:60px" target="_blank"><img src="<?php echo $row['image']?>" style="width:300px; !important"></a>
+                        <?php }?>
+                        <div class="clear">
+                            <div><a href="<?php echo $row['link'];?>" target="_blank"><?php echo substr($row['title'],0,50);?></a></div>
+                        </div>
+                    </li>
+                    <?php }?>
+                </ul>
+            </div>
 		</div>
-		<!-- streamline -->
-		<div class="text-md wrapper-md">Activity</div>
-		<div class="list-group no-borders no-bg m-l-xs m-r-xs m-t-n">
-			<div class="list-group-item">
-				<div class="text-muted">5 minutes ago</div>
-				<div><a href class="text-info">Jessi</a> commented your post.</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">11:30</div>
-				<div><a ui-sref="music.detail">Jone</a> published a song</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">Sun, 11 Feb</div>
-				<div><a href class="text-info">Jessi</a> upload a video <a href class="text-info">Cat</a>.</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">Thu, 17 Jan</div>
-				<div>Mike Followed you</div>
-			</div>
-		</div>
-		<!-- / streamline --> 
 	</div>
 	<!-- / right col --> 
 </div>
@@ -229,15 +247,16 @@ if (isset($_COOKIE['customer_logout'])) {
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/colorbox.css" type="text/css" />
 <script src="<?php echo base_url()?>assets/js/jquery.colorbox.js"></script> 
 <script type="text/javascript">
+
 $(document).ready(function(){
-	setTimeout(function(){
+	/*setTimeout(function(){
 		$.colorbox({
 			iframe:true, 
 			innerWidth:"90%", 
 			innerHeight:"90%",
 			href: "<?php echo base_url()?>home/mainpopup",
 		});
-	},4000);
+	},4000);*/
 });
 </script>
 <?php }?>

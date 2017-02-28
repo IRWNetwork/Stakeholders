@@ -206,8 +206,10 @@ class Content_model extends CI_Model
 			$where.=" and type='". $data['type']."'";
 		}
 		$this->db->where($where,NULL,false);
-		$this->db->select('contents.*');
-		$query = $this->db->get('contents');
+		$this->db->select('contents.*, users.channel_name');
+		$this->db->from('users');
+        $this->db->join('contents', 'users.id = contents.user_id','INNER');
+		$query = $this->db->get();
 		//echo $this->db->last_query();
 		if($query->num_rows())
 		{
@@ -249,8 +251,10 @@ class Content_model extends CI_Model
 			$where.=" and type='". $data['type']."'";
 		}
 		$this->db->where($where,NULL,false);
-		$this->db->select('contents.*');
-		$query = $this->db->get('contents');
+		$this->db->select('contents.*, users.channel_name');
+		$this->db->from('users');
+		$this->db->join('contents','users.id = contents.user_id','INNER');
+		$query = $this->db->get();
 		//echo $this->db->last_query();
 		if($query->num_rows())
 		{
@@ -270,8 +274,10 @@ class Content_model extends CI_Model
 			$this->db->where("type",$data['type']);
 		}
 		
-		$this->db->select('contents.*');
-		$query = $this->db->get('contents');
+		$this->db->select('contents.*, users.channel_name');
+		$this->db->from('users');
+		$this->db->join('contents','users.id = contents.user_id','INNER');
+		$query = $this->db->get();
 		if($query->num_rows())
 		{
 			$r=array();
@@ -420,6 +426,16 @@ class Content_model extends CI_Model
 		$this->db->where('id',$id);
 		$this->db->update('pages_banners_details',$data);
 		return true;
+	}
+	
+	public function getRssRows(){
+		$query  =   $this->db->get('news_feeds');
+		if($query->num_rows())
+		{
+			$row = $query->result();
+			return $row;
+		}
+		return array();
 	}
 }
 ?>

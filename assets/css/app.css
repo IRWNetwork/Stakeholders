@@ -2967,3 +2967,13 @@ a.text-#000000:hover { color: #131e25; }
 .sm2-bar-ui.fixed .bd.sm2-playlist-drawer, .sm2-bar-ui.bottom .bd.sm2-playlist-drawer {
   bottom: 5.75em !important;
 }
+.new_feeds_link{
+	font-size:11px;
+	padding: 10px;
+	background-color: #4d4d4d;
+	box-shadow: 1px 1px 9px 1px #a6a6a6;
+	color:#FFF;
+	margin-bottom:10px;
+	margin-right:5px;
+	border:none;
+}

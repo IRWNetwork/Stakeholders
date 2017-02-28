@@ -73,8 +73,18 @@
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x"></a> </div>
-					<div class="padder-v"> <a href="<?php echo $url;?>"><?php echo $row->title;?></a> </div>
+                        
+						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x"></a></div>
+					<div class="padder-v"> <a href="<?php echo $url;?>"><?php echo $row->title;?></a> 
+                    	<br />
+						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
+                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    	<?php } 
+						  else{
+						?> 
+                       	 <small><strong>Posted by:</strong> Admin</small>
+                    	<?php } ?>
+                    </div>
 				</div>
 			</div>
 			<?php }
@@ -97,39 +107,18 @@
 	<!-- right col -->
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
 		<div class="wrapper-md">
-			<div class="m-b-sm text-md">Top Plays</div>
+			<div class="m-b-sm text-md">Wrestle Zone</div>
 			<ul class="list-group no-bg no-borders pull-in">
-				<?php $i=0;foreach($contents as $row){$url = $this->Common_model->getUrl($row);$i++; if($i==5) break;?>
-				<li class="list-group-item"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" class="r" style="width:30px"> </a>
+				<?php $i=0;foreach($rss_data as $row){?>
+				<li class="list-group-item">
+					<a herf="<?php echo $row['link'];?>" class="pull-left thumb-sm m-r" style="width:60px" target="_blank"><img src="<?php echo $row['image']?>" style="width:300px; !important"></a>
 					<div class="clear">
-						<div><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,15);?></a></div>
+						<div><a href="<?php echo $row['link'];?>" target="_blank"><?php echo substr($row['title'],0,50);?></a></div>
 					</div>
 				</li>
 				<?php }?>
 			</ul>
-			<div class="text-center"> <a href class="btn btn-sm btn-info padder-md m-b">More</a> </div>
 		</div>
-		<!-- streamline -->
-		<div class="text-md wrapper-md">Activity</div>
-		<div class="list-group no-borders no-bg m-l-xs m-r-xs m-t-n">
-			<div class="list-group-item">
-				<div class="text-muted">5 minutes ago</div>
-				<div><a href class="text-info">Jessi</a> commented your post.</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">11:30</div>
-				<div><a ui-sref="music.detail">Jone</a> published a song</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">Sun, 11 Feb</div>
-				<div><a href class="text-info">Jessi</a> upload a video <a href class="text-info">Cat</a>.</div>
-			</div>
-			<div class="list-group-item">
-				<div class="text-muted">Thu, 17 Jan</div>
-				<div>Mike Followed you</div>
-			</div>
-		</div>
-		<!-- / streamline --> 
 	</div>
 	<!-- / right col --> 
 	

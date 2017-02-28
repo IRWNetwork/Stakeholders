@@ -23,19 +23,35 @@
 		<div class="col">
 			<div class="wrapper-md">
 				<div class="row">
-					<div class="col-md-12">
-						<h3 class="m-t-none text-black"><?php echo $channelDetail['channel_name']?></h3>
-                        <h4 style="padding-left:5px;" class="m-t-none text-black"><?php echo $channelDetail['sales_pitch']?></h4>
+                        <div class="col-md-12">
+                            <h3 class="m-t-none text-black"><?php echo $channelDetail['channel_name']?></h3>
+                            <h4 style="padding-left:5px;" class="m-t-none text-black"><?php echo $channelDetail['sales_pitch']?></h4>
+                        </div>
+                 </div>
+                    <div class="row">
+                        <div class="col-xs-4 col-md-3">
+                            <img src="<?php echo base_url()."uploads/profile_pic/".$channelDetail['picture']?>" class=" img-responsive"/>
+                        </div>
+                        <?php if($channelDetail['banner1']){?>
+                        <div class="col-xs-8 col-md-9">
+                            <img src="<?php echo base_url()."uploads/profile_pic/".$channelDetail['banner1']?>" class=" img-responsive"/>
+                        </div>
+                        <?php }?>
+                        
 					</div>
-                    <div class="col-md-3">
-                    	<img src="<?php echo base_url()."uploads/profile_pic/".$channelDetail['picture']?>" class=" img-responsive"/>
-                    </div>
-				</div>
 				<p class="text-muted m-b-md" style="padding-top:10px;"><?php echo $channelDetail['description']?></p>
                 
 				<h4 class="m-b-md">Price: <br>
                 <?php if($channelDetail['channel_subscription_price']==0){echo "Free"; } else{ echo $channelDetail['channel_subscription_price']."$"; } ?>
                 </h4>
+                <div class="row">
+                        <?php if($channelDetail['banner2']){?>
+                        <div class=" col-xs-12 col-md-12">
+                            <img src="<?php echo base_url()."uploads/profile_pic/".$channelDetail['banner2']?>" class=" img-responsive"/>
+                        </div>
+                        <?php }?>
+                        
+					</div>
 				
 			</div>
 		</div>

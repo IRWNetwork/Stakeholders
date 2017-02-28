@@ -10,6 +10,7 @@ class Podcasts extends MY_Controller
     
 	public function index()
 	{
+
 		$this->data['page_title'] 	= 'Podcasts';
 		$this->data['page_heading'] 	= 'Podcasts';
 		

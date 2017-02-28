@@ -30,6 +30,8 @@
                                             <option value="ruler_forums">Ruler Forums</option>
                                             <option value="faq">FAQ</option>
                                             <option value="channel_marketplace">Channel Marketplace</option>
+                                            <option value="channel_subscription">Channel Subscription</option>
+                                            <option value="upgradepackage">Upgrade Package</option>
 										</select>
 										<?php if(isset($bannerRow['page'])){?>
 										<script type="text/javascript">

@@ -132,6 +132,55 @@ class Advertisers extends CI_Controller {
 		);
 		redirect(base_url().'admin/advertisers');
     }
+
+    public function view_banners($id) {
+        $data['page_title']      = 'Banners';
+        $data['page_heading']   = 'Banners';
+        $data['advertiser_id'] = $id;
+        $data['banners'] = $this->Advertiser_model->getAdvertiserBanners($id);
+        //echo "<pre>"; print_r($data['banners']);exit;
+        $parser['content'] = $this->load->view('admin/advertisers/banner_listing',$data,TRUE);
+        $this->parser->parse('admin/template', $parser);
+    }
+
+    public function new_banner($advertiser_id) {
+        $data['page_title']      = 'New Banner';
+        $data['page_heading']   = 'New Banner';
+        if ($this->input->post()) {
+            //echo '<pre>'; print_r($this->input->post());exit;
+            $file_name = "";
+            if ($_FILES['video_file']) {
+                //echo "<pre>"; print_r($_FILES['video_file']);exit;
+                $video_file  = 'file_' . time();
+                $path       = 'uploads/banners/videos';
+                $video_file  = $this->Advertiser_model->uploadVideo($video_file,$path,'video_file');
+                $_POST['video_file_name'] = $video_file;
+                //echo $video_file;exit;
+            }
+            if ($_FILES['banner_file']['tmp_name']) {
+                //echo '<pre>'; print_r($_FILES);exit;
+                $banner_file_name   = 'file_' . time();
+                $path = 'uploads/banners/';
+                $banner_file_name  = $this->Advertiser_model->uploadBanner($banner_file_name,$path,'banner_file');
+                $_POST['banner_file'] = $banner_file_name;
+            }
+            $result = $this->Advertiser_model->saveBannerdata($this->input->post());
+            if ($result) {
+                $this->session->set_flashdata(
+                        'success',
+                        "Banner Added Successfully"
+                );
+                redirect(base_url().'admin/advertisers');
+            }
+        }
+        $data['advertiser_name'] = $this->Advertiser_model->getAdvertisername($advertiser_id);
+        $data['advertiser_id'] = $advertiser_id;
+
+        $parser['content'] = $this->load->view('admin/advertisers/new_banner',$data,TRUE);
+        $this->parser->parse('admin/template', $parser);
+        //echo $advertiser_id;exit;
+    }
+
 }    
 
 ?>

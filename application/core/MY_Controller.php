@@ -23,5 +23,22 @@ class MY_Controller extends CI_Controller {
 			$this->data['playlists'] 	= array();
 			$this->data['user_id'] 		= 0;
 		}
+		
+		$this->data['rssRows'] = $this->Content_model->getRssRows();
+
+		
+		/***** Rss Feed from wrestlezone.com ******/
+		$rss_array = array();
+		$this->load->library('rssparser');
+		$rss_data = $this->rssparser->set_feed_url('http://www.wrestlezone.com/feed')->set_cache_life(30)->getFeed(10);
+		foreach($rss_data as $row){
+			$html = $row['description'];
+			preg_match('@src="([^"]+)"@',$html,$match);
+			$src 			= array_pop($match);
+			$row['image'] 	= $src;
+			$rss_array[] 	= $row;
+		}
+		$this->data['rss_data'] = $rss_array;
 	}
+	
 }

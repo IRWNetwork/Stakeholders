@@ -29,6 +29,7 @@
 										<input type="text" class="form-control" name="phone" value="<?php echo $user->phone?>" placeholder="Phone">
 									</div>
 								</div>
+                                
                                 <?php if($this->ion_auth->user()->row()->id==3){ ?>
                                 <div class="form-group">
 									<label class="col-lg-3 control-label">Channel Subscription Price</label>
@@ -51,6 +52,43 @@
 									<input type="hidden" name="old_pic" value="<?php echo $user->picture; ?>">
 									<div class="col-lg-6 col-md-offset-3">
 										<div><img src="<?php echo  base_url().'/uploads/profile_pic/thumb_200_'.$user->picture; ?>" ></div>
+									</div>
+								</div>
+								<?php }?>
+                                
+                                
+                                <div class="form-group">
+									<label class="col-lg-3 control-label">Small Banner</label>
+									<div class="col-lg-6">
+										
+										<label>
+										  <input type="file" name="banner1" id="banner1" />
+									  </label>
+                                    </div>
+								</div>
+								<?php if($user->banner1!=''){?>
+								<div class="form-group">
+									<input type="hidden" name="banner1_old_pic" value="<?php echo $user->banner1; ?>">
+									<div class="col-lg-6 col-md-offset-3">
+										<div><img src="<?php echo  base_url().'/uploads/profile_pic/thumb_200_'.$user->banner1; ?>" ></div>
+									</div>
+								</div>
+								<?php }?>
+                                
+                                <div class="form-group">
+									<label class="col-lg-3 control-label">Big Banner</label>
+									<div class="col-lg-6">
+										
+										<label>
+										  <input type="file" name="banner2" id="banner2" />
+									  </label>
+                                    </div>
+								</div>
+								<?php if($user->banner2!=''){?>
+								<div class="form-group">
+									<input type="hidden" name="banner2_old_pic" value="<?php echo $user->banner2; ?>">
+									<div class="col-lg-6 col-md-offset-3">
+										<div><img src="<?php echo  base_url().'/uploads/profile_pic/thumb_200_'.$user->banner2; ?>" ></div>
 									</div>
 								</div>
 								<?php }?>

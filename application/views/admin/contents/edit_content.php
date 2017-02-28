@@ -39,7 +39,7 @@
 									<div class="col-lg-6">
 										<div class="radio">
 											<label class="i-checks">
-												<input type="radio" name="video_type" required value="file" onchange="showVideo(this.value)" checked="checked">
+												<input type="radio" name="video_type" required value="url" onchange="showVideo(this.value)" checked="checked">
 												<i></i> File
 											</label>
 											<label class="i-checks">
@@ -79,7 +79,7 @@
 									<div class="col-sm-9">
 										<input type="file" name="picture" /><br />
 										<?php if($contentRow['picture']!=''){?>
-										<img src="<?php echo base_url()?>uploads/admin_listing/<?php echo $contentRow['picture']?>" style="width:100px" /><br />
+										<img src="<?php echo base_url()?>uploads/content_listing/<?php echo $contentRow['picture']?>" style="width:100px" /><br />
 										<span><a href=""><i class="fa fa-trash"></i>&nbsp;Delete</a></span>
 										<?php }?>
 									</div>

@@ -13,7 +13,13 @@ class Common_model extends CI_Model
 		if($this->ion_auth->logged_in()){
 			$user_row = $this->ion_auth->user()->row();
 			$url = "";
-			if($row->is_premium){
+			
+			
+			if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3 && !($this->Users_model->checkAlreadyBuy($row->user_id))){
+					
+				$url = site_url('user/channelsubscription/'.$row->user_id);
+			}
+			else if($row->is_premium){
 				if($user_row->is_premium=='yes'){
 					if($row->type=='Video'){
 						$url = site_url('home/playvideo/?id='.$row->id);
@@ -258,7 +264,7 @@ class Common_model extends CI_Model
     public function uploadFile($name,$path,$field_name){
     	$config['upload_path']   = $path; //'uploads/data/';
 		$config['allowed_types'] = 'mkv|ogv|ogg|m4v|wmv|avi|mp3|flv|mp4|doc|docx|pdf|csv|ppt|pptx|jpeg|jpg|png|JPG|JPEG|PNG|rv|wav|mpeg|mpg|mov|avi|mp3|mp4|Svlc';
-		$config['max_size'] 	 = '1000000';
+		$config['max_size'] 	 = '10000000';
 		$config['file_name']     = $name;  // 'sliderimage_' . time()
 		
 		$this->load->library('upload', $config);
@@ -273,7 +279,7 @@ class Common_model extends CI_Model
 		        'player_image' => array(43, 43),
 		    );
 			
-		    $this->load->library('image_lib');
+		    /*$this->load->library('image_lib');
 			foreach ($image_sizes as $key => $resize) {
 
 			    $config = array(
@@ -288,7 +294,7 @@ class Common_model extends CI_Model
 			    $this->image_lib->resize();
 			    $this->image_lib->clear();
 			    //exit;
-			}
+			}*/
 			$file_name 	= $image_details['file_name'];
 			return $file_name;
 		}else{
@@ -572,6 +578,28 @@ class Common_model extends CI_Model
 	function getCountriesArray(){
 		
 		return $countries;
+	}
+	
+	public function checkAlreadyBuy($id){
+		$this->db->select('*');
+		$this->db->where('channel_id',$id);
+		$this->db->where('status','active');
+		$this->db->where('user_id',$this->ion_auth->get_user_id());
+		$this->db->where('next_recharge_date >=',date('Y-m-d'));
+		$query = $this->db->get('channel_subscription');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			
+			return true;	
+		}
+		return false;
+	}
+	public function getFeedLinkByID($id){
+		$query  = "SELECT link from news_feeds where id= '$id'";
+		$result = $this->db->query($query);
+		$row    = $result->result();
+		return $row[0]->link;
 	}
 }
 ?>

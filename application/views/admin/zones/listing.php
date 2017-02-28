@@ -8,7 +8,7 @@
 		var t= (screen.height - parseInt(win_height))/2 +"px";
 	
 		var features='width='+win_width+',height='+win_height+',menubar=0,locationbar=0,scrollbars=1,left='+l+',top='+t;
-		var w=window.open('scripts/getcode.php?zoneid='+id,'win1',features);
+		var w=window.open('zones/getcode/'+id,'win1',features);
 		w.focus();
 	}
 </script>
@@ -38,7 +38,7 @@
 							<td><?php echo $zone->name . " (".$zone->width . ' x '. $zone->width .")"?></td>
 							<td align="left" class=" last" nowrap="nowrap">
 								<a href="javascript:showCodeWindow(<?php echo $zone->id; ?>)"  class="btn btn-info btn-xs">Get Code</a>
-								<a href="<?php echo base_url()?>/<?php echo $zone->id?>" class="btn btn-info btn-xs">Linked Banners </a> 
+								<a href="<?php echo base_url()?>admin/zones/linked_banners/<?php echo $zone->id?>" class="btn btn-info btn-xs">Linked Banners </a> 
 								<a href="<?php echo base_url()?>/<?php echo $zone->id?>" class="btn btn-info btn-xs">Delete </a> 
 								<a href="<?php echo base_url()?>/<?php echo $zone->id?>" class="btn btn-info btn-xs">Rename </a>
 							</td>

@@ -29,7 +29,7 @@
 							<td align="left" class=" last" nowrap="nowrap">
 								<a href="<?php echo base_url()?>admin/advertisers/edit_advertiser/<?php echo $advertiser->id?>" class="btn btn-info btn-xs">Edit</a> 
 								<a href="<?php echo base_url()?>admin/advertisers/delete_advertiser/<?php echo $advertiser->id?>" class="btn btn-info btn-xs" onClick="return confirm('Are you sure to delete ?')">Delete</a> 
-								<a href="<?php echo base_url()?>admin/advertisers/view_banner/<?php echo $advertiser->id?>" class="btn btn-info btn-xs">View Banner</a> 
+								<a href="<?php echo base_url()?>admin/advertisers/view_banners/<?php echo $advertiser->id?>" class="btn btn-info btn-xs">View Banner</a> 
 							</td>
 						</tr>
 						<?php } ?>

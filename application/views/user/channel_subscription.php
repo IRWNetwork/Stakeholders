@@ -1,8 +1,8 @@
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
-		<h1 class="m-n font-thin h3">Membership Upgrade!</h1>
+		<h1 class="m-n font-thin h3">Channel Subscription!</h1>
 	</div>
-	<?php $this->load->view('admin/common/messages');?>
+    
     <?php if(count($bannerDetail)>0){?>
          <div style="margin-bottom:20px; padding: 20px 20px 0 20px;" class="row">
          	<div class="col-xs-12">
@@ -15,17 +15,18 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-default">
-					<div class="panel-heading font-bold">Membership Upgrade!</div>
+					<div class="panel-heading font-bold">Channel Subscription!</div>
 					<div class="panel-body">
-						<?php if($this->ion_auth->user()->row()->is_premium=='yes' && $this->session->flashdata('success')==''){?>
-						<div>You Are already premium user</div>
+						<?php $this->load->view('admin/common/messages');?>
+						<?php if($alreadyBuy && $this->session->flashdata('success')==''){?>
+						<div>You Are already Subscribe this channel.</div>
 						<?php }else{?>
 						<form class="bs-example form-horizontal" method="post" id="frm" name="frm" role="form" autocomplete="off">
 							<div class="col-md-12">
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Price</label>
 									<div class="col-lg-6">
-										$1.99/Month
+										$<?php echo $channelInfo['channel_subscription_price'];?>/Month
 									</div>
 								</div>
 								<div class="form-group">

@@ -75,8 +75,18 @@
 								</ul>
 							</div>
 						</div>
+                        
 						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> </div>
+					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> 
+                    	<br />
+						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
+                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    	<?php } 
+						  else{
+						?> 
+                       	 <small><strong>Posted by:</strong> Admin</small>
+                    	<?php } ?>
+                    </div>
 				</div>
 			</div>
 			<?php }
@@ -101,6 +111,21 @@
 	<!-- / main --> 
 	<!-- right col -->
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
+		<div class="wrapper-md">
+			<div class="m-b-sm text-md">Wrestle Zone</div>
+			<ul class="list-group no-bg no-borders pull-in">
+				<?php $i=0;foreach($rss_data as $row){?>
+				<li class="list-group-item">
+					<a herf="<?php echo $row['link'];?>" class="pull-left thumb-sm m-r" style="width:60px" target="_blank"><img src="<?php echo $row['image']?>" style="width:300px; !important"></a>
+					<div class="clear">
+						<div><a href="<?php echo $row['link'];?>" target="_blank"><?php echo substr($row['title'],0,50);?></a></div>
+					</div>
+				</li>
+				<?php }?>
+			</ul>
+		</div>
+	</div>
+	<?php /*?><div class="col w-md bg-light dker b-l bg-auto no-border-xs">
 		<div class="wrapper-md">
 			<div class="m-b-sm text-md">Top Plays</div>
 			<ul class="list-group no-bg no-borders pull-in">
@@ -135,7 +160,7 @@
 			</div>
 		</div>
 		<!-- / streamline --> 
-	</div>
+	</div><?php */?>
 	
 	<!-- / right col -->
 	<input type="hidden" name="limit_count" id="limit_count" value="20">

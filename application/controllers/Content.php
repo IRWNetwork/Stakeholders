@@ -27,7 +27,7 @@ class Content extends CI_Controller
 		$config 			   	  = array();
         $config["base_url"]      = base_url() . "content";
         $config["total_rows"]  	= $this->Content_model->countTotalRowsByUserId($this->ion_auth->user()->row()->id, $arr);
-        $config["per_page"]      = 5;
+        $config["per_page"]      = 10;
         $config["uri_segment"]   = 2;
 		$config['reuse_query_string'] = TRUE;
 
@@ -101,7 +101,7 @@ class Content extends CI_Controller
 				
 				if($_FILES['picture']['tmp_name']){
 					$picture_name 	= 'file_' . time();
-					$path       	= 'uploads/admin_listing/';
+					$path       	= 'uploads/content_listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
 					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
@@ -213,7 +213,7 @@ class Content extends CI_Controller
 				if($_FILES['picture']['tmp_name']!=''){
 
 					$picture_name 	= 'picture_' . time().rand();
-					$path       	= 'uploads/admin_listing/';
+					$path       	= 'uploads/content_listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
 

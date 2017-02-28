@@ -9,6 +9,7 @@ class Stats extends CI_Controller
 		$this->load->model('Common_model');
 		$this->load->library("pagination");
 		$this->load->model('Analytics_model');
+		$this->load->model('Users_model');
 		$this->load->model('Content_model');
 		$this->load->helper('csv');
 		$this->load->library('ion_auth');
@@ -20,6 +21,7 @@ class Stats extends CI_Controller
 		$data = array();
 		$data['page_title']     = 'Analytics';
 		$data['page_heading']   = 'Analytics';
+		$data['channel_banner'] = $this->Users_model->getUserbanner();
 		$data['data_analytics_totalPlays'] = $this->Analytics_model->getTotalByDay('Podcasts');
 		$data['analytics_topPlays']   		= $this->Analytics_model->getTopByDay('Podcasts');
 		$data['analytics_topCountries']	= $this->Analytics_model->getTopCountries('Podcasts');

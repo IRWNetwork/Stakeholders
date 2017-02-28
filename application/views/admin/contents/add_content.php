@@ -39,7 +39,7 @@
 									<div class="col-lg-6">
 										<div class="radio">
 											<label class="i-checks">
-												<input type="radio" name="video_type" required value="file" onchange="showVideo(this.value)" checked="checked">
+												<input type="radio" name="video_type" required value="url" onchange="showVideo(this.value)" checked="checked">
 												<i></i> File
 											</label>
 											<label class="i-checks">
