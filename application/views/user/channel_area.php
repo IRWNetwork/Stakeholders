@@ -24,7 +24,7 @@
                         
                             <div class="col-xs-5"> 
                                 <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
-                                    <img src="<?php echo base_url()."uploads/profile_pic/".$list['picture']?>" class=" img-responsive"/>
+                                    <img src="<?php echo base_url()."uploads/profile_pic/".(($list['picture'])?$list['picture']:"default-thumbnail.jpg")?>" class=" img-responsive"/>
                                     
                                  </a>
                             </div>

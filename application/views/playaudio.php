@@ -50,7 +50,7 @@
 		<?php $count=0;
 			foreach($featuredcontent as $row){$count++; if($count==5) break; $url = $this->Common_model->getUrl($row);
 		?>
-		<div> <a class="pull-left thumb thumb-wrapper m-r"> <img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>"> </a>
+		<div> <a class="pull-left thumb thumb-wrapper m-r"> <img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>"> </a>
 			<div class="clear"> 
 				<?php 
 					$url = $this->Common_model->getUrl($row);

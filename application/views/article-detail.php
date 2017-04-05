@@ -6,7 +6,7 @@
 				<h2 class="m-t-none"><a href=""><?php echo $dataRow['title'] ?></a></h2>
 				<a data-item="share" data-toggle="modal" data-target="#share-pop" onclick="showSharePopup('<?php echo $dataRow['id']?>')">Share</a>
 				<div>
-					<img src="<?php echo base_url() ?>uploads/files/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />
+					<img src="<?php echo base_url() ?>uploads/listing/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />
 					<?php echo $dataRow['description']?>
 					<div style="clear:both"></div>
 					<div id="disqus_thread"></div>
@@ -42,7 +42,7 @@
 		<?php $count=0;
 			foreach($featuredcontent as $row){$count++; if($count==5) break; $url = $this->Common_model->getUrl($row);
 		?>
-		<div> <a class="pull-left thumb thumb-wrapper m-r"> <img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>"> </a>
+		<div> <a class="pull-left thumb thumb-wrapper m-r"> <img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>"> </a>
 			<div class="clear"> 
 				<?php 
 					$url = $this->Common_model->getUrl($row);

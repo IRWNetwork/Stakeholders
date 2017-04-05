@@ -78,7 +78,7 @@
 									<div class="col-sm-9">
 										<input type="file" name="picture" /><br />
 										<?php if($contentRow['picture']!=''){?>
-										<img src="<?php echo base_url()?>uploads/content_listing/<?php echo $contentRow['picture']?>" style="width:100px" /><br />
+										<img src="<?php echo base_url()?>uploads/listing/<?php echo $contentRow['picture']?>" style="width:100px" /><br />
 										<span><a href=""><i class="fa fa-trash"></i>&nbsp;Delete</a></span>
 										<?php }?>
 									</div>

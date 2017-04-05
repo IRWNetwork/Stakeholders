@@ -43,7 +43,7 @@ $(document).ready(function(){
 		
 		//var base_url = window.location.origin;
 		
-		var current_song_image = '<img src='+BASE_URL+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+		var current_song_image = '<img src='+BASE_URL+'/uploads/listing/thumb_153_'+image+' class="img-small r r-2x"/>';
 		$(".song-img").empty();
 		$(".song-img").append(current_song_image);
 		
@@ -112,7 +112,7 @@ $(document).on('click', '.playSong', function() {
 		
 		//var base_url = window.location.origin;
 		
-		var current_song_image = '<img src='+BASE_URL+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+		var current_song_image = '<img src='+BASE_URL+'/uploads/listing/thumb_153_'+image+' class="img-small r r-2x"/>';
 		$(".song-img").empty();
 		$(".song-img").append(current_song_image);
 		
@@ -136,15 +136,15 @@ $(document).on('click', '.playSong', function() {
 });
 
 function addSong(song,title,id){
-	$(".sm2-playlist-bd").html("<li id='song"+id+"' data-id='song"+id+"'><a href='<?php echo base_url()?>uploads/files/"+song+"'></a></li>");
+	$(".sm2-playlist-bd").html("<li id='song"+id+"' data-id='song"+id+"'><a href='<?php echo base_url()?>uploads/listing/"+song+"'></a></li>");
 	window.sm2BarPlayers[0].actions.play(0);
 }
 function addNextPlay(song,title,id){
 	var liNumber = $('.sm2-playlist-bd li.selected').attr('data-id');
-	$("#"+liNumber ).after( "<li id='song"+id+"' data-id='song"+id+"'> <a href='<?php echo base_url()?>uploads/files/"+song+"'>"+title+"</a></li>");
+	$("#"+liNumber ).after( "<li id='song"+id+"' data-id='song"+id+"'> <a href='<?php echo base_url()?>uploads/listing/"+song+"'>"+title+"</a></li>");
 }
 function addInQueue(song,title,id,image){
-	$(".sm2-playlist-bd" ).append( "<li id='song"+id+"' class='playlist_item' data-id='song"+id+"' data-image="+image+"> <a href='<?php echo base_url()?>uploads/files/"+song+"'>"+title+"</a></li>");
+	$(".sm2-playlist-bd" ).append( "<li id='song"+id+"' class='playlist_item' data-id='song"+id+"' data-image="+image+"> <a href='<?php echo base_url()?>uploads/listing/"+song+"'>"+title+"</a></li>");
 }
 
 $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() {
@@ -152,7 +152,7 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 	var image = $(this).attr('data-image');
 	var title = $(this).find('a').text();
 	$(".song-name h3").text(title);
-	var current_song_image = '<img src='+BASE_URL+'/uploads/files/thumb_153_'+image+' class="img-small r r-2x"/>';
+	var current_song_image = '<img src='+BASE_URL+'/uploads/listing/thumb_153_'+image+' class="img-small r r-2x"/>';
 	$(".song-img").empty();
 	$(".song-img").append(current_song_image);
 
@@ -163,9 +163,9 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 <meta name="twitter:card" content="player">
 <meta name="twitter:title" content="<?php echo $dataRow['title'];?>">
 <meta name="twitter:description" content="<?php echo $dataRow['description'];?>">
-<meta name="twitter:image:src" content="<?php echo base_url() ?>uploads/files/<?php echo $dataRow['picture']?>">
+<meta name="twitter:image:src" content="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture']?>">
 <meta property="og:title" content="<?php echo $dataRow['title'];?>">
-<meta property="og:image" content="<?php echo base_url() ?>uploads/files/thumb_469_<?php echo $dataRow['picture']?>">
+<meta property="og:image" content="<?php echo base_url() ?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>">
 <meta property="og:url" content="<?php echo current_url();?>">
 <meta property="og:type" content="article"/>
 <meta property="og:description" content="<?php echo $dataRow['description'];?>">
@@ -182,7 +182,7 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 	<!-- content -->
 	<div>
 	<div class="loader" style="margin: 0 auto;text-align: center;margin-right:265px;display: none">
-		<img src="<?php echo base_url()?>uploads/files/loading.gif" width="50" height="50">
+		<img src="<?php echo base_url()?>uploads/listing/loading.gif" width="50" height="50">
 	</div>
 		<div id="content" class="app-content" role="main"> {content} </div>
 		<!-- footer -->

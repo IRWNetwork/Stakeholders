@@ -3,7 +3,7 @@
     <?php if($dataRow['type']=='Podcasts' || $dataRow['type']== 'podcasts'){ ?>
     <style>
 	body{
-		 background: url("<?php echo base_url() ?>uploads/files/thumb_400_<?php echo $dataRow['picture']?>") no-repeat;
+		 background: url("<?php echo base_url() ?>uploads/listing/thumb_400_<?php echo $dataRow['picture']?>") no-repeat;
 		/* background: url("../images/maxresdefault.jpg") no-repeat center center fixed;
 	   background-repeat: repeat-y;
 		background-size: 100% auto;
@@ -198,7 +198,7 @@ wavesurfer.load('<?php echo base_url()?>uploads/files/BoWEp03.mp3');
                 <div class="wrapper-lg">
                     <h2 class="m-t-none"><?php echo $dataRow['title'] ?></h2>
                     <div>
-                        <img src="<?php echo base_url() ?>uploads/files/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />
+                        <img src="<?php echo base_url() ?>uploads/listing/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />
                         <?php echo $dataRow['description']?>
                     </div>
                 </div>

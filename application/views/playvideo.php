@@ -6,31 +6,7 @@
 			<div>
 				<?php if ($dataRow['video_type']=='embed_code') { ?>
 				<?php echo $dataRow['embed_code']; ?>
-				<?php } else { ?>
-				<?php 
-					$add = base_url() . "uploads/banners/videos/".$addvertis_video;
-					//$add = 'http://www.w3schools.com/html/mov_bbb.mp4';
-					$video = base_url() . "uploads/files/".$dataRow['file'];
-					//echo $video = "http://localhost:8001/uploads/files/SampleVideo_640x360_2mb.mp4";exit;
-					$current_video = '';
-					$display_skip_button = '';
-					if ($add != '') {
-						$current_video = $add;
-						$display_skip_button = 'block';
-					}
-					else {
-						$current_video = $video;
-						$display_skip_button = 'none';
-					}
-				?>	
-				<video width="100%" height="400" id="myvideo" controls>
-  					<source src="<?php echo $current_video; ?>" type="video/mp4">
-					Your browser does not support the video tag.
-				</video>
-				<button id="skip_add" onclick="play_video()" class="btn btn-sm" style="display: <?php echo $display_skip_button; ?>">
-					Skip Add
-				</button>
-				<?php }?>
+				<?php } ?>
 			</div>
 			<div class="wrapper-lg">
 				<h2 class="m-t-none"><a href=""><?php echo $dataRow['title'] ?></a></h2>
@@ -86,29 +62,29 @@
 </div>
 <script type="text/javascript">
 	
-	function play_video() {
-		var video = '<?= $video ?>';
-		$("#skip_add").click(function(){
-			$("#myvideo").attr('src', video);
-			var myvid = document.getElementById('myvideo');
-			myvid.play();
-			$("#skip_add").hide();
-		});
-	}
+	// function play_video() {
+	// 	var video = '<?= $video ?>';
+	// 	$("#skip_add").click(function(){
+	// 		$("#myvideo").attr('src', video);
+	// 		var myvid = document.getElementById('myvideo');
+	// 		myvid.play();
+	// 		$("#skip_add").hide();
+	// 	});
+	// }
 </script>
 <script type="text/javascript">
-	var myvid = document.getElementById('myvideo');
-	var myvids = ['<?= $video; ?>'];
-	var activeVideo = 0;
+	// var myvid = document.getElementById('myvideo');
+	// var myvids = ['<?= $video; ?>'];
+	// var activeVideo = 0;
 
-	myvid.addEventListener('ended', function(e) {
-	  // update the active video index
-	  activeVideo = (++activeVideo) % myvids.length;
+	// myvid.addEventListener('ended', function(e) {
+	//   // update the active video index
+	//   activeVideo = (++activeVideo) % myvids.length;
 
-	  // update the video source and play
-	  myvid.src = myvids[activeVideo];
-	  myvid.play();
-	});
+	//   // update the video source and play
+	//   myvid.src = myvids[activeVideo];
+	//   myvid.play();
+	// });
 
 </script>
 

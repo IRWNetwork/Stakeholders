@@ -41,7 +41,7 @@
 													<ul class="main-grid-menu grid__item__menu item-actions">
 														<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 															<div class="item-actions__count" data-bind="bundleCount"></div>
-															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
+															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 														<li class="item-actions__item" data-item="play"> <a href="#" class="js-item-action js-play-now" data-test-id="contextmenu-play-now"> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
 														<li class="item-actions__item" data-item="play" data-sub-item="play-next"> <a href="#" class="js-item-action js-play-next" data-test-id="contextmenu-play-next"> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
 														<li class="item-actions__item" data-item="play" data-sub-item="add-to-queue"> <a href="javascript:void(0)" class="js-item-action js-play-last" data-test-id="contextmenu-play-last"> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
@@ -82,7 +82,7 @@
 			}?>
 		</div>
 		<div class="loader" style="margin: 0 auto;text-align: center;display: none">
-			<img src="<?php echo base_url()?>uploads/files/loading.gif" width="200" height="200">
+			<img src="<?php echo base_url()?>uploads/listing/loading.gif" width="200" height="200">
 		</div>
 	</div>
 	<!-- / main --> 

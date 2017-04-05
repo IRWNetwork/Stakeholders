@@ -30,7 +30,7 @@
                  </div>
                     <div class="row">
                         <div class="col-xs-4 col-md-3">
-                            <img src="<?php echo base_url()."uploads/profile_pic/".$channelDetail['picture']?>" class=" img-responsive"/>
+                            <img src="<?php echo base_url()."uploads/profile_pic/".(($channelDetail['picture'])?$channelDetail['picture']:"default-thumbnail.jpg")?>" class=" img-responsive"/>
                         </div>
                         <?php if($channelDetail['banner1']){?>
                         <div class="col-xs-8 col-md-9">

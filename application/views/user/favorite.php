@@ -53,7 +53,7 @@
 													<ul class="main-grid-menu grid__item__menu item-actions">
 														<li class="item-actions__item item-actions__album" data-bind-class="type" data-item="header">
 															<div class="item-actions__count" data-bind="bundleCount"></div>
-															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
+															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
 														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
@@ -78,7 +78,7 @@
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/files/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
 					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> </div>
 				</div>
 			</div>

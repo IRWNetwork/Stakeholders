@@ -29,7 +29,6 @@
 										<input type="text" class="form-control" name="phone" value="<?php echo $user->phone?>" placeholder="Phone">
 									</div>
 								</div>
-                                
                                 <?php if($this->ion_auth->user()->row()->id==3){ ?>
                                 <div class="form-group">
 									<label class="col-lg-3 control-label">Channel Subscription Price</label>
@@ -41,10 +40,10 @@
                                 <div class="form-group">
 									<label class="col-lg-3 control-label">Profile Picture</label>
 									<div class="col-lg-6">
-										
 										<label>
-										  <input type="file" name="picture" id="picture" />
-									  </label>
+											<input type="file" name="picture" id="picture" />
+									  	</label>
+										<span>Picture size must be at least 200 x 200</span>
                                     </div>
 								</div>
 								<?php if($user->picture!=''){?>
@@ -55,15 +54,13 @@
 									</div>
 								</div>
 								<?php }?>
-                                
-                                
                                 <div class="form-group">
 									<label class="col-lg-3 control-label">Small Banner</label>
 									<div class="col-lg-6">
-										
 										<label>
-										  <input type="file" name="banner1" id="banner1" />
-									  </label>
+											<input type="file" name="banner1" id="banner1" />
+									  	</label>
+										<span>Banner size must be at least 578 X 170</span>
                                     </div>
 								</div>
 								<?php if($user->banner1!=''){?>
@@ -74,7 +71,6 @@
 									</div>
 								</div>
 								<?php }?>
-                                
                                 <div class="form-group">
 									<label class="col-lg-3 control-label">Big Banner</label>
 									<div class="col-lg-6">
@@ -82,6 +78,7 @@
 										<label>
 										  <input type="file" name="banner2" id="banner2" />
 									  </label>
+									  <span>Banner size must be at least 846 X 180</span>
                                     </div>
 								</div>
 								<?php if($user->banner2!=''){?>

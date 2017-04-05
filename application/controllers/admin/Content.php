@@ -103,7 +103,7 @@ class Content extends CI_Controller
 				
 				if($_FILES['picture']['tmp_name']){
 					$picture_name 	= 'file_' . time();
-					$path       	= 'uploads/files/';
+					$path       	= 'uploads/listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
 					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
@@ -217,7 +217,7 @@ class Content extends CI_Controller
 					
 
 					$picture_name 	= 'picture_' . time().rand();
-					$path       	= 'uploads/content_listing/';
+					$path       	= 'uploads/listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
 

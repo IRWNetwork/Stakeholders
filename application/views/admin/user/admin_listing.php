@@ -34,7 +34,7 @@
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
 							<td><?php if($row->picture!=''){?>
-								<img style="width: 62px;height: 62px;" src="<?php echo base_url()?>uploads/files/<?php echo $row->picture?>" />
+								<img style="width: 62px;height: 62px;" src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" />
 								<?php }?></td>
 							<td><?php echo $row->first_name; ?></td>
 							<td><?php echo $row->last_name; ?></td>
