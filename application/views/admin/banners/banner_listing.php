@@ -34,7 +34,11 @@
 							<td><?php echo $row->page;?></td>
                             <td><img src="<?php echo base_url()."uploads/banner_images/thumb_153_".$row->banner_image;?>"/></td>
 							<td><?php echo $row->target;?></td>
-							<td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>admin/banner/changebanner?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a></td>						</tr>
+							<td class=" last" nowrap="nowrap">
+                            	<a href="<?php echo base_url()?>admin/banner/changebanner?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                                <a href="<?php echo base_url()?>admin/banner/delete?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to delete this banner ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete </a>
+                        	</td>
+                        </tr>
 						<?php }}else{?>
 						<tr>
 							<td colspan="6">No Record Found</td>

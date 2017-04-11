@@ -32,13 +32,21 @@
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
 							<td><?php if($row->picture!=''){?>
-								<img style="width: 62px;height: 62px;" src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" />
+								<img style="width: 62px;height: 62px;" src="<?php echo base_url()?>uploads/listing/<?php echo "thumb_153_".$row->picture?>" />
 								<?php }?></td>
 							<td><?php echo $row->title?></td>
 							<td><?php echo $row->type?></td>
-							<td><?php echo $row->is_premium?></td>
-							<td><?php echo $row->is_premium?></td>
-							<td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>admin/content/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>admin/content/delete?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to delete this product ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete </a></td>
+							<td><?php echo ($row->is_premium == 'yes') ?  'Yes' : 'No' ?></td>
+							<td><?php echo ($row->is_featured == 'yes') ? 'Yes' : 'No' ?></td>
+							<td class=" last" nowrap="nowrap">
+                            	<?php if($row->is_featured=='yes'){?>
+                                <a href="<?php echo base_url()?>admin/content/unfeatured/<?php echo $row->id?>" class="btn btn-primary btn-xs"><i class="fa fa-times"></i> Unfeatured </a> 
+                                <?php }else{?>
+                                <a href="<?php echo base_url()?>admin/content/featured/<?php echo $row->id?>" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Featured </a> 
+                                <?php }?>
+                            	<a href="<?php echo base_url()?>admin/content/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> 
+                                <a href="<?php echo base_url()?>admin/content/delete?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to delete this product ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete </a>
+                           	</td>
 						</tr>
 						<?php }}else{?>
 						<tr>

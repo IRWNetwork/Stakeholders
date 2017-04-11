@@ -54,15 +54,15 @@
 							</div>
 						</div>
                         
-						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="<?php echo $url?>" class="text-ellipsis"><?php echo $row->title;?></a> 
+						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+					<div class="padder-v"><a href="<?php echo $url?>" class="text-ellipsis"><?php echo nl2br($row->title);?></a> 
                     	<br />
 						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
-                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    		<small><strong>Posted by:</strong>&nbsp;<a href="<?php echo base_url()?>user/channeldescription/<?php echo $row->user_id?>"><?php echo $row->channel_name;?></a></small>
                     	<?php } 
 						  else{
 						?> 
-                       	 <small><strong>Posted by:</strong> Admin</small>
+                       	 <small><strong>Posted by:</strong>&nbsp;IRW Network</small>
                     	<?php } ?>
                     </div>
 				</div>

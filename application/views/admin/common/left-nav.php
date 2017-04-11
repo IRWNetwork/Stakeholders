@@ -34,6 +34,12 @@
 							<li> <a href="<?php echo base_url()?>admin/channel/addchannel"> <span>Add Channel</span> </a> </li>
 						</ul>
 					</li>
+                    
+                    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-flask" aria-hidden="true"></i><span>Social</span> </a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/preferences"> <span>Edit Social</span> </a> </li>
+						</ul>
+					</li>
 
 					<li>
 						<a href class="auto">
@@ -71,6 +77,15 @@
 							<li> <a href="<?php echo base_url()?>admin/faq/add"> <span>Add FAQ</span> </a> </li>
 						</ul>
 					</li>
+                    
+                    <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-comments-o"></i> <span>Forum</span> </a>
+						<ul class="nav nav-sub dk">
+							<li> <a href="<?php echo base_url()?>admin/forum/admin/category_create"> <span>Add Category</span> </a> </li>
+							<li> <a href="<?php echo base_url()?>admin/forum/admin/category_view"> <span>All Categories</span> </a> </li>
+                            <li> <a href="<?php echo base_url()?>admin/forum/admin/thread_view"> <span>All Threads</span> </a></li>
+						</ul>
+					</li>
+                    
 					<li> 
 						<a href class="auto">
 							<span class="pull-right text-muted">

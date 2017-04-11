@@ -71,13 +71,23 @@ class Users_model extends CI_Model
 		}
 
 		$this->db->select('users.*');
+		//$this->db->where('is_deleted !=', 1);
 		$query = $this->db->get('users');
-		//echo $this->db->last_query();
+		//echo $this->db->last_query();exit;
 		if($query->num_rows())
 		{
 			return $query->result();
 		}
 		return array();
+	}
+
+	public function soft_delete($id) {
+		$data = array(
+           'is_deleted' => 1,
+        );
+		$this->db->where('id', $id);
+		$this->db->update('users', $data);
+		return true;
 	}
 	
 	public function getLatestUsersForDashboard(){
@@ -778,23 +788,54 @@ class Users_model extends CI_Model
 		//print_r($new); die();
 		return $new;
 	}
+    public function getChanelUsers() {
+        /*$chanel_users  = $this->db->query("select users_groups.user_id,
+            users.id, users.channel_subscription_price, users.channel_name, users.picture,
+            contents.user_id, contents.type, count(contents.id) as TOTAL from users_groups 
+            left join users on (users_groups.user_id = users.id)
+            left join contents on (users_groups.user_id = contents.user_id)
+            where users_groups.group_id = '3' and users.is_deleted != '1' 
+            group by contents.user_id , contents.type order by users.sorting desc
+        ");*/
+        $chanel_users = $this->db->query("SELECT users.id, users.channel_subscription_price, users.channel_name, users.picture,users_groups.user_id,contents.user_id, contents.type, count(contents.id) as TOTAL FROM `users`
+left join users_groups on (users.id=users_groups.user_id)
+left join contents on (users.id = contents.user_id)
+where users_groups.group_id = '3' and users.is_deleted!='1'
+group by users.channel_name order by users.sorting desc");
+        if($chanel_users->num_rows()>0){
+            return $chanel_users->result_array();
+        }
+        return array();
+    }
 	
-	public function getUserDetailByIds($ids){
+	public function getUserDetailByIds($ids) {
 		$this->db->select('id, channel_subscription_price, channel_name, picture');
 		$this->db->where_in('id',$ids);
+		$this->db->order_by("sorting", "desc");
+		$this->db->where('is_deleted !=', 1);
 		$query = $this->db->get('users');
-		//echo $this->db->last_query();
-		//die();
-		if($query->num_rows()>0){
+		// echo $this->db->last_query();
+		// die();
+		if ($query->num_rows()>0) {
 			$row = $query->result_array();
 			return $row;	
 		}
 		return array();
 	}
 	
+
+	public function getUserDetailcountById($id) {
+		$this->db->select('id,channel_subscription_price, channel_name, description, picture, sales_pitch, banner, video,video_type');
+		$this->db->where('id',$id);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		return $query->num_rows();
+	}
+	
 	
 	public function getUserDetailById($id){
-		$this->db->select('channel_subscription_price, channel_name, description, picture, sales_pitch, banner1, banner2');
+		$this->db->select('id,channel_subscription_price, channel_name, description, picture, sales_pitch, banner, video,video_type');
 		$this->db->where('id',$id);
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();
@@ -805,6 +846,7 @@ class Users_model extends CI_Model
 		}
 		return array();
 	}
+    
 	
 	
 	
@@ -837,7 +879,7 @@ class Users_model extends CI_Model
 	
 	
 	public function getChannelSubscribeInfoByChannelId($id){
-		$this->db->select('channel_subscription_price, channel_name');
+		$this->db->select('channel_subscription_price, channel_name,picture');
 		$this->db->where('id',$id);
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();
@@ -957,7 +999,7 @@ class Users_model extends CI_Model
 		return true;
 	}
 	public function getUserbanner(){
-		$this->db->select(' banner1');
+		$this->db->select(' banner');
 		$this->db->where('id',$this->ion_auth->get_user_id());
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();

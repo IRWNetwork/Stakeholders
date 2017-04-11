@@ -3,7 +3,7 @@
 	<div class="blog-post">
 		<div class="panel no-border">
 			<div class="wrapper-lg">
-				<h2 class="m-t-none"><a href=""><?php echo $dataRow['title'] ?></a></h2>
+				<h2 class="m-t-none"><a href=""><?php echo nl2br($dataRow['title']); ?></a></h2>
 				<a data-item="share" data-toggle="modal" data-target="#share-pop" onclick="showSharePopup('<?php echo $dataRow['id']?>')">Share</a>
 				<div>
 					<img src="<?php echo base_url() ?>uploads/listing/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />

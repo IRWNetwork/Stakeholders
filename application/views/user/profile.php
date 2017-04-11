@@ -54,38 +54,60 @@
 									</div>
 								</div>
 								<?php }?>
-                                <div class="form-group">
-									<label class="col-lg-3 control-label">Small Banner</label>
+                                
+                                <div class="form-group" id="video_type" >
+									<label class="col-lg-3 control-label">Video Type</label>
 									<div class="col-lg-6">
-										<label>
-											<input type="file" name="banner1" id="banner1" />
-									  	</label>
-										<span>Banner size must be at least 578 X 170</span>
-                                    </div>
-								</div>
-								<?php if($user->banner1!=''){?>
-								<div class="form-group">
-									<input type="hidden" name="banner1_old_pic" value="<?php echo $user->banner1; ?>">
-									<div class="col-lg-6 col-md-offset-3">
-										<div><img src="<?php echo  base_url().'/uploads/profile_pic/thumb_200_'.$user->banner1; ?>" ></div>
+										<div class="radio">
+											<label class="i-checks">
+												<input type="radio" name="video_type" required value="file" onchange="showVideo(this.value)" <?php if(isset($user->video_type) && $user->video_type=='file'){ echo "checked"; }else{?> checked="checked" <?php }?>>
+												<i></i> File
+											</label>
+											<label class="i-checks">
+												<input type="radio" name="video_type" required value="embed_code" onchange="showVideo(this.value)" <?php if(isset($user->video_type) && $user->video_type=='embed_code'){ echo "checked"; }?> >
+												<i></i> Embed Code
+											</label>
+										</div>
 									</div>
 								</div>
-								<?php }?>
+                                <input type="hidden" name="type" value="Video" />
+                                <div class="form-group" id="file">
+									<label class="col-sm-3 control-label">Promo Video File (Limit 5GB)</label>
+									<div class="col-sm-9">
+										<input type="file" name="file" />
+									</div>
+								</div>
+                                
+                                <div class="form-group" id="embed_code" style="display:none">
+									<label class="col-sm-3 control-label">Youtube Embedcode</label>
+									<div class="col-sm-9">
+									<textarea name="embed_code" class="form-control"><?php if(isset($user->video_type)&& $user->video_type=="embed_code"){ echo $user->video; }?></textarea>
+                                    	
+									</div>
+								</div>
+                                <!--<div class="form-group">
+									<label class="col-lg-3 control-label">Promo Video Link</label>
+									<div class="col-lg-6">
+										<input type="text" class="form-control" name="video" value="<?php echo $user->video?>" placeholder="embed video Link">
+									</div>
+								</div>-->
+                                
+                                
                                 <div class="form-group">
-									<label class="col-lg-3 control-label">Big Banner</label>
+									<label class="col-lg-3 control-label">Promo Banner</label>
 									<div class="col-lg-6">
 										
 										<label>
-										  <input type="file" name="banner2" id="banner2" />
+										  <input type="file" name="banner" id="banner" />
 									  </label>
 									  <span>Banner size must be at least 846 X 180</span>
                                     </div>
 								</div>
-								<?php if($user->banner2!=''){?>
+								<?php if($user->banner!=''){?>
 								<div class="form-group">
-									<input type="hidden" name="banner2_old_pic" value="<?php echo $user->banner2; ?>">
+									<input type="hidden" name="banner_old_pic" value="<?php echo $user->banner; ?>">
 									<div class="col-lg-6 col-md-offset-3">
-										<div><img src="<?php echo  base_url().'/uploads/profile_pic/thumb_200_'.$user->banner2; ?>" ></div>
+										<div><img src="<?php echo  base_url().'/uploads/profile_pic/thumb_200_'.$user->banner; ?>" ></div>
 									</div>
 								</div>
 								<?php }?>
@@ -103,3 +125,15 @@
 		</div>
 	</div>
 </div>
+<script>
+  	function showVideo(type){
+		if(type=='embed_code'){
+			$("#file").fadeOut( 500, "linear" );
+			$("#embed_code").fadeIn( 500, "linear" );
+		}else{
+			$( "#file" ).fadeIn( 200, "linear" );
+			$("#embed_code").fadeOut( 500, "linear" );
+		}
+	}
+	showVideo('<?php echo $user->video_type?>');
+</script>

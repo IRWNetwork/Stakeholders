@@ -33,7 +33,7 @@
 				<ul class="nav dk load_data_ajax">
 					<li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs"> <span>Discovery</span> </li>
 					<li ui-sref-active="active" class="active"> <a href="javascript:void(0)" data-for=""> <i class="icon-disc icon"></i> <span>New</span> </a> </li>
-                   	<li ui-sref-active="active"> <a href="<?php echo base_url()?>user/channelmarketplace" > <i class="icon-list icon"></i> <span style="font-size:13px">Channel Marketplace</span> </a> </li>
+                   	<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="user/channelmarketplace" > <i class="icon-list icon"></i> <span style="font-size:13px">Channel Marketplace</span> </a> </li>
 					<li ui-sref-active="active">
 						<a href="javascript:void(0)" data-for="podcasts">
 							<i class="fa fa-microphone" ></i>

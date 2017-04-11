@@ -78,6 +78,8 @@ class Thread extends MY_Controller {
     
     public function talk($slug, $start = 0)
     {
+		$slug = urldecode($slug);
+		
         if ($this->input->post('btn-post')) {
             if (!$this->ion_auth->user()->row()->id) {
                 redirect('user/login');
@@ -110,12 +112,14 @@ class Thread extends MY_Controller {
         }
         
         $thread = $this->db->get_where(TBL_THREADS, array('slug' => $slug))->row();
+		//echo $this->db->last_query(); die();
         //print_r($thread); die();
         // set pagination
         $this->load->library('pagination');
         $this->page_config['base_url']    = site_url('forum/thread/talk/'.$slug);
         $this->page_config['uri_segment'] = 4;
         $this->page_config['total_rows']  = $this->db->get_where(TBL_POSTS, array('thread_id' => $thread->id))->num_rows();
+		//echo $this->db->last_query(); die();
         $this->page_config['per_page']    = 10;
         
         $this->set_pagination();
@@ -162,7 +166,7 @@ class Thread extends MY_Controller {
         $this->pagination->initialize($this->page_config);
         
         $this->data['page']    = $this->pagination->create_links();
-        
+       
         $this->data['threads'] = $this->Thread_model->get_by_category($start, $this->page_config['per_page'], $cat_id);
         
         $this->data['type']         = 'category';

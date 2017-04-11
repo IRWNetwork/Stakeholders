@@ -35,7 +35,7 @@ class Channel extends CI_Controller
 
         $page 		         = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$data['channels']	 = $this->Users_model->getAllUsers(array(),$page,$config["per_page"]);
-		//print_r($data['channels']); die();
+		//echo "<pre>"; print_r($data['channels']);exit;
 		$data["links"]        = $this->pagination->create_links();
         $parser['content']	= $this->load->view('admin/channels/listing',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
@@ -254,6 +254,11 @@ class Channel extends CI_Controller
 						 'field'   => 'description',
 						 'label'   => 'Description',
 						 'rules'   => 'trim|required'
+					),
+					array(
+						 'field'   => 'sorting',
+						 'label'   => 'Sort Order',
+						 'rules'   => 'trim|required'
 					)
 					
 				);
@@ -277,26 +282,27 @@ class Channel extends CI_Controller
 
 			if ($this->form_validation->run()){
 
-					if($this->input->post('type')=='4'){
-						$userData = array(
-							'password'   => $this->input->post('password'),
-							'email' 	=>  $this->input->post('email'),
-							'username' 	=>  $this->input->post('email'),
-							'brand_name'   =>  $this->input->post('brand'),
-							'channel_name' =>  $this->input->post('channel'),
-							'description' =>  $this->input->post('description'),
-							'channel_subscription_price' =>  floatval($this->input->post('channel_price'))
-						);
-					}
-					else{
-						$userData = array(
-							'password'   => $password,
-							'email' 	=>  $email,
-							'username' 	=>  $email,
-						);
-					}
-					
-					if(isset($_FILES['picture']) and $_FILES['picture']['name']!=''){
+				if($this->input->post('type')=='4'){
+					$userData = array(
+						'email' 	=>  $this->input->post('email'),
+						'username' 	=>  $this->input->post('email'),
+						'brand_name'   =>  $this->input->post('brand'),
+						'channel_name' =>  $this->input->post('channel'),
+						'description'  =>  $this->input->post('description'),
+						"sorting"      =>  (int)$this->input->post('sorting'),
+                        "is_deleted"   =>  (int)$this->input->post('is_deleted'),
+						'channel_subscription_price' =>  floatval($this->input->post('channel_price'))
+					);
+				}
+				else{
+					$userData = array(
+						'password'   => $password,
+						'email' 	=>  $email,
+						'username' 	=>  $email,
+					);
+				}
+				
+				if(isset($_FILES['picture']) and $_FILES['picture']['name']!=''){
 					
 					$file_name = time().$_FILES['picture']['name'];
 					$userData['picture'] = $file_name;
@@ -310,8 +316,10 @@ class Channel extends CI_Controller
 						$this->Common_model->generateThumb($name,array("200",""),$destination);
 					}
 				}
-					if (!$this->Users_model->email_check($this->input->post('email'),$this->input->get('id')))
-						{
+				if (!$this->Users_model->email_check($this->input->post('email'),$this->input->get('id'))){
+					if($this->input->post('password')){
+						$this->ion_auth->reset_password($this->input->post('email'),$this->input->post('password'));
+					}
 					//$group_name = array($this->input->post('type')-1);
 					$this->Users_model->update($userData, $this->input->get('id')); 
 					//$this->Phpbb->user_add($identity,$identity,$password);
@@ -344,6 +352,19 @@ class Channel extends CI_Controller
 		//print_r($data['usersRow']);die();
         $parser['content']		= $this->load->view('admin/channels/edit_channel',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
+	}
+
+	public function deletecontent($id) {
+
+		$result = $this->Users_model->soft_delete($id);
+		if ($result) {
+			$this->session->set_flashdata(
+				'Success',
+				'Record Deleted'
+			);
+
+			redirect("admin/channel");
+		}
 	}
 	
 }

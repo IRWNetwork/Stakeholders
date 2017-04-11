@@ -86,8 +86,7 @@ class Embed extends MY_Controller
 			echo "404 Page Not Found";
 			die();
 		}
-		//print_r($content_row);
-		//die();
+		//echo "<pre>"; print_r($content_row);die();
 		$this->data['dataRow']		= $content_row;
 		$this->data['page_heading']   = $content_row['title'];
 		$parser['content']			=  $this->load->view('embed_code_view',$this->data);

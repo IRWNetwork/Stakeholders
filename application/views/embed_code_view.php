@@ -212,21 +212,21 @@ else {
  <?php if($dataRow['type']=='video' || $dataRow['type']== 'Video'){ ?>
  
  	<div id="Container" class="container content">
-            <video id="my-video" data-action="play" class="video" src="<?php echo base_url()?>uploads/files/<?php echo $dataRow['file']?>" type="video/mpeg" ></video>
+            <video id="my-video" data-action="play" class="video" src="<?php echo $dataRow['file_url']; ?>" type="video/mpeg" ></video>
 
              <div class="container-fluid ">
             <div class="row">
                 <div class="col-md-12">
                    <div class="controls">
                             <a class="play-button" data-action="play" href="javascript:void(0)" >
-                                <img id="play-icon" src="<?php echo base_url() ?>uploads/data/play.png" width="60">
+                                <img id="play-icon" src="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture'] ?>" width="60">
                             </a>
                             <div class="song-title pull-right">
                                 <a href="" class="title"><span><?php echo $dataRow['title']; ?></span></a>
                             </div>
                             
                         </div>
-                        <div class="pull-right"><div class="player-logo"><img  src="<?php echo base_url() ?>uploads/data/logo-old.png" width="50"/></div> 
+                        <div class="pull-right"><div class="player-logo"><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50"/></div> 
                                 <a href="">
                                     <i class="glyphicon glyphicon-heart heart-icon"></i>
                                 </a>
@@ -292,12 +292,12 @@ else {
          <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="controls"> <a class="play-button" data-action="play" data-status="play"  > <img id="play-icon" src="<?php echo base_url() ?>uploads/data/play.png" width="60"> </a>
+                    <div class="controls"> <a class="play-button" data-action="play" data-status="play"  > <img id="play-icon" src="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture']; ?>" width="60"> </a>
                         <div class="song-title pull-right"> <a href="#" class="tag"><?php echo $dataRow['title']; ?></a>
                         </div>
                     </div>
                     <div class="pull-right">
-                        <div class="player-logo"><img  src="<?php echo base_url() ?>uploads/data/logo-old.png" width="50" /></div>
+                        <div class="player-logo"><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50" /></div>
                         <a href=""> <i class="glyphicon glyphicon-heart heart-icon"></i> </a>
                         <button class="share-button glyphicon glyphicon-share">Share</button>
                     </div>

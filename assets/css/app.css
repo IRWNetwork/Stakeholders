@@ -1,4 +1,4 @@
-/* 
+2E3344/* 
 */
 .app-footer.app-footer-fixed { z-index: 9999; }
 html { background-color: #f0f3f4; }
@@ -123,6 +123,11 @@ a:hover .caret-white { border-top-color: #fff; }
 	padding-right: 15px;
 	border-color: #e7ecee;
 }
+
+.list-group {
+    margin-bottom: 0 !important;
+}
+
 a.list-group-item:hover, a.list-group-item:focus, a.list-group-item.hover { background-color: #f6f8f8; }
 .list-group-item.media { margin-top: 0; }
 .list-group-item.active {
@@ -2593,7 +2598,7 @@ a.text-#000000:hover { color: #131e25; }
 }
 .img-full { width: 100%; }
 .img-small {
-	width: 50%;
+	width: 100%;
     height: 43px;
 }
 .img-full img { width: 100%; }
@@ -2941,7 +2946,7 @@ a.text-#000000:hover { color: #131e25; }
 	position: fixed !important;
 }
 .player-custom.sm2-bar-ui .song-img {
-	width: 95px;
+	width: 50px;
 	float: left;
 	min-height: 1px;
 }
@@ -2976,4 +2981,66 @@ a.text-#000000:hover { color: #131e25; }
 	margin-bottom:10px;
 	margin-right:5px;
 	border:none;
+}
+.embed_video {
+	width: 100%;
+    text-align: center;
+}
+
+.add_video {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    background: #ccc;
+    min-height: 340px;
+}
+#skip_add {
+	display: block;
+    position: absolute;
+    top: 300px;
+    left: 76px;
+    color: red;
+    font-weight: bold;
+}
+#embed_skip_add {
+	display: block;
+    position: absolute;
+    top: 300px;
+    left: 76px;
+    color: red;
+    font-weight: bold;	
+}
+
+.loader_div {
+	background: #FFF;
+    text-align: center;
+    display: none;
+    margin-left: -38px;
+    margin-top: -12px;
+}
+.loader_div progress {
+	    position: relative;
+	    top: 25px;
+}
+::-webkit-scrollbar {
+      width: 5px;
+}
+::-webkit-scrollbar-track {
+      background-color: #ccc;
+} /* the new scrollbar will have a flat appearance with the set background color */
+ 
+::-webkit-scrollbar-thumb {
+      background-color: #2E3344; 
+} /* this will style the thumb, ignoring the track */
+ 
+::-webkit-scrollbar-button {
+      background-color: #2E3344;
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+ 
+::-webkit-scrollbar-corner {
+      background-color: black;
+}
+.prem-btn {
+	float: right;
 }

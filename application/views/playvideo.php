@@ -1,16 +1,70 @@
-<br />
+<style>
+@media (max-width:1024px){
+  #footer{margin-top: 271px;}
+}
 
-<div class="col-sm-9">
+@media (max-width: 414px){
+#footer {margin-top: 0px;}
+}
+
+@media (max-width:414px){
+	.w-md {
+		width: 330px !important;
+	}
+  
+	.clear {
+		width: 70% !important;
+	}
+}
+
+@media (max-width:320px){
+	.clear {
+		width: 60% !important;
+	}
+}
+
+video::-internal-media-controls-download-button {
+    display:none;
+}
+
+video::-webkit-media-controls-enclosure {
+    overflow:hidden;
+}
+
+video::-webkit-media-controls-panel {
+    width: calc(100% + 30px); /* Adjust as needed */
+}
+
+@media(max-width: 768px){
+	.w-md {
+		width: 538px;
+	}
+	
+}
+
+</style>
+<br />
+<div class="col-md-9">
 	<div class="blog-post">
 		<div class="panel no-border">
 			<div>
-				<?php if ($dataRow['video_type']=='embed_code') { ?>
-				<?php echo $dataRow['embed_code']; ?>
-				<?php } ?>
+				<?php 
+					if ($dataRow['video_type'] == 'embed_code') {
+				?>
+					<!--End of embed video Div-->
+					<div class="embed_video">
+						<?php	 
+						 	echo $dataRow['embed_code'];
+						?>
+					</div> <!--End of embed video Div-->
+
+				<?php } else {?>
+                    <video controls="controls" width="100%" height="400" src="<?php echo $dataRow['file_url']?>"></video>
+				<?php }?>
 			</div>
 			<div class="wrapper-lg">
-				<h2 class="m-t-none"><a href=""><?php echo $dataRow['title'] ?></a></h2>
-				<a data-item="share" data-toggle="modal" data-target="#share-pop" onclick="showSharePopup('<?php echo $dataRow['id']?>')">Share</a>
+				<h2 class="m-t-none"><a href=""><?php echo nl2br($dataRow['title']); ?></a></h2>
+				<a data-item="share" data-toggle="modal" data-target="#share-pop" style="font-size:16px" onclick="showSharePopup('<?php echo $dataRow['id']?>')"><i class="fa fa-share-alt-square" aria-hidden="true"></i>&nbsp;Share</a>
 				<div>
 					<p><?php echo $dataRow['description']?></p>
 				</div>
@@ -42,7 +96,7 @@
 	
 	
 </div>
-<div class="col-sm-3">
+<div class="col-md-3">
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
 		<div class="wrapper-md">
 			<div class="m-b-sm text-md">Wrestle Zone</div>
@@ -61,30 +115,22 @@
 	
 </div>
 <script type="text/javascript">
-	
-	// function play_video() {
-	// 	var video = '<?= $video ?>';
-	// 	$("#skip_add").click(function(){
-	// 		$("#myvideo").attr('src', video);
-	// 		var myvid = document.getElementById('myvideo');
-	// 		myvid.play();
-	// 		$("#skip_add").hide();
-	// 	});
-	// }
+	function play_video() {
+		var video = '<?= $video ?>';
+		$("#skip_add").click(function(){
+			$("#myvideo").attr('src', video);
+			var myvid = document.getElementById('myvideo');
+			myvid.play();
+			$("#skip_add").hide();
+		});
+	}
+</script>
+
 </script>
 <script type="text/javascript">
-	// var myvid = document.getElementById('myvideo');
-	// var myvids = ['<?= $video; ?>'];
-	// var activeVideo = 0;
-
-	// myvid.addEventListener('ended', function(e) {
-	//   // update the active video index
-	//   activeVideo = (++activeVideo) % myvids.length;
-
-	//   // update the video source and play
-	//   myvid.src = myvids[activeVideo];
-	//   myvid.play();
-	// });
-
+	$("#embed_skip_add").click(function() {
+		$(".add_video").remove();
+		$(this).hide();
+	});
 </script>
 

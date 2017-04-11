@@ -1,13 +1,47 @@
+<style>
+@media (max-width:1024px){
+#footer{margin-top: 688px !important;}
+}
+
+@media (max-width: 768px){
+	#footer {
+		margin-top: 360px !important;
+	}
+}
+
+
+@media (max-width: 414px){
+	#footer {
+		margin-top: 142px !important;
+	}
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.bxslider').bxSlider({
+		pager: false,
+		auto: true,
+		pause: 9000
+	});
+});
+</script>
 <br />
 <div class="col-sm-12">
-<?php if(count($bannerDetail)>0){?>
- <div style="margin-bottom:25px;" class="row">
-    <div class="col-xs-12">
-    <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
-        <img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
-    </div>
-  </div>
-  <?php }?>
+	<?php if(count($bannerDetail)>0){?>
+    <div class="row for-height">
+        <div class="col-xs-12">
+            <ul class="bxslider">
+                <?php foreach($bannerDetail as $banner_row){ ?>
+                <li>
+                    <a href="<?php echo $banner_row["banner_link"]?>" target="<?php echo $banner_row['target'];?>">
+                        <img src="<?php echo base_url()."uploads/banner_images/".$banner_row["banner_image"]?>" class="img-responsive" />
+                    </a>
+                </li>
+                <?php }?>
+            </ul>
+        </div>
+     </div>
+    <?php } ?>
 	<div class="blog-post">
 		<div class="panel no-border">
 			<div class="wrapper-lg">

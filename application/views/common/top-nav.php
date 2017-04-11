@@ -42,7 +42,7 @@
 				<li>
 					<div class="m-t-sm"> 
 						<a href="<?php echo base_url()?>user/login" class="btn btn-link btn-sm">Sign in</a> or 
-						<a href="<?php echo base_url()?>user/type" class="btn btn-sm btn-success btn-rounded m-l"><strong>Sign up</strong></a> &nbsp;
+						<a href="<?php echo base_url()?>user/register/1" class="btn btn-sm btn-success btn-rounded m-l"><strong>Sign up</strong></a> &nbsp;
 					</div>
 				</li>
 			</ul>
@@ -54,7 +54,7 @@
 					<a href="#" data-toggle="dropdown" class="dropdown-toggle clear">
 					<?php if($this->session->userdata('profile_pic')!=''){?>
 					<span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
-					<img src="<?php echo base_url().'uploads/profile_pic/thumb_200_'.$this->session->userdata('profile_pic'); ?>" alt="..."> <i class="on md b-white bottom"></i>
+					<img src="<?php echo base_url().'uploads/profile_pic/'.$this->session->userdata('profile_pic'); ?>" alt="..."> <i class="on md b-white bottom"></i>
 					</span> 
 					<?php }?>
 					<span class="hidden-sm hidden-md"><?php echo $this->session->userdata('uname');?></span> <b class="caret"></b>
@@ -64,9 +64,9 @@
 						<li> <a href="<?php echo base_url()?>user/profile">Profile</a> </li>
                         <li> <a href="<?php echo base_url()?>user/upgradepackage">Become Permium User</a> </li>
                         <li> <a href="<?php echo base_url()?>user/paymenthistory">Payment History </a></li>
-                        <li> <a href="<?php echo base_url()?>user/subscribechannel">Subscribed Channel </a> </li> 
+                        <li> <a href="<?php echo base_url()?>user/subscribechannel">Your Subscriptions </a> </li> 
                         <?php if($this->ion_auth->get_users_groups()->row()->id == 3){ ?>
-                            <li> <a href="<?php echo base_url()?>content">Contents</a> </li>
+                            <li> <a href="<?php echo base_url()?>content">Your Content</a> </li>
                             <li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
                              <li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>
                         <?php } ?>
@@ -82,3 +82,12 @@
 		</div>
 		<!-- / navbar collapse --> 
 	</header>
+	<script>
+	$(function() {
+		$('body').click(function(e) {
+			if($( document ).width()<790){
+			$(".app-aside").removeClass('off-screen');
+			}
+		});
+	});
+	</script>

@@ -1,3 +1,16 @@
+<style>
+@media (max-width:768px){
+.for-height {max-height: 187px !important;}
+.for-margin-left {margin-left: 0px !important;}
+.field{ width: 49% !important;
+    float: none;
+    display: inline-block;
+    vertical-align: top;}
+}
+
+
+</style>
+
 <?php 
 if (isset($_COOKIE['customer_logout'])) {
 	//echo 'hi';exit;
@@ -9,10 +22,17 @@ if (isset($_COOKIE['customer_logout'])) {
 ?>
 <script type="text/javascript">
 function loadRssFeed(id){
-		$.post("<?php echo base_url()?>home/rss_feeds?id="+id,function(data){
-			$("#feeds_content").html(data);
-		});
+	$.post("<?php echo base_url()?>home/rss_feeds?id="+id,function(data){
+		$("#feeds_content").html(data);
+	});
 }
+$(document).ready(function(){
+	$('.bxslider').bxSlider({
+		pager: false,
+		auto: true,
+		pause: 9000
+	});
+});
 </script>
 
 <div class="hbox hbox-auto-xs hbox-auto-sm"> 
@@ -20,11 +40,18 @@ function loadRssFeed(id){
 	<div class="col wrapper-lg">
     <?php $this->load->view('common/messages');?>
 		<h3 class="font-thin m-t-n-xs m-b">Featured</h3>
-         <?php if(count($bannerDetail)>0){?>
-        <div style="margin-bottom:25px;" class="row">
+        <?php if(count($bannerDetail)>0){?>
+        <div class="row for-height">
          	<div class="col-xs-12">
-            <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
-            	<img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
+                <ul class="bxslider">
+                	<?php foreach($bannerDetail as $banner_row){ ?>
+                    <li>
+                        <a href="<?php echo $banner_row["banner_link"]?>" target="<?php echo $banner_row['target'];?>">
+                            <img src="<?php echo base_url()."uploads/banner_images/".$banner_row["banner_image"]?>" class="img-responsive" />
+                        </a>
+                    </li>
+                    <?php }?>
+                </ul>
             </div>
          </div>
 		<?php } ?>
@@ -57,7 +84,7 @@ function loadRssFeed(id){
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }else{?>
 								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a> 
-								<a href="<?php echo $url;?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>' class="playSong"><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
+								<a href="<?php echo $url;?>" data-image='<?php echo $row->picture?>' data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>' class="playSong"><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }?>
 								<ul class="dropdown-menu">
@@ -82,9 +109,9 @@ function loadRssFeed(id){
 															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span>
 														</li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
-														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
-														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
-														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-last add_in_queue"  data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-last add_in_queue"  data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
 														<?php }?>
 														<li class="item-actions__divider" data-item="play"></li>
 														<?php if(!$this->ion_auth->logged_in()){?>
@@ -105,17 +132,22 @@ function loadRssFeed(id){
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/thumb_400_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a>
+						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/thumb_400_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a>
 					</div>
-					<div class="padder-v"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo substr($row->title,0,40);?></a> 
+					<div class="padder-v"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><?php echo nl2br($row->title);?></a> 
                     	<br />
 						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
-                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    		<small><strong>Posted by:</strong>&nbsp;<a href="<?php echo base_url()?>user/channeldescription/<?php echo $row->user_id?>"><?php echo $row->channel_name;?></a></small>
                     	<?php } 
 						  else{
 						?> 
-                       	 <small><strong>Posted by:</strong> Admin</small>
+                       	 <small><strong>Posted by:</strong>&nbsp;IRW Network</small>
                     	<?php } ?>
+						<br/>
+                        <small>
+                			<strong>Type:</strong>&nbsp;
+                			<?php echo $row->type; ?>
+                		</small>
                     </div>
 				</div>
 			</div>
@@ -151,7 +183,7 @@ function loadRssFeed(id){
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }else{ ?>
 								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class?>"></i></a> 
-								<a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
+								<a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }?>
 								<ul class="dropdown-menu">
@@ -175,9 +207,9 @@ function loadRssFeed(id){
 															<div class="item-actions__count" data-bind="bundleCount"></div>
 															<img class="item-actions__cover" src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" data-bind-src="imgUrl" data-bind-width="width" data-bind-height="height" width="32" height="32"> <span class="item-actions__title" data-bind="title" data-test-id="contextmenu-title"><?php echo substr($row->title,0,20);?></span> </li>
 														<?php if($row->type!='Video' && $row->type!='Text'){?>
-														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-image="<?php echo $row->picture; ?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
-														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
-														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-last add_in_queue" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-now playSong" data-title="<?php echo $row->title?>" data-image="<?php echo $row->picture; ?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-play-circle fa fa-play-circle-o"></i> <span class="smallText" data-i18n="t-play-now">Play Now</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-next playNext" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'> <span class="smallText" data-i18n="t-play-next">Play Next</span> </a> </li>
+														<li class="item-actions__item" data-item="play"> <a href="<?php echo $url;?>" class="js-item-action js-play-last add_in_queue" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'> <i class="item-actions__icon icon-queue-add fa fa-file-text-o"></i> <span class="smallText" data-i18n="t-add-to-queue">Add to Play Queue</span> </a> </li>
 														<?php }?>
 														<li class="item-actions__divider" data-item="play"></li>
 														<?php if(!$this->ion_auth->logged_in()){?>
@@ -199,16 +231,21 @@ function loadRssFeed(id){
 							</div>
 						</div>
                         
-						<a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file?>' data-id='<?php echo $row->id?>'><?php echo $row->title;?></a> 
+						<a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+					<div class="padder-v"><a href="<?php echo $url;?>" class="playSong" data-image="<?php echo $row->picture; ?>" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><?php echo nl2br($row->title);?></a> 
                     	<br />
 						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
-                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    		<small><strong>Posted by:</strong>&nbsp;<a href="<?php echo base_url()?>user/channeldescription/<?php echo $row->user_id?>"><?php echo $row->channel_name;?></a></small>
                     	<?php } 
 						  else{
 						?> 
-                       	 <small><strong>Posted by:</strong> Admin</small>
+                       	 <small><strong>Posted by:</strong>&nbsp;IRW Network</small>
                     	<?php } ?>
+						<br/>
+                        <small>
+                			<strong>Type:</strong>&nbsp;
+                			<?php echo $row->type; ?>
+                		</small>
                     </div>
 					
                 </div>
@@ -217,9 +254,34 @@ function loadRssFeed(id){
 		</div>
 	</div>
 	<div class="col w-md bg-light dker b-l bg-auto no-border-xs">
-		<div class="wrapper-md">
+    	<div class="wrapper-md " style="padding-bottom: 0;">
+        <div class="m-b-sm text-md">IRW Social</div>
+        	<div class="row for-margin-left">
+            	<ul style="list-style-type: none;padding:0;" class=" col-xs-12">
+                	 <li class="col-xs-2">
+                     	<a href="<?php echo $facebook_link;?>" target="_blank" >
+                        	<i style="font-size:30px;" class="fa fa-facebook-square" aria-hidden="true"></i>
+						 </a>
+                     </li>
+                     
+                     <li  class="col-xs-2">
+                     	<a href="<?php echo $twitter_link;?>" target="_blank" >
+                        	<i style="font-size:30px;" class="fa fa-twitter-square" aria-hidden="true"></i>
+                        </a>
+                     </li>
+                     
+                     <li class="col-xs-2">
+                     	<a href="<?php echo $instagram_link;?>" target="_blank" >
+                        	<i style="font-size:30px;" class="fa fa-instagram" aria-hidden="true"></i>
+                        </a>
+                     </li>
+                </ul>
+            	
+            </div>
+        </div>
+		<div class="wrapper-md" style="padding-top: 2px;">
         <div class="m-b-sm text-md">Feed Aggregator</div>
-        	<div class="row">
+        	<div class="row for-margin-left">
 				<?php foreach($rssRows as $row){?>
             	<button class="col-xs-5 new_feeds_link" onclick="loadRssFeed('<?php echo $row->id?>')"><?php echo $row->name?></button>
 				<?php }?>

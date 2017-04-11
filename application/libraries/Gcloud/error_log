@@ -1,0 +1,23 @@
+[06-Mar-2017 08:27:59 America/Chicago] PHP Fatal error:  Call to undefined method Google\Cloud\Storage\StorageClient::objects() in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 16
+[06-Mar-2017 08:28:33 America/Chicago] PHP Catchable fatal error:  Argument 1 passed to Google\Cloud\Storage\StorageClient::buckets() must be of the type array, string given in /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/Storage/StorageClient.php on line 146
+[06-Mar-2017 08:28:35 America/Chicago] PHP Catchable fatal error:  Argument 1 passed to Google\Cloud\Storage\StorageClient::buckets() must be of the type array, string given in /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/Storage/StorageClient.php on line 146
+[06-Mar-2017 08:28:53 America/Chicago] PHP Fatal error:  Call to undefined method Google\Cloud\Storage\StorageClient::objects() in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 16
+[06-Mar-2017 08:32:02 America/Chicago] PHP Warning:  Invalid argument supplied for foreach() in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 18
+[06-Mar-2017 08:41:08 America/Chicago] PHP Fatal error:  Cannot use object of type Google\Cloud\Storage\StorageObject as array in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 18
+[06-Mar-2017 08:41:21 America/Chicago] PHP Fatal error:  Cannot use object of type Google\Cloud\Storage\StorageObject as array in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 18
+[06-Mar-2017 08:42:42 America/Chicago] PHP Fatal error:  Uncaught exception 'Google\Cloud\Exception\NotFoundException' with message 'Client error: `GET https://storage.googleapis.com/irw-network/my-object?alt=media` resulted in a `404 Not Found` response:
+<?xml version='1.0' encoding='UTF-8'?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message>< (truncated...)
+' in /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/RequestWrapper.php:220
+Stack trace:
+#0 /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/RequestWrapper.php(136): Google\Cloud\RequestWrapper->convertToGoogleException(Object(GuzzleHttp\Exception\ClientException))
+#1 /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/Storage/Connection/Rest.php(225): Google\Cloud\RequestWrapper->send(Object(GuzzleHttp\Psr7\Request), Array)
+#2 /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/Storage/StorageObject.php(622): Google\Cloud\Storage\Connection\Rest->downloadObject(Array)
+#3 /home2/innovator/pu in /home2/innovator/public_html/projects/irw/gcloud/vendor/google/cloud/src/RequestWrapper.php on line 220
+[06-Mar-2017 08:44:25 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/innovator/public_html/projects/irw/gcloud/index.php:15) in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 20
+[06-Mar-2017 08:44:25 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/innovator/public_html/projects/irw/gcloud/index.php:15) in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 22
+[06-Mar-2017 08:44:25 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/innovator/public_html/projects/irw/gcloud/index.php:15) in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 24
+[06-Mar-2017 08:44:39 America/Chicago] PHP Warning:  Header may not contain NUL bytes in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 20
+[06-Mar-2017 08:44:39 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/innovator/public_html/projects/irw/gcloud/index.php:20) in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 22
+[06-Mar-2017 08:44:39 America/Chicago] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home2/innovator/public_html/projects/irw/gcloud/index.php:20) in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 24
+[06-Mar-2017 08:59:12 America/Chicago] PHP Fatal error:  Call to undefined method Generator::object() in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 11
+[06-Mar-2017 09:02:42 America/Chicago] PHP Fatal error:  Call to undefined method Generator::object() in /home2/innovator/public_html/projects/irw/gcloud/index.php on line 11

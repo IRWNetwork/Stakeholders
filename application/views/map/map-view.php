@@ -50,6 +50,33 @@
 	font-weight:bold;
 	color:#000;
 }
+
+@media(max-width:1024px){
+	#draggable{left: 20.5% !important; top: 7.1% !important;}
+}
+
+@media(max-width:768px){
+	#draggable{left: 27.3% !important; top: 9.3% !important;}
+}
+
+@media(max-width:414px){
+	#draggable{left: 2.7% !important; top: 9.3% !important;}
+}
+
+@media (max-width: 414px){
+	#footer {
+		margin-top: 0px;
+	}
+}
+
+@media (max-width:768px){
+  #footer{margin-top: 130px;}
+}
+
+@media (min-width:1024px){
+  #footer{margin-top: 464px;}
+}
+
 </style>
 <div id="map" style="height:800px;"></div>
 <script>
@@ -546,7 +573,7 @@ function updateMarker(){
 		});
   	});
 </script>
-<div id="draggable" class="ui-widget-content" style="width:200px; z-index:999999999; position:absolute; left:15.5%; top:10%; cursor:pointer">
+<div id="draggable" class="ui-widget-content" style="width:200px; z-index:999; position:absolute; left:17.1%; top:6.6%; cursor:pointer">
 	<?php foreach($categories as $cat){?>
 	<div style="background:#ccc; text-align:center; font-weight:bold; font-size:13px; padding:5px"><?php echo $cat->name?></div>
 	<form name="frm" id="map_frm" method="post">

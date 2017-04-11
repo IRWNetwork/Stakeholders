@@ -1,16 +1,32 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.bxslider').bxSlider({
+		pager: false,
+		auto: true,
+		pause: 9000
+	});
+});
+</script>
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
 		<h1 class="m-n font-thin h3">Membership Upgrade!</h1>
 	</div>
 	<?php $this->load->view('admin/common/messages');?>
     <?php if(count($bannerDetail)>0){?>
-         <div style="margin-bottom:20px; padding: 20px 20px 0 20px;" class="row">
-         	<div class="col-xs-12">
-            <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
-            	<img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
-            </div>
-         </div>
-     <?php }?>
+    <div style="padding: 20px 20px 0 20px;" class="row">
+        <div class="col-xs-12">
+            <ul class="bxslider">
+                <?php foreach($bannerDetail as $banner_row){ ?>
+                <li>
+                    <a href="<?php echo $banner_row["banner_link"]?>" target="<?php echo $banner_row['target'];?>">
+                        <img src="<?php echo base_url()."uploads/banner_images/".$banner_row["banner_image"]?>" class="img-responsive" />
+                    </a>
+                </li>
+                <?php }?>
+            </ul>
+        </div>
+     </div>
+    <?php } ?>
 	<div class="wrapper-md" ng-controller="FormDemoCtrl">
 		<div class="row">
 			<div class="col-sm-12">

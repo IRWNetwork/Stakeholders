@@ -10,6 +10,7 @@ class Home extends MY_Controller
 		$this->load->model('Emailtemplates_model');
 		$this->load->library("pagination");
 		$this->load->model('Events_model');
+		//$this->load->library('gcloud/gcloud.php');
     }
 	
 	public function home2(){
@@ -74,6 +75,7 @@ class Home extends MY_Controller
 
 	public function index()
 	{	
+		$this->load->model('Preferences_model');
 		$this->data['page_title'] 	  = 'Home';
 		$this->data['page_heading'] 	= 'Home';
 		$search 			   = $this->input->get('search')?$this->input->get('search'):"";
@@ -89,13 +91,15 @@ class Home extends MY_Controller
         $config["uri_segment"] = 3;
 		$config['reuse_query_string']   = true;
         $this->pagination->initialize($config);
-        $page 		               = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$this->data['contents']	 = $this->Content_model->getAllData($arr,$page,$config["per_page"]);
-		$this->data['contents1']	= $this->Content_model->getAudio($arr,$page,$config["per_page"]);
-		$this->data['featured']	 = $this->Content_model->getFeaturedData($arr);
-		
-		$this->data["links"]   = $this->pagination->create_links();
-		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","new");
+        $page 		                = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->data['contents']	  = $this->Content_model->getAllData($arr,$page,$config["per_page"]);
+		$this->data['contents1']	 = $this->Content_model->getAudio($arr,$page,$config["per_page"]);
+		$this->data['featured']	  = $this->Content_model->getFeaturedData($arr);
+		$this->data['facebook_link'] =  $this->Preferences_model->getValue('facebook_link');
+		$this->data['twitter_link']  =  $this->Preferences_model->getValue('twitter_link');
+		$this->data['instagram_link']=  $this->Preferences_model->getValue('instagram_link'); 
+		$this->data["links"]         = $this->pagination->create_links();
+		$this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","new");
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('main',$this->data,TRUE);
 		}
@@ -108,20 +112,20 @@ class Home extends MY_Controller
 	public function playvideo(){
 		$id = $this->input->get('id');
 		$video_row = $this->Content_model->getRow($id);
-		//echo "<pre>"; print_r($video_row);exit;
-		//echo $video_row['video_type'];exit;
-		$addvertis_video = "";
-		if ($video_row['video_type'] != '') {
-			$addvertis_video = 'file_1488053747.mp4'; 
-		}
 		$this->data['dataRow']			= $video_row;
-		$this->data['addvertis_video'] = $addvertis_video;
-		$this->data['page_title'] 		 = $video_row['title'];
-		$this->data['page_heading'] 	   = $video_row['title'];
+		$this->data['page_title'] 		= $video_row['title'];
+		$this->data['page_heading'] 	= $video_row['title'];
+		$this->data['meta_keywords']	= $video_row['meta_keywords'];
+		$this->data['meta_description']	= $video_row['meta_description'];
 		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
 		
-		$parser['content'] = $this->load->view('playvideo',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('playvideo_ajax',$this->data,TRUE);
+		}
+		else {
+			$parser['content'] = $this->load->view('playvideo',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
 	}
 	
 	public function playaudio(){
@@ -138,15 +142,21 @@ class Home extends MY_Controller
 	}
 	
 	public function showArticle(){
-		
 		$id = $this->input->get('id');
 		$article_row = $this->Content_model->getRow($id);
 		$this->data['dataRow']			= $article_row;
-		$this->data['page_title'] 		 = $article_row['title'];
-		$this->data['page_heading'] 	   = $article_row['title'];
+		$this->data['page_title'] 		= $article_row['title'];
+		$this->data['page_heading'] 	= $article_row['title'];
+		$this->data['meta_keywords']	= $article_row['meta_keywords'];
+		$this->data['meta_description']	= $article_row['meta_description'];
 		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
-		$parser['content']				=  $this->load->view('article-detail',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('article-detail-ajax',$this->data,TRUE);
+		}
+		else {
+			$parser['content'] =  $this->load->view('article-detail',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
 	}
 	
 	public function add_remove_to_favorite(){

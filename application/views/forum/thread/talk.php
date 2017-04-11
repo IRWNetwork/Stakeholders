@@ -112,17 +112,13 @@
                             <b class="caret"></b>
                             </a>
                             <ul class="active dropdown-menu">
-                                <script>
-                                $(document).ready(function() {
-                                    $("#replypost<?php echo $post->id; ?>").froalaEditor();
-                                });
-                                </script>
+                            
                             <li><form class="well" action="" method="post" style=" background-color:#fff;margin: 5px 10px;width: 600px;text-align: left;">
                                     <input type="hidden" name="row[thread_id]" value="<?php echo $thread->id; ?>"/>
                                     <input type="hidden" name="row[reply_to_id]" value="<?php echo $post->id; ?>"/>
                                     <input type="hidden" name="row[author_id]" value="<?php echo $this->ion_auth->user()->row()->id; ?>"/>
                                     <input type="hidden" name="row[date_add]" value="<?php echo date('Y-m-d H:i:s'); ?>"/>
-                                    <textarea name="row[post]" id="replypost<?php echo $post->id; ?>" class="textpostreply" cols="72" style="height:180px;" class="span12">                                 	<div style='font-size:11px; background: #e3e3e3;padding:5px;'>
+                                    <textarea name="row[post]" class="textpostreply" cols="72" style="height:180px;" class="span12">                                 	<div style='font-size:11px; background: #e3e3e3;padding:5px;'>
                                             posted by <b>@<?php echo $post->username; ?></b>
                                             <p>
                                             	<i><?php echo preg_replace("/&#?[a-z0-9]+;/i","", strip_tags($post->post)); ?></i>
@@ -158,7 +154,7 @@
                         <input type="hidden" name="row[reply_to_id]" value="0"/>
                         <input type="hidden" name="row[author_id]" value="<?php echo $this->ion_auth->user()->row()->id; ?>"/>
                         <input type="hidden" name="row[date_add]" value="<?php echo date('Y-m-d H:i:s'); ?>"/>
-                        <textarea name="row[post]" class="span12" id="textpost" style="height:150px;"></textarea>
+                        <textarea name="row[post]" class="span12" style="height:150px;"></textarea>
                         <input type="submit" style="margin-top:15px;font-weight: bold;" name="btn-post" class="btn btn-primary" value="Reply Post"/>
                     </form>
                 </div>
@@ -177,3 +173,16 @@
         </div>
 	</div>
 </div>
+<script type="text/javascript" src="<?php echo base_url()?>assets/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+
+tinymce.init({
+	selector: "textarea",
+	plugins: [
+		"advlist autolink lists link image charmap print preview anchor",
+		"searchreplace visualblocks code fullscreen",
+		"insertdatetime media table contextmenu paste"
+	],
+	toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+});
+</script>

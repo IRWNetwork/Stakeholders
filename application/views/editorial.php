@@ -1,15 +1,53 @@
+<style>
+@media (min-width:1024px){
+#footer{margin-top: 342px !important;}
+}
+
+@media (max-width:768px){
+.for-height{max-height: 187px !important;}
+}
+
+@media (max-width:1024px){
+.float_none {width: 32.5%;}
+}
+
+@media (max-width:768px){
+.float_none {width: 49.5%;}
+}
+
+
+@media (max-width:414px){
+.float_none {width: 49.5%;}
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.bxslider').bxSlider({
+		pager: false,
+		auto: true,
+		pause: 9000
+	});
+});
+</script>
 <div class="hbox hbox-auto-xs hbox-auto-sm"> 
 	<!-- main -->
 	<div class="col wrapper-lg">
 		<h3 class="font-thin m-t-n-xs m-b">Editorial</h3>
         <?php if(count($bannerDetail)>0){?>
-         <div style="margin-bottom:25px;" class="row">
+        <div class="row for-height">
          	<div class="col-xs-12">
-            <a href="<?php echo $bannerDetail["banner_link"]?>" target="<?php echo $bannerDetail['target'];?>">
-            	<img src="<?php echo base_url()."uploads/banner_images/".$bannerDetail["banner_image"]?>" class="img-responsive"  /></a>
+                <ul class="bxslider">
+                	<?php foreach($bannerDetail as $banner_row){ ?>
+                    <li>
+                        <a href="<?php echo $banner_row["banner_link"]?>" target="<?php echo $banner_row['target'];?>">
+                            <img src="<?php echo base_url()."uploads/banner_images/".$banner_row["banner_image"]?>" class="img-responsive" />
+                        </a>
+                    </li>
+                    <?php }?>
+                </ul>
             </div>
-          </div>
-          <?php }?> 
+         </div>
+		<?php } ?>
 		<div class="row row-sm">
 			<?php 
 			if(count($contents)>0){
@@ -62,15 +100,15 @@
 								</ul>
 							</div>
 						</div>
-						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
-					<div class="padder-v"><a href="<?php echo $url?>" class="text-ellipsis"><?php echo $row->title;?></a> 
+						<a href="<?php echo $url;?>"><img src="<?php echo base_url()?>uploads/listing/thumb_153_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a> </div>
+					<div class="padder-v"><a href="<?php echo $url?>" class="text-ellipsis"><?php echo nl2br($row->title);?></a> 
                     	<br />
 						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
-                    		<small><strong>Posted by:</strong> <?php echo $row->channel_name;?></small>
+                    		<small><strong>Posted by:</strong>&nbsp;<a href="<?php echo base_url()?>user/channeldescription/<?php echo $row->user_id?>"><?php echo $row->channel_name;?></a></small>
                     	<?php } 
 						  else{
 						?> 
-                       	 <small><strong>Posted by:</strong> Admin</small>
+                       	 <small><strong>Posted by:</strong>&nbsp;IRW Network</small>
                     	<?php } ?>
                     </div>
 				</div>

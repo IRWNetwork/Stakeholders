@@ -15,12 +15,21 @@ class Common_model extends CI_Model
 			$url = "";
 			
 			
-			if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3 && !($this->Users_model->checkAlreadyBuy($row->user_id))){
-					
-				$url = site_url('user/channelsubscription/'.$row->user_id);
-			}
-			else if($row->is_premium){
-				if($user_row->is_premium=='yes'){
+			if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){
+				
+				if($row->is_premium){					
+					/*if(!($this->Users_model->checkAlreadyBuy($row->user_id))){
+						$url = site_url('user/channelsubscription/'.$row->user_id);
+					}else{*/
+						if($row->type=='Video'){
+							$url = site_url('home/playvideo/?id='.$row->id);
+						}else if($row->type=='Text'){
+							$url = site_url('home/showArticle/?id='.$row->id);
+						}else{
+							$url = "javascript:void(0)";
+						}
+					//}
+				}else{
 					if($row->type=='Video'){
 						$url = site_url('home/playvideo/?id='.$row->id);
 					}else if($row->type=='Text'){
@@ -28,9 +37,20 @@ class Common_model extends CI_Model
 					}else{
 						$url = "javascript:void(0)";
 					}
-				}else{
-					$url = site_url('user/upgradepackage');
 				}
+			}
+			else if($row->is_premium){
+				//if($user_row->is_premium=='yes'){
+					if($row->type=='Video'){
+						$url = site_url('home/playvideo/?id='.$row->id);
+					}else if($row->type=='Text'){
+						$url = site_url('home/showArticle/?id='.$row->id);
+					}else{
+						$url = "javascript:void(0)";
+					}
+				/*}else{
+					$url = site_url('user/upgradepackage');
+				}*/
 			}else{
 				if($row->type=='Video'){
 					$url = site_url('home/playvideo/?id='.$row->id);
@@ -41,9 +61,9 @@ class Common_model extends CI_Model
 				}
 			}
 		}else{
-			if($row->is_premium){
+			/*if($row->is_premium){
 				$url = site_url('user/login/');
-			}else{
+			}else{*/
 				if($row->type=='Video'){
 					$url = site_url('home/playvideo/?id='.$row->id);
 				}else if($row->type=='Text'){
@@ -51,7 +71,7 @@ class Common_model extends CI_Model
 				}else{
 					$url = "javascript:void(0)";
 				}
-			}
+			//}
 		}
 		return $url;
 	}
@@ -86,7 +106,41 @@ class Common_model extends CI_Model
 		}
 		$this->image_lib->initialize($config);
 		$this->image_lib->resize();
+	}
+	
+	function updateContentImageWithBlackBackground($image,$background,$height,$width,$new_image_with_path){
 		
+		$ext_array 	= explode('.',$image);
+		$ext 		= strtolower($ext_array[count($ext_array)-1]);
+		$image1 	= imagecreatefromjpeg($background); //300 x 300
+		
+		if($ext == 'jpg' || $ext=='jpeg'){
+			$image2 = imagecreatefromjpeg($image); //150 x 150
+		}else if($ext == 'png'){
+			$image2 = imagecreatefrompng($image); //150 x 150
+		}else if($ext == 'gif'){
+			$image2 = imagecreatefromgif($image); //150 x 150
+		}else{
+			$image2 = imagecreatefromjpeg($image); //150 x 150
+		}
+	
+		$totalHeigh = $height;
+		$totalWidth = $width;
+	
+		list($width, $height) = getimagesize($image);
+	
+		$totalHeigh = intval(($totalHeigh - $height)/2);
+		$totalWidth = intval(($totalWidth - $width)/2);
+		imagecopymerge($image1, $image2, $totalWidth, $totalHeigh, 0, 0, $width, $height, 100);
+		if($ext == 'jpg' || $ext=='jpeg'){
+			imagejpeg($image1,$new_image_with_path);
+		}else if($ext == 'png'){
+			imagepng($image1,$new_image_with_path);
+		}else if($ext == 'gif'){
+			imagegif($image1,$new_image_with_path);
+		}else{
+			imagejpeg($image1,$new_image_with_path);
+		}
 	}
 	
 	function generateThumbWithOutRation($imgPath, $dimentions,$destinationFile = '') {
@@ -268,20 +322,16 @@ class Common_model extends CI_Model
 		$config['file_name']     = $name;  // 'sliderimage_' . time()
 		
 		$this->load->library('upload', $config);
+		//$this->load->library('Gcloud');
 		if ($this->upload->do_upload($field_name)){
+		
 			$image_details  = $this->upload->data();
-			//echo "<pre>"; print_r($image_details);exit;
-			$image_sizes = array(
-		        'listing' => array(150, 150),
-		        'admin_listing' => array(100, 100),
-		        'featured' => array(270, 270),
-		        'detail_page' => array(400, 400),
-		        'player_image' => array(43, 43),
-		    );
+			//echo "<pre>"; print_r($image_details['full_path']);exit;
+			//$this->gcloud->uploadData($image_details['full_path'],$image_details['file_name']);
+			//echo "<pre>"; print_r($image_details['full_path']);exit;
 			
 		    /*$this->load->library('image_lib');
 			foreach ($image_sizes as $key => $resize) {
-
 			    $config = array(
 			        'source_image' => $image_details['full_path'],
 			        'new_image' => $this->gallery_path . "/".$key."/" . $image_details['raw_name'].$image_details['file_ext'],
@@ -301,42 +351,56 @@ class Common_model extends CI_Model
 			return false;
 		}
     }
-
-	    public function convert_images() {
-			//echo "hi";exit;
-			$this->db->select('contents.picture');
-			$query = $this->db->get('contents');
-			//echo $this->db->last_query();exit;
-			$results = $query->result_array();
-			//echo "<pre>"; print_r($results);exit;
-			$image_sizes = array(
-	        'listing' => array(150, 150),
-	        'admin_listing' => array(100, 100),
-	        'featured' => array(270, 270),
-	        'detail_page' => array(400, 400),
-	        'player_image' => array(43, 43),
-	    );
+	
+	public function uploadFileToGoogle($source,$file_name){
+		$allowed_types = 'mkv|ogv|ogg|m4v|wmv|avi|mp3|flv|mp4|doc|docx|pdf|csv|ppt|pptx|jpeg|jpg|png|JPG|JPEG|PNG|rv|wav|mpeg|mpg|mov|avi|mp3|mp4|Svlc';
+		$allowed_types = explode('|',$allowed_types);
+		$ext = pathinfo($source['name']);
+		$file_name = $file_name.".".$ext['extension'];
+		if(in_array($ext['extension'],$allowed_types)){
+			$this->load->library('Gcloud');
+			$file_name = $this->gcloud->uploadData($source['tmp_name'],$file_name);
+			return $file_name;
+		}else{
+			return false;
+		}
+    }
+	
+	public function directUploadFileToGoogle($source,$file_name){
+		$this->load->library('Gcloud');
+		$file_name = $this->gcloud->uploadData($source,$file_name);
+		return $file_name;
+    }
+	
+	public function convert_images() {
+		$this->db->select('contents.picture');
+		$query = $this->db->get('contents');
+		$results = $query->result_array();
+		$image_sizes = array(
+			'listing' => array(150, 150),
+			'admin_listing' => array(100, 100),
+			'featured' => array(270, 270),
+			'detail_page' => array(400, 400),
+			'player_image' => array(43, 43),
+		);
 		foreach ($results as $key => $result) {
 			$source_image = $result['picture'];
 			$image_details = explode('.', $source_image);
 			foreach ($image_sizes as $key => $resize) {
-
-		    $config = array(
-		        'source_image' => $this->gallery_path.'/files/'.$source_image,
-		        'new_image' => $this->gallery_path . "/".$key."/" . $image_details[0].'.'.$image_details[1],
-		        'maintain_ration' => true,
-		        'width' => $resize[0],
-		        'height' => $resize[1]
-		    );
-		    //echo $config['source_image'];exit;
-		    //echo "<pre>"; print_r($config);exit;
-		    $this->image_lib->initialize($config);
-		    $this->image_lib->resize();
-		    $this->image_lib->clear();
+		    	$config = array(
+					'source_image' => $this->gallery_path.'/files/'.$source_image,
+					'new_image' => $this->gallery_path . "/".$key."/" . $image_details[0].'.'.$image_details[1],
+					'maintain_ration' => true,
+					'width' => $resize[0],
+					'height' => $resize[1]
+				);
+		    
+				$this->image_lib->initialize($config);
+				$this->image_lib->resize();
+				$this->image_lib->clear();
 		    }
 		}
-				//echo "<pre>"; print_r();exit;
-		}
+	}
 	
 	 public function uploadsenderFile($name,$path){
     	$config['upload_path']   = $path; //'uploads/data/';

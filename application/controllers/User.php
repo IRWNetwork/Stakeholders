@@ -51,9 +51,6 @@ class User extends MY_Controller
 	}
     
 	public function login() {
-		
-		
-		
 		if ($this->ion_auth->logged_in()) {
 			redirect(site_url('/'), 'refresh');
 		}
@@ -83,46 +80,21 @@ class User extends MY_Controller
 				$password = $this->input->post("password");
 				
 				if($this->ion_auth->login($identity,$password)) {
-					
-					
 					//$this->phpbb_login($identity,$password);
-
 					$user = $this->ion_auth->user()->row();
 					//$this->Phpbb->user_login($identity,$password);
-					$this->session->set_userdata(
-							'email',
-							$user->username
-					);
-					$this->session->set_userdata(
-							'id',
-							$user->id
-					);
-					$this->session->set_userdata(
-							'uname',
-							$user->first_name." ".$user->last_name
-					);
-					$this->session->set_userdata(
-							'username',
-							$user->first_name."_".$user->last_name
-					);
-						$this->session->set_userdata(
-							'profile_pic',
-							$user->picture);
-
-					$this->session->set_userdata(
-							'password',
-							$password
-					);
+					$this->session->set_userdata('email',$user->username);
+					$this->session->set_userdata('id',$user->id);
+					$this->session->set_userdata('uname',$user->first_name." ".$user->last_name);
+					$this->session->set_userdata('username',$user->first_name."_".$user->last_name);
+					$this->session->set_userdata('profile_pic',$user->picture);
+					$this->session->set_userdata('password',$password);
 
 					$_SESSION['customer_id'] =  $user->id;
-					//echo "<pre>"; print_r($_SESSION);exit;
 					setcookie('customer_id', $user->id, time()+30*3600*24, '/');
-					//print_r($_COOKIE['customer_id']);exit;
-					// 	$this->session->set_userdata(
-					// 		'profile_pic',
-					// 		$user->picture);
-				 // print_r($_SESSION);
-					// die();
+					if ($_SESSION['after_login']) {
+						redirect(site_url('/'.$_SESSION['after_login']), 'refresh');
+					}
 					redirect(site_url('/'), 'refresh');
 				} else {
 					$this->session->set_flashdata(
@@ -556,44 +528,75 @@ class User extends MY_Controller
 				);
 
 			}
+            if($this->input->post("type")=="Video"){
+				$rules[] = array(
+							 'field'   => 'video_type',
+							 'label'   => 'Video Type',
+							 'rules'   => 'trim|required'
+							);
+				if($this->input->post("video_type")=="embed_code"){
+					$rules[] = array(
+							 	'field'   => 'embed_code',
+							 	'label'   => 'Embed Code',
+							 	'rules'   => 'trim|required'
+								);
+				}
+			}
 
 			$this->form_validation->set_rules($rules);
 
 			if ($this->form_validation->run()) {
+				$file_name 		= $this->input->post("embed_code");
 				
+				if($_FILES['file']['tmp_name']){
+					$file_name 	= 'file_' . time();
+					$source   	= $_FILES['file'];
+					$file_name 	= $this->Common_model->uploadFileToGoogle($source,$file_name);
+				}
+                
+                
 				$user_id = $this->ion_auth->user()->row()->id;
 				// finally change the password
 			 	if($this->ion_auth->user()->row()->id==3){ 
 					$data = array(
-						"first_name" 				   => $this->input->post('first_name'),
+						"first_name" 				   	=> $this->input->post('first_name'),
 						"last_name" 					=> $this->input->post('last_name'),
 						"phone" 						=> $this->input->post('phone'),
-						"channel_subscription_price"   => $this->input->post('channel_subscription_price')
+						"video_type"                    => $this->input->post("video_type"),
+						"video"                         => $file_name,
+						"channel_subscription_price"   	=> $this->input->post('channel_subscription_price')
 					);
 				}
 				else{
 					$data = array(
-						"first_name" 				   => $this->input->post('first_name'),
+						"first_name" 				    => $this->input->post('first_name'),
 						"last_name" 					=> $this->input->post('last_name'),
-						"phone" 						=> $this->input->post('phone')
+						"phone" 						=> $this->input->post('phone'),
+                        "video"                         => $file_name,
+                        "video_type"                    => $this->input->post("video_type")      
+						/*"video"						=> 	
+								(strpos($file_name,"&"))?
+									substr(str_replace("watch?v=","embed/",$file_name),0,strpos($file_name,"&")-2):
+										str_replace("watch?v=","embed/",$file_name)*/
 					);
 				}
-				
 				$file_name ="";
 				$banner1 ="";
-				$banner2 ="";
-				
+				$banner ="";
+				$this->session->set_userdata('uname',$this->input->post('first_name')." ".$this->input->post('last_name'));
 				if(isset($_FILES['picture']) and $_FILES['picture']['name']!=''){
 					
-					$file_name = time().$_FILES['picture']['name'];
-					$data['picture'] = $file_name;
+					$file_name = time().str_replace(' ','_',$_FILES['picture']['name']);
 					$this->session->set_userdata('profile_pic',$file_name);
 					$returnValue = $this->Common_model->uploadImageByFieldName('picture',$file_name, 'uploads/profile_pic/');
+					
 					if($returnValue != true) {
 						$this->session->set_flashdata('error', 'Some error picture not upload');	
 					}else{
-						$name = "uploads/profile_pic/".$file_name;
-						$destination = "uploads/profile_pic/thumb_200_".$file_name;
+						$data['picture'] = $returnValue;
+						$this->session->set_userdata('profile_pic',$returnValue);
+						$name = "uploads/profile_pic/".$returnValue;
+						$destination = "uploads/profile_pic/thumb_200_".$returnValue;
 						$this->Common_model->generateThumb($name,array("200",""),$destination);
 						
 						@unlink("uploads/profile_pic/".$this->input->post('old_pic'));
@@ -601,38 +604,21 @@ class User extends MY_Controller
 					}
 				}
 				
-				if(isset($_FILES['banner1']) and $_FILES['banner1']['name']!=''){
-					
-					$banner1 = "banner1".time().$_FILES['banner1']['name'];
-					$data['banner1'] = $banner1;
-					
-					$returnValue = $this->Common_model->uploadImageByFieldName('banner1',$banner1, 'uploads/profile_pic/');
-					if($returnValue != true) {
-						$this->session->set_flashdata('error', 'Some error banner one picture not upload');	
-					}else{
-						$name = "uploads/profile_pic/".$banner1;
-						$destination = "uploads/profile_pic/thumb_200_".$banner1;
-						$this->Common_model->generateThumb($name,array("200",""),$destination);
-						
-						@unlink("uploads/profile_pic/".$this->input->post('banner1_old_pic'));
-						@unlink("uploads/profile_pic/thumb_200_".$this->input->post('banner1_old_pic'));
-					}
-				}
 				
-				if(isset($_FILES['banner2']) and $_FILES['banner2']['name']!=''){
+				if(isset($_FILES['banner']) and $_FILES['banner']['name']!=''){
 					
-					$banner2 = "banner2".time().$_FILES['banner2']['name'];
-					$data['banner2'] = $banner2;
-					$returnValue = $this->Common_model->uploadImageByFieldName('banner2',$banner2, 'uploads/profile_pic/');
+					$banner = "banner".time().str_replace(' ','_',$_FILES['banner']['name']);
+					$returnValue = $this->Common_model->uploadImageByFieldName('banner',$banner, 'uploads/profile_pic/');
 					if($returnValue != true) {
 						$this->session->set_flashdata('error', 'Some error picture not upload');	
 					}else{
-						$name = "uploads/profile_pic/".$banner2;
-						$destination = "uploads/profile_pic/thumb_200_".$banner2;
+						$data['banner'] = $returnValue;
+						$name = "uploads/profile_pic/".$returnValue;
+						$destination = "uploads/profile_pic/thumb_200_".$returnValue;
 						$this->Common_model->generateThumb($name,array("200",""),$destination);
 						
-						@unlink("uploads/profile_pic/".$this->input->post('banner2_old_pic'));
-						@unlink("uploads/profile_pic/thumb_200_".$this->input->post('banner2_old_pic'));
+						@unlink("uploads/profile_pic/".$this->input->post('banner_old_pic'));
+						@unlink("uploads/profile_pic/thumb_200_".$this->input->post('banner_old_pic'));
 					}
 				}
 								
@@ -647,43 +633,73 @@ class User extends MY_Controller
 	}
 	
 	public function channelmarketplace() {
-		/*if (!$this->ion_auth->logged_in()) {
-			redirect(site_url(''), 'refresh');
-		}*/
 		$this->data['page_title'] 	= 'Channel Marketplace';
-		$this->data['page_heading']  = 'Channel Marketplace';
-		$this->data['user_ids']      = $this->Users_model->getUserIdByGroupId();
-		$data   						= $this->Users_model->getUserDetailByIds( $this->data['user_ids']);
-		$contents = $this->Content_model->countUserContentByIds($this->data['user_ids']);
-	
-		$customArray = array();
-		foreach($data as $newArray){
-			$customArray [$newArray['id']] = $newArray;
-		}
+		$this->data['page_heading'] = 'Channel Marketplace';
+		//$this->data['user_ids']     = $this->Users_model->getUserIdByGroupId();
+        $chanel_users = $this->Users_model->getChanelUsers();
+        $this->data['ContentList']  = $chanel_users;
+        $this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","channel_marketplace");
 		
-		foreach($contents as $totals){
-			$customArray[$totals['user_id']][$totals['type'].'Total'] = $totals['TOTAL']; 
+
+        if (isset($_POST['flag'])) {
+			echo $this->load->view('user/channel_area',$this->data,true);
 		}
-		$this->data['ContentList'] = $customArray;
-		//print_r($this->data['ContentList']);
-		//print_r($customArray); 
-		//die();
-		$this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","channel_marketplace");
-		//print_r($this->data['bannerDetail']);die;
-		$parser['content']      = $this->load->view('user/channel_area',$this->data,true);
-        $this->parser->parse('template', $parser);
+		else {
+			$parser['content']          = $this->load->view('user/channel_area',$this->data,true);
+        	$this->parser->parse('template', $parser);
+		}
 	}
 	public function channeldescription($id=NULL){
 		$this->data['page_title']    = "Channel Description";
 		$this->data['page_heading']  = "Channel Description";
+		$filter = $this->input->get('filter') ? $this->input->get('filter'):'';
 		$this->data['channelDetail'] = $this->Users_model->getUserDetailById($id);
-		//print_r($this->data['channelDetail']); die;
-		$this->data['contents']      = $this->Content_model->getContentByUserId($id);
-		//print_r($this->data['channelDetail']); echo "<hr>";
-		//print_r($this->data['contents']);
-		 //die();
-        $parser['content']	       =  $this->load->view('user/channel_description',$this->data,TRUE);
-        $this->parser->parse('template', $parser);
+		$this->data['contents']      = $this->Content_model->getContentByUserId($id,$filter);
+		$this->data['id'] = $id;
+		$this->data['total_rows'] = count($this->data['contents']);
+		$this->data['contents'] = array_slice($this->data['contents'], 0, 10);
+        if (isset($_POST['flag'])) {
+			echo $this->load->view('user/channel_description',$this->data,TRUE);
+		}
+		else {
+			$parser['content']	       =  $this->load->view('user/channel_description',$this->data,TRUE);
+        	$this->parser->parse('template', $parser);
+		}
+	}
+
+	public function channeldescription_ajax() {
+		
+		$id = $this->input->get('id');
+
+		$config 			   = array();
+        $config["base_url"]    = base_url() . "channeldescription";
+        $config["total_rows"]  = $this->Users_model->getUserDetailcountById($id);
+
+
+        $config["per_page"] = 5;
+        $config["uri_segment"] = 3;
+		$config['reuse_query_string']   = true;
+
+		$this->pagination->initialize($config);
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+		$this->data['contents'] = $this->Content_model->getContentByUserIdLimit($id,$page,$config["per_page"]);
+		
+		if (count($this->data['contents']) > 0) {
+        	echo $this->load->view('user/channeldescription_limit',$this->data,TRUE);	
+    	}
+	}
+	
+	public function filterchanneldescription($id=NULL){
+		$this->data['page_title']    = "Channel Description";
+		$this->data['page_heading']  = "Channel Description";
+		$filter = $this->input->post('filter') ? $this->input->post('filter'):'';
+		$this->data['channelDetail'] = $this->Users_model->getUserDetailById($id);
+		
+		$this->data['contents']      = $this->Content_model->getContentByUserId($id,$filter);
+		
+        echo $parser['content']	       =  $this->load->view('user/filter_channel_description',$this->data,TRUE);
+        //$this->parser->parse('template', $parser);
 	}
 
 	
@@ -751,12 +767,231 @@ class User extends MY_Controller
 		}
 		$this->data['clientToken']= $this->clientToken;
 		$this->data['user'] 		= $this->ion_auth->user()->row();
+		
 		$parser['content'] 	= $this->load->view('user/upgradepackage',$this->data,true);
         $this->parser->parse('template', $parser);
 	}
 	
-	
-	public function channelsubscription($id=NULL) {
+	public function upgradepackage_ajax () {
+		if (!$this->ion_auth->logged_in()) {
+			redirect(site_url(''), 'refresh');
+		}
+		$this->data['page_title'] 	= 'Upgrade Package';
+		$this->data['page_heading'] 	= 'Upgrade Package';
+		$this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","upgradepackage");
+		$this->init_braintree();
+
+		if ($this->input->post()) {
+			
+				
+				$user_id = $this->ion_auth->user()->row()->id;
+				// finally change the password
+				
+				$result = Braintree_Transaction::sale(array(
+						"amount" 				=> 45,
+						"paymentMethodNonce" 	=> $_REQUEST['payment_method_nonce'],
+						"options" 				=> array(
+						"submitForSettlement" => true,
+						"storeInVaultOnSuccess"=>true
+						)
+					));
+				
+				$merchant_responce = json_encode($result);
+				if ($result->success) {
+					
+					
+					$braintree_token = "";
+					$txn = $result->transaction;
+					if ($txn->paymentInstrumentType == 'credit_card') {
+						$braintree_token = $txn->creditCardDetails->token;
+					}else if ($txn->paymentInstrumentType == 'paypal_account') {
+						$braintree_token = $txn->paypalDetails->token;
+					}
+					$next_recharge_date = getNextRechargeDate('month');
+					$data_update 		= array(
+												"braintree_payment_token" 	=> $braintree_token,
+												"next_recharge_date" 		=> $next_recharge_date,
+												"is_premium"				=> "yes"
+											);
+					$array_payment_log = array(
+						"user_id" 			 => $user_id,
+						"channel_id" 		  => 0,
+						"type" 				=> "subscription",
+						"amount"			  => 1.99,
+						"date_of_charge" 	  => date("Y-m-d"),
+						"merchant_responce"   => $merchant_responce,
+						"status"			  => "Complete"
+					);
+					
+					$this->ion_auth->update($user_id,$data_update);
+					$this->Users_model->insertpaymentLogs($array_payment_log);
+					
+					$this->session->set_flashdata('success', "Package updated successfully, Now can buy any channel from channel Marketplace.");
+					redirect(base_url()."user/upgradepackage");
+				}else{
+					$this->session->set_flashdata('error', $result->message);
+					redirect(base_url()."user/upgradepackage");
+				}
+			
+		}
+		
+		$this->data['clientToken']= $this->clientToken;
+		$this->data['user'] = $this->ion_auth->user()->row();
+		
+		echo $this->load->view('user/upgradepackage',$this->data,true);
+		
+	}
+    function channelsubscription($id=NULL) {
+  if (!$this->ion_auth->logged_in()) {
+   redirect(site_url(''), 'refresh');
+  }
+  $user_row = $this->ion_auth->user()->row();
+  
+  /*if($user_row->is_premium){
+   if($user_row->is_premium!='yes'){
+    redirect(base_url()."user/upgradepackage");
+   }
+  }
+  else{
+   redirect(base_url()."user/upgradepackage");
+  }*/
+  
+  $this->data['page_title']    = 'Subscrible Channel';
+  $this->data['page_heading']  = 'Subscrible Channel';
+  $this->init_braintree();
+  $this->data['channelInfo']   = $this->Users_model->getChannelSubscribeInfoByChannelId($id);
+  $this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","channel_subscription");
+  $this->data['alreadyBuy']    = $this->Users_model->checkAlreadyBuy($id);
+  
+    $subs_price                  = $this->data['channelInfo']['channel_subscription_price'];
+    $this->data['officalInfo']   = $this->Users_model->getChannelSubscribeInfoByChannelId("42");
+    $this->data['flag_div']      = false;
+    if($id!='42'){
+      if(isset($user_row->is_premium)&&$user_row->is_premium!='yes'){
+        $subs_price = $this->data['channelInfo']['channel_subscription_price']+$this->data['officalInfo']['channel_subscription_price']; 
+        $this->data['flag_div']  = true;
+      }
+    }
+    if($id=="42"){
+     if(isset($user_row->is_premium)&&$user_row->is_premium!='yes'){
+       $subs_price = $this->data['channelInfo']['channel_subscription_price'];  
+     } 
+    }
+  $this->data['chanelPrice']   = $subs_price;
+  if($this->input->post()) {
+    $user_id = $this->ion_auth->get_user_id();
+    // finally change the password
+        
+                    
+     $result = Braintree_Transaction::sale(array(
+      "amount"     => $subs_price,
+      "paymentMethodNonce"  => $_REQUEST['payment_method_nonce'],
+      "options"     => array(
+      "submitForSettlement" => true,
+      "storeInVaultOnSuccess"=>true
+      )
+     ));
+    
+    $merchant_responce = json_encode($result);
+    if ($result->success) {
+     $braintree_token = "";
+     $txn = $result->transaction;
+     if ($txn->paymentInstrumentType == 'credit_card') {
+      $braintree_token = $txn->creditCardDetails->token;
+     }else if ($txn->paymentInstrumentType == 'paypal_account') {
+      $braintree_token = $txn->paypalDetails->token;
+     }
+     
+     if( date('d') == 31 || (date('m') == 1 && date('d') > 28)){
+      $date = strtotime('last day of next month');
+     } else {
+      $date = strtotime('+1 months');
+     }
+     $next_recharge_date = date('Y-m-d', $date);
+     if(isset($user_row->is_premium) && $user_row->is_premium!='yes' ){
+     //$next_recharge_date = getNextRechargeDate('month');
+     
+     $data_update   = array(
+            "braintree_payment_token"  => $braintree_token,
+            "next_recharge_date"   => $next_recharge_date,
+            "is_premium"    => "yes"
+           );
+           
+     $array_payment_log = array(
+      "user_id"     => $user_id,
+      "channel_id"     => "42",
+      "type"     => "channel",
+      "amount"     => $this->data['officalInfo']['channel_subscription_price'],
+      "date_of_charge"    => date("Y-m-d"),
+      "merchant_responce"   => $merchant_responce,
+      "status"     => "Complete"
+     );
+     
+       
+      $insert = array(
+         'user_id'             => $user_id,
+         'channel_id'          => '42',
+         'channel_name'        => $this->data['officalInfo']['channel_name'],
+         'amount'              => $this->data['officalInfo']['channel_subscription_price'],
+         'type'           => "monthly",
+         'next_recharge_date'  => $next_recharge_date,
+         'date'        => date('Y-m-d'),
+         'status'     => 'active'
+     );
+     
+      $this->ion_auth->update($user_id,$data_update);  
+      $this->Users_model->insertpaymentLogs($array_payment_log);
+      $this->Users_model->insertChannelSubscriptionDetail($insert);
+    }
+     
+     if($id!="42"){
+                        
+     
+     $array_payment_log = array(
+      "user_id"     => $user_id,
+      "channel_id"     => $id,
+      "type"     => "channel",
+      "amount"     => $this->data['channelInfo']['channel_subscription_price'],
+      "date_of_charge"    => date("Y-m-d"),
+      "merchant_responce"   => $merchant_responce,
+      "status"     => "Complete"
+     );
+     $insert = array(
+         'user_id'             => $user_id,
+         'channel_id'          => $id,
+         'channel_name'        => $this->data['channelInfo']['channel_name'],
+         'amount'              => $this->data['channelInfo']['channel_subscription_price'],
+         'type'           => "monthly",
+         'next_recharge_date'  => $next_recharge_date,
+         'date'        => date('Y-m-d'),
+         'status'     => 'active'
+     );
+     
+     
+      
+     $this->Users_model->insertpaymentLogs($array_payment_log);
+     $this->Users_model->insertChannelSubscriptionDetail($insert);
+                  
+    }
+                 
+                    
+                    
+     $this->session->set_flashdata('success', "Channel subscribed to successfully!");
+     redirect(base_url()."user/channelsubscription/".$id);
+    }else{
+     $this->session->set_flashdata('error', $result->message);
+     redirect(base_url()."user/channelsubscription/".$id);
+    }
+   
+  }
+   
+  $this->data['clientToken'] = $this->clientToken;
+  $this->data['user']   = $this->ion_auth->user()->row();
+
+  $parser['content'] = $this->load->view('user/channel_subscription',$this->data,true);
+     $this->parser->parse('template', $parser);
+ }
+	public function channelsubscription1($id=NULL) {
 		if (!$this->ion_auth->logged_in()) {
 			redirect(site_url(''), 'refresh');
 		}
@@ -764,6 +999,9 @@ class User extends MY_Controller
 		
 		if($user_row->is_premium){
 			if($user_row->is_premium!='yes'){
+				if (isset($_POST['flag'])) {
+					redirect(base_url()."user/upgradepackage_ajax");
+				}
 				redirect(base_url()."user/upgradepackage");
 			}
 		}
@@ -777,7 +1015,7 @@ class User extends MY_Controller
 		$this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","channel_subscription");
 		$this->data['alreadyBuy']  = $this->Users_model->checkAlreadyBuy($id);
 		
-		if($this->input->post()) {
+		if ($this->input->post() && !isset($_POST['flag'])) {
 				$user_id = $this->ion_auth->get_user_id();
 				// finally change the password
 				
@@ -844,8 +1082,14 @@ class User extends MY_Controller
 		 
 		$this->data['clientToken'] = $this->clientToken;
 		$this->data['user'] 		= $this->ion_auth->user()->row();
-		$parser['content'] 		 = $this->load->view('user/channel_subscription',$this->data,true);
-        $this->parser->parse('template', $parser);
+
+		if (isset($_POST['flag'])) {
+			echo $this->load->view('user/channel_subscription',$this->data,true);
+		}
+		else {
+			$parser['content'] = $this->load->view('user/channel_subscription',$this->data,true);
+	    	$this->parser->parse('template', $parser);
+		}
 	}
 	
 	private function init_braintree(){

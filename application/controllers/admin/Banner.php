@@ -71,7 +71,6 @@ class Banner extends CI_Controller
 			if ($this->form_validation->run()) {
 				$picture_name	= "";
 				
-				
 				if($_FILES['banner_picture']['tmp_name']){
 					$picture_name 	= 'bannerImage_' . time().rand();
 					$path       	= 'uploads/banner_images/';
@@ -87,13 +86,9 @@ class Banner extends CI_Controller
 								"target" 	     => $this->input->post('target'),
 								"banner_image"   => $picture_name
 							);
-				$checkPage = $this->Content_model->getBannerRowByField("page",$this->input->post('page'));
-				if(count($checkPage)>0){
-					$result = $this->Content_model->updateBanner($data,$checkPage->id);
-				}
-				else{
-					$result = $this->Content_model->saveBanner($data);
-				}
+				
+				$result = $this->Content_model->saveBanner($data);
+				
 				if($result){
 					$this->session->set_flashdata(
 							'success',
@@ -144,6 +139,12 @@ class Banner extends CI_Controller
 				if($_FILES['banner_picture']['tmp_name']){
 					$picture_name 	= 'bannerImage_' .time().rand();
 					$path       	= 'uploads/banner_images/';
+					
+					$bannerRow 	= $this->Content_model->getBannerRowByField("id",$this->input->get('id'));
+					@unlink($path.$bannerRow['banner_image']);
+					@unlink($path."thumb_400_".$bannerRow['banner_image']);
+					@unlink($path."thumb_153_".$bannerRow['banner_image']);
+					
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'banner_picture');
 					$full_picture_path = $path.$picture_name;
 					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
@@ -171,9 +172,19 @@ class Banner extends CI_Controller
 			}
 		}
 
-		$data['bannerRow'] 	= $this->Content_model->getBannerRowByField("id",$this->input->get('id'));
-        $parser['content']		= $this->load->view('admin/banners/add_banner',$data,TRUE);
+		$data['bannerRow'] 	= $this->Content_model->getBannerRowByID($this->input->get('id'));
+        $parser['content']	= $this->load->view('admin/banners/add_banner',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
+	}
+	
+	function delete(){
+		$id 	= $this->input->get('id');
+		$result = $this->Content_model->deleteBanner($id);
+		$this->session->set_flashdata(
+						'success',
+						"Deleted Successfully"
+				);
+		redirect(base_url().'admin/banner');
 	}
 	
 }

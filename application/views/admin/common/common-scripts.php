@@ -27,6 +27,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/flot/curvedLines.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/flot/jquery.flot.resize.js"></script>
 
+
 <!-- flot -->
 
 <!-- /flot -->

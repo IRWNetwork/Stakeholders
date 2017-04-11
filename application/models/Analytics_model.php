@@ -16,12 +16,12 @@ class Analytics_model extends CI_Model
 		return $this->db->insert_id();
 	}
 	
-	function getTotalByDay($type){
+	function getTotalByDay(){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.'  GROUP BY date ORDER BY date');
+		$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.'  GROUP BY date ORDER BY date');
 
 		 //echo $this->db->last_query();		
-		 //die();
+		// die();
 		 if($query->num_rows())
 				{
 					return $query->result_array();
@@ -29,9 +29,9 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getTopByDay($type){
+	function getTopByDay(){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  episode, date ORDER BY date');
+		$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  episode, date ORDER BY date');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -50,9 +50,9 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getTopCountries($type){
+	function getTopCountries(){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  country ORDER BY count');
+		$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  country ORDER BY count');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -62,8 +62,8 @@ class Analytics_model extends CI_Model
 				}
 		return array();
 	}
-	function getMaxDateForCountries($type){
-		$query = $this->db->query('SELECT max(id) AS end, date FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
+	function getMaxDateForCountries(){
+		$query = $this->db->query('SELECT max(id) AS end, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -75,8 +75,8 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getMinDateForCountries($type){
-		$query = $this->db->query('SELECT min(id) AS start, date FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
+	function getMinDateForCountries(){
+		$query = $this->db->query('SELECT min(id) AS start, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -88,9 +88,9 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getTopCities($type){
+	function getTopCities(){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  country ORDER BY count');
+		$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' where  author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  country ORDER BY count');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -102,9 +102,9 @@ class Analytics_model extends CI_Model
 	}
 	
 	
-	function getTotalListens($type){
+	function getTotalListens(){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS total FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id );
+		$query = $this->db->query('SELECT COUNT(*) AS total FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id );
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -116,9 +116,9 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getUrlReport($type){
+	function getUrlReport(){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS total, referral_path FROM '.$this->tablename.' where type = "'.$type.'" and author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  referral_path');
+		$query = $this->db->query('SELECT COUNT(*) AS total, referral_path FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  referral_path');
 
 		 //echo $this->db->last_query();		
 		 //die();

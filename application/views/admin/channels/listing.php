@@ -19,7 +19,9 @@
 							<th>Type</th>
 							<th>Brand Name</th>
 							<th>Channel Name</th>
+                            <th>Sort Order</th>
                             <th>Subscription Price</th>
+                            <th>Deleted</th>
                             <th>Created Date</th>
 							<th class=" no-link last"><span class="nobr">Action</span></th>
 						</tr>
@@ -36,9 +38,12 @@
 							<td><?php if($row->brand_name!= NULL){echo "Producer"; }else{echo "User"; }?></td>
 							<td><?php echo $row->brand_name;?></td>
 							<td><?php echo $row->channel_name;?></td>
+                            <td><?php echo $row->sorting;?></td>
                             <td><?php echo $row->channel_subscription_price;?></td>
+                            <td><?php echo ($row->is_deleted == 1) ? "Yes" : "No" ; ?></td>
 							<td><?php echo date("m-d-Y",$row->created_on);?></td>
-							<td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>admin/channel/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a></td>						</tr>
+							<td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>admin/channel/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>admin/channel/deletecontent/<?php echo $row->id?>" class="btn btn-danger btn-xs"  onClick="return confirm('Are you sure to delete this channel ?')" >Delete </a></td>
+						</tr>
 						<?php }}else{?>
 						<tr>
 							<td colspan="7">No Record Found</td>

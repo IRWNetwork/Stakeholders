@@ -1,5 +1,4 @@
 <?php
-
 class Content_model extends CI_Model
 {
 	var $tablename = '';
@@ -9,6 +8,26 @@ class Content_model extends CI_Model
         parent::__construct();
 		$this->tablename = 'contents';
     }
+	
+	function getAllContentsPictures(){
+		$this->db->where('picture<>','');
+		$query = $this->db->get('contents');
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	function getAllContents(){
+		$this->db->where('file<>','');
+		$query = $this->db->get('contents');
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
 	
 	function getPlaylist($user_id){
 
@@ -182,7 +201,26 @@ class Content_model extends CI_Model
 		}
 		return array();
 	}
-	public function getContentByUserId($id){
+	public function getContentByUserId($id,$filter){
+		if($filter!=''){
+			$this->db->where('type',$filter);
+		}
+		$this->db->where('show_date <=',date('Y-m-d'));
+		$sSQL   =   $this->db->where("user_id",$id);
+		$query  =   $this->db->get('contents');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows())
+		{
+			$row = $query->result();
+			return $row;
+		}
+		return array();
+	}
+	
+	public function getContentByUserIdLimit($id,$start,$limit) {
+		$this->db->limit($limit, $start);
+		$this->db->where('show_date <=',date('Y-m-d'));
 		$sSQL   =   $this->db->where("user_id",$id);
 		$query  =   $this->db->get('contents');
 		//echo $this->db->last_query();
@@ -205,6 +243,7 @@ class Content_model extends CI_Model
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
 		}
+		$this->db->where('show_date <=',date('Y-m-d'));
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*, users.channel_name');
 		$this->db->from('users');
@@ -250,6 +289,7 @@ class Content_model extends CI_Model
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
 		}
+		$this->db->where('show_date <=',date('Y-m-d'));
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*, users.channel_name');
 		$this->db->from('users');
@@ -273,7 +313,7 @@ class Content_model extends CI_Model
 		if(isset($data['type']) && $data['type']!=''){
 			$this->db->where("type",$data['type']);
 		}
-		
+		$this->db->where('show_date <=',date('Y-m-d'));
 		$this->db->select('contents.*, users.channel_name');
 		$this->db->from('users');
 		$this->db->join('contents','users.id = contents.user_id','INNER');
@@ -299,6 +339,7 @@ class Content_model extends CI_Model
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
 		}
+		$this->db->where('show_date <=',date('Y-m-d'));
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*');
 		$this->db->from('contents');
@@ -316,6 +357,7 @@ class Content_model extends CI_Model
 			$where.=" and type='". $data['type']."'";
 		}
 		$where.=" and user_id='". $user_id."'";
+		$this->db->where('show_date <=',date('Y-m-d'));
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*');
 		$this->db->from('contents');
@@ -329,23 +371,63 @@ class Content_model extends CI_Model
 		return $this->db->last_query();
 	}
 	
+	public function deleteBanner($id){
+		$this->deleteBannerFiles($id);
+		$this->db->where('id', $id);
+	}
+	
+	public function googleCloudDelete($id) {
+		$this->load->library('Gcloud');
+		$file_name = $this->gcloud->deleteData($source,$file_name);
+		// $this->db->where('id', $id);
+		// $this->db->select('*');
+		// $query = $this->db->get('contents');
+		// $data = $query->row_array();
+		// echo "<pre>"; print_r($data);exit;
+	}
 	public function deleteFiles($id){
 		$this->db->where('id', $id);
 		$this->db->select('*');
 		$query = $this->db->get('contents');
 		if($query->num_rows()){
 			$rows =  $query->result();
+			//echo "<pre>"; print_r($rows);exit;
 			foreach($rows as $row){
-				@unlink('uploads/files/'.$row->picture);
-				@unlink('uploads/files/'.$row->file);
+				@unlink('uploads/listing/'.$row->picture);
+				@unlink('uploads/listing/thumb_400_'.$row->picture);
+				@unlink('uploads/listing/thumb_469_'.$row->picture);
+				@unlink('uploads/listing/thumb_153_'.$row->picture);
+				@unlink('uploads/listing/thumb_50_'.$row->picture);
+
+				//Delete google cloud file here
+				//@unlink('uploads/files/'.$row->file);
 				$this->db->where('id', $row->id);
 				$this->db->delete('contents');
 			}	
 		}
 	}
 	
-	public function getTotalEpisode($type){
-		$query = $this->db->query('SELECT COUNT(*) As total from contents where type = "'.$type.'" ');
+	public function deleteBannerFiles($id){
+		$this->db->where('id', $id);
+		$this->db->select('*');
+		$query = $this->db->get('pages_banners_details');
+		if($query->num_rows()){
+			$rows =  $query->result();
+			//echo "<pre>"; print_r($rows);exit;
+			foreach($rows as $row){
+				@unlink('uploads/banner_images/'.$row->banner_image);
+				@unlink('uploads/banner_images/thumb_400_'.$row->banner_image);
+				@unlink('uploads/banner_images/thumb_153_'.$row->banner_image);
+
+				$this->db->where('id', $row->id);
+				$this->db->delete('pages_banners_details');
+			}	
+		}
+	}
+	
+	public function getTotalEpisode(){
+	    $user_id = $this->ion_auth->user()->row()->id;
+		$query   = $this->db->query('SELECT COUNT(*) As total from contents where user_id = "'.$user_id.'" ');
 		//echo $this->db->last_query();		
 		//die();
 		if($query->num_rows())
@@ -364,8 +446,7 @@ class Content_model extends CI_Model
 		//$this->db->where('contents.type',$type);
 		$this->db->group_by('user_id,type');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//die();
+		//echo $this->db->last_query();exit;
 		if($query->num_rows()>0){
 			$row = $query->result_array();
 			return $row;	
@@ -409,6 +490,17 @@ class Content_model extends CI_Model
 	}
 	public function getBannerRowByField($field, $value){
 		$sSQL   =   $this->db->where($field,$value);
+		$query  =   $this->db->get('pages_banners_details');
+		if($query->num_rows())
+		{
+			$row = $query->result_array();
+			return $row;
+		}
+		return array();
+	}
+	
+	public function getBannerRowByID($id){
+		$sSQL   =   $this->db->where('id',$id);
 		$query  =   $this->db->get('pages_banners_details');
 		if($query->num_rows())
 		{

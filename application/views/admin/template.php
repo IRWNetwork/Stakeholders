@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
-<head>
+<html lang="en" class=""><head>
 <meta charset="utf-8" />
 <title><?php echo $page_title;?></title>
 <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
@@ -13,6 +12,7 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css" type="text/css" />
 <script src="<?php echo base_url(); ?>assets/libs/jquery/jquery/dist/jquery.js"></script>
+<script src="<?php echo base_url();?>assets/jquery/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>

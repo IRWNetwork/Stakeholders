@@ -63,8 +63,16 @@
 										<input type="file" name="banner_picture" />
 									</div>
 								</div>
-								
-								
+                                <?php if($bannerRow['banner_image']!=''){?>
+                                <div class="form-group">
+									<label class="col-sm-3 control-label">Banner Image</label>
+									<div class="col-sm-9">
+										<?php if($bannerRow['banner_image']){?>
+                                        <img src="<?php echo base_url()."uploads/banner_images/thumb_153_".$bannerRow['banner_image'];?>" />
+                                        <?php }?>
+                                	</div>
+                                </div>
+                                <?php }?>
 								<div class="form-group">
 									<div class="col-lg-offset-3 col-lg-10">
 										<button type="submit" class="btn btn-sm btn-info">Save</button>

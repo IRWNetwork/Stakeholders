@@ -7,7 +7,7 @@
 				<?php echo $dataRow['embed_code'];?>
 				<?php }else{?>
 				<video width="100%" height="400" controls>
-  					<source src="<?php echo base_url()?>uploads/files/<?php echo $dataRow['file']?>" type="video/mp4">
+  					<source src="<?php echo $dataRow['file_url']?>" type="video/mp4">
 					Your browser does not support the video tag.
 				</video> 
 				<?php }?>

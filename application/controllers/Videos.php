@@ -34,7 +34,7 @@ class Videos extends MY_Controller
 		$config['reuse_query_string']   = true;
 
         $this->pagination->initialize($config);
-        $page 		           = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
 		$this->data['contents']= $this->Content_model->getAllData($arr,$page,$config["per_page"]);
 		$this->data["links"]   = $this->pagination->create_links();

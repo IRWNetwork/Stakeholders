@@ -86,6 +86,22 @@
                                             <label class="col-lg-3 control-label">Channel Price in $</label>
                                             <div class="col-lg-6">
                                                 <input type="text" name="channel_price" value="<?php echo $usersRow['channel_subscription_price']?>" placeholder="Channel Price" class="form-control " >                                            </div>
+                                        </div>
+                                        
+                                         <div class="form-group">
+                                            <label class="col-lg-3 control-label">Sort Order</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" name="sorting" value="<?php echo $usersRow['sorting']?>" placeholder="Sort Orders" class="form-control " >                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                        <?php //print_r($usersRow); ?>
+                                            <label class="col-lg-3 control-label">Is Deleted</label>
+                                            <div class="col-lg-6">
+                                               <select class="form-control" name="is_deleted">
+                                                 <option <?php echo $usersRow['is_deleted']=='0' ? "selected" : ""; ?>  value="0">No</option>
+                                                 <option <?php echo $usersRow['is_deleted']=='1' ? "selected" : ""; ?> value="1">Yes</option>
+                                               </select>
+                                            </div>
                                         </div>                                  
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Channel Description</label>

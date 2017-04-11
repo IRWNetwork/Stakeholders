@@ -91,37 +91,48 @@ class Content extends CI_Controller
 			$this->form_validation->set_rules($rules);
 
 			if ($this->form_validation->run()) {
+			
 				$file_name 		= "";
 				$picture_name	= "";
+				
 				if($_FILES['file']['tmp_name']){
 					$file_name 	= 'file_' . time();
-					$path       = 'uploads/files/';
-					$file_name 	= $this->Common_model->uploadFile($file_name,$path,'file');
+					$source   	= $_FILES['file'];
+					$file_name 	= $this->Common_model->uploadFileToGoogle($source,$file_name);
 				}
 				
 				if($_FILES['picture']['tmp_name']){
-					$picture_name 	= 'file_' . time();
-					$path       	= 'uploads/content_listing/';
+					$picture_name 	= 'picture_' . time();
+					$path       	= 'uploads/listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
-					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
-					$this->Common_model->generateThumb($full_picture_path,array('153',153),"thumb_153_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(400,400),"thumb_400_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(469,469),"thumb_469_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(153,153),"thumb_153_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(50,50),"thumb_50_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_50_".$picture_name,$path."pic_50_50.jpg",50,50,$path."thumb_50_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_153_".$picture_name,$path."pic_153_153.jpg",153,153,$path."thumb_153_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_400_".$picture_name,$path."pic_400_400.jpg",400,400,$path."thumb_400_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_469_".$picture_name,$path."pic_469_469.jpg",469,469,$path."thumb_469_".$picture_name);
 				}
 				
 				$is_premium  = ($this->input->post('is_premium')!='') ? $this->input->post('is_premium') : "";
 				$is_featured = ($this->input->post('is_featured')!='') ? $this->input->post('is_featured') : "";
 
 				$data	= array(
-								"title" 		=> $this->input->post('title'),
-								"description" 	=> $this->input->post('description'),
-								"type"			=> $this->input->post('type'),
-								"video_type"	=> $this->input->post('video_type'),
-								"embed_code"	=> $this->input->post('embed_code'),
-								"is_premium" 	=> $is_premium,
-								"is_featured"   => $is_featured,
-								"file" 		  => $file_name,
-								"picture" 	   => $picture_name,
-								"user_id"	   => $this->ion_auth->user()->row()->id
+								"title" 			=> $this->input->post('title'),
+								"description" 		=> $this->input->post('description'),
+								"type"				=> $this->input->post('type'),
+								"video_type"		=> $this->input->post('video_type'),
+								"embed_code"		=> $this->input->post('embed_code'),
+								"meta_keywords"		=> $this->input->post('meta_keywords'),
+								"meta_description"	=> $this->input->post('meta_description'),
+								"show_date"			=> changeDateTimeToSQLDateTime($this->input->post('show_date')),
+								"is_premium" 		=> $is_premium,
+								"is_featured"   	=> $is_featured,
+								"file_url" 			=> $file_name,
+								"picture" 	   		=> $picture_name,
+								"user_id"	   		=> $this->ion_auth->user()->row()->id
 							);
 				$result = $this->Content_model->save($data);
 				if($result){
@@ -194,32 +205,50 @@ class Content extends CI_Controller
 				
 				$id = $this->input->get('id');
 				$data	= array(
-								"title" 		=> $this->input->post('title'),
-								"description" 	=> $this->input->post('description'),
-								"type"			=> $this->input->post('type'),
-								"video_type"	=> $this->input->post('video_type'),
-								"embed_code"	=> $this->input->post('embed_code'),
-								"is_premium" 	=> $is_premium,
-								"is_featured" 	=> $is_featured,
+								"title" 			=> $this->input->post('title'),
+								"description" 		=> $this->input->post('description'),
+								"type"				=> $this->input->post('type'),
+								"video_type"		=> $this->input->post('video_type'),
+								"embed_code"		=> $this->input->post('embed_code'),
+								"meta_keywords"		=> $this->input->post('meta_keywords'),
+								"meta_description"	=> $this->input->post('meta_description'),
+								"show_date"			=> changeDateTimeToSQLDateTime($this->input->post('show_date')),
+								"is_premium" 		=> $is_premium,
+								"is_featured" 		=> $is_featured,
 							);
-							
-				if($_FILES['file']['tmp_name']!=''){
+				
+				if($_FILES['file']['tmp_name']){
 					$file_name 	= 'file_' . time();
-					$path       = 'uploads/files/';
-					$file_name 	= $this->Common_model->uploadFile($file_name,$path,'file');
-					$data["file"] = $file_name;
+					$source   	= $_FILES['file'];
+					$file_name 	= $this->Common_model->uploadFileToGoogle($source,$file_name);
+					$data['file_url'] = $file_name;
 				}
 				
 				if($_FILES['picture']['tmp_name']!=''){
 
+					//Delete Old picuture
+					$sSQL   =   $this->db->where("id",$id);
+					$query  =   $this->db->get('contents');
+					$row = $query->row_array();
+					if ($row) {
+						unlink('uploads/listing/'.$row['picture']);
+						unlink('uploads/listing/thumb_400_'.$row['picture']);
+						unlink('uploads/listing/thumb_469_'.$row['picture']);
+						unlink('uploads/listing/thumb_153_'.$row['picture']);
+						unlink('uploads/listing/thumb_50_'.$row['picture']);
+					}
 					$picture_name 	= 'picture_' . time().rand();
-					$path       	= 'uploads/content_listing/';
+					$path       	= 'uploads/listing/';
 					$picture_name 	= $this->Common_model->uploadFile($picture_name,$path,'picture');
 					$full_picture_path = $path.$picture_name;
-
-					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
-					$this->Common_model->generateThumb($full_picture_path,array('469',469),"thumb_469_".$picture_name);
-					$this->Common_model->generateThumb($full_picture_path,array('153',153),"thumb_153_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(400,400),"thumb_400_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(469,469),"thumb_469_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(153,153),"thumb_153_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(50,50),"thumb_50_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_50_".$picture_name,$path."pic_50_50.jpg",50,50,$path."thumb_50_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_153_".$picture_name,$path."pic_153_153.jpg",153,153,$path."thumb_153_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_400_".$picture_name,$path."pic_400_400.jpg",400,400,$path."thumb_400_".$picture_name);
+					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_469_".$picture_name,$path."pic_469_469.jpg",469,469,$path."thumb_469_".$picture_name);
 					
 
 					$data["picture"] = $picture_name;

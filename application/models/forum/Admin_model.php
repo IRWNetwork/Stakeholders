@@ -138,8 +138,8 @@ class Admin_model extends CI_Model {
     // end roles function
     
     // start category function
-    public function category_create()
-    {
+    public function category_create(){
+		
         $row = $this->input->post('row');
         
         // check name 
@@ -169,8 +169,8 @@ class Admin_model extends CI_Model {
         }
     }
 
-    public function category_edit()
-    {
+    public function category_edit(){
+		
         $row = $this->input->post('row');
         
         // check name

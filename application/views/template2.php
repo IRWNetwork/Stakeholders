@@ -23,7 +23,12 @@ $(document).ready(function(){
 	// $(".play_list_song").click(function(){
 		$("i.fa-pause").removeClass("icon-control-pause");
 		$(".play_list_song i").addClass("icon-control-play");
-		$(".player-custom").show();
+		var type = $(this).attr('type');
+		if (type == 'Video') {
+			$(".player-custom").hide();
+		} else {
+			$(".player-custom").show();
+		}
 		var current_play_button = $(this).children('i');
 		current_play_button.removeClass('icon-control-play');
 		current_play_button.addClass('icon-control-pause');
@@ -202,7 +207,7 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 					<div class="song-img">
 						
 					</div>
-									<div class="song-name">							<h3></h3>							<h6><a href="#">Claudia Leitte																																									</a></h6>						</div>					</div>					<div class="player-controls">						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a> </div>						</div>						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#play" class="sm2-inline-button play-pause" id="paly">Play / pause</a> </div>						</div>						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a> </div>						</div>						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#repeat" title="Repeat playlist" class="sm2-inline-button repeat">&infin; repeat</a> </div>						</div>					</div>					<div class="player-right">						<div class="sm2-inline-element sm2-button-element sm2-volume">							<div class="sm2-button-bd"> <span class="sm2-inline-button sm2-volume-control volume-shade"></span> 							<a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a> </div>						</div>						<div class="sm2-inline-element sm2-button-element sm2-menu">							<div class="sm2-button-bd"> <a href="#menu" class="sm2-inline-button menu">menu</a> </div>						</div>					</div>				</div>
+									<div class="song-name">							<h3></h3>							<h6><a href="#">																																									</a></h6>						</div>					</div>					<div class="player-controls">						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#prev" title="Previous" class="sm2-inline-button previous">&lt; previous</a> </div>						</div>						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#play" class="sm2-inline-button play-pause" id="paly">Play / pause</a> </div>						</div>						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#next" title="Next" class="sm2-inline-button next">&gt; next</a> </div>						</div>						<!--//-->						<div class="sm2-inline-element sm2-button-element">							<div class="sm2-button-bd"> <a href="#repeat" title="Repeat playlist" class="sm2-inline-button repeat">&infin; repeat</a> </div>						</div>					</div>					<div class="player-right">						<div class="sm2-inline-element sm2-button-element sm2-volume">							<div class="sm2-button-bd"> <span class="sm2-inline-button sm2-volume-control volume-shade"></span> 							<a href="#volume" class="sm2-inline-button sm2-volume-control">volume</a> </div>						</div>						<div class="sm2-inline-element sm2-button-element sm2-menu">							<div class="sm2-button-bd"> <a href="#menu" class="sm2-inline-button menu">menu</a> </div>						</div>					</div>				</div>
 			</div>
 			<div class="bd sm2-playlist-drawer sm2-element">
 				<div class="sm2-inline-texture">

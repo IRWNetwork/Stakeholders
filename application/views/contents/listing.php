@@ -37,8 +37,8 @@
 								<?php }?></td>
 							<td><?php echo $row->title?></td>
 							<td><?php echo $row->type?></td>
-							<td><?php echo $row->is_premium?></td>
-							<td><?php echo $row->is_premium?></td>
+							<td><?php echo ($row->is_premium == 'yes') ?  'Yes' : 'No' ?></td>
+							<td><?php echo ($row->is_featured == 'yes') ? 'Yes' : 'No' ?></td>
 							<td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>content/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>content/delete?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to delete this product ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete </a></td>
 						</tr>
 						<?php }}else{?>
