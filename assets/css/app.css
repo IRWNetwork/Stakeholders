@@ -2951,8 +2951,9 @@ a.text-#000000:hover { color: #131e25; }
 	min-height: 1px;
 }
 .player-custom.sm2-bar-ui .song-name {
-	float: left;
-	padding-left: 15px;
+	position: absolute;
+    left: 58px;
+    width: 28%;
 }
 .player-custom.sm2-bar-ui .song-name h3 {
 	font-size: 20px;
@@ -3043,4 +3044,25 @@ a.text-#000000:hover { color: #131e25; }
 }
 .prem-btn {
 	float: right;
+}
+.modal-content {
+    background-color: #171717 !important;
+}
+.preview__title{
+	color: #FFF !important;
+}
+.modal {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#waveform canvas{
+	width:100% !important;
+}
+#Container video {
+	min-width: none !important;
+	width: 50%;
+}
+@media screen and (max-width: 600px) {
+    #my_editorial {
+        width: 100%;
+    }
 }

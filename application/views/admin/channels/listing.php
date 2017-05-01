@@ -1,8 +1,32 @@
 <!-- content -->
+<script type="text/javascript">
+    function formSubmit(e){
+        if(e.keyCode === 13){
+            $('#search').submit();
 
+        }
+    }
+</script>
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
 		<h1 class="m-n font-thin h3"><?php echo $page_heading;?></h1>
+         <div style=" margin-top:-24px;float:right; width:40%;" class="input-group">
+          <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
+          <form id="search" method='post'>
+          	<input name="name" onkeypress="formSubmit(event)"  class="form-control input-sm ng-pristine ng-valid ng-empty ng-touched" placeholder="search" aria-invalid="false" type="text">
+          </form>  
+        </div>
+         <div style=" margin-top:-24px;float:right; width:30%;margin-right: 50px;" class="input-group">
+		  <select name="type" class="form-control m-b" id="type" onchange="filter_users(this.value)">
+				<option value="">Filer By Type</option>
+				<option value="2">User</option>
+				<option value="3">Channel</option>
+				<option value="4">Advertiser</option>
+		  </select>
+        </div>
+        <div style=" margin-top:-24px;width:10%;margin-right: 50px;float: right;" class="input-group">
+		  <a href="" class="btn btn-info btn-sm">Clear Filter</a>
+		</div>
 	</div>
 	<div class="wrapper-md">
 		<div class="panel panel-default">
@@ -35,7 +59,17 @@
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
 							<td><?php echo $row->username;?></td>
-							<td><?php if($row->brand_name!= NULL){echo "Producer"; }else{echo "User"; }?></td>
+							<td><?php 
+								if($row->group_id == 2) {
+									echo "Users"; 
+								}
+								elseif ($row->group_id == 3) {
+									echo "Producer";
+								}
+								else {
+									echo "Advertiser";
+								}?>
+							</td>
 							<td><?php echo $row->brand_name;?></td>
 							<td><?php echo $row->channel_name;?></td>
                             <td><?php echo $row->sorting;?></td>
@@ -56,3 +90,23 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	function filter_users(type) {
+		var BASE_URL = '<?php echo base_url()?>';
+		var flag = 1;
+
+		my_url = BASE_URL+"admin/channel/user_filter";
+
+	    $.ajax({
+	        url: my_url,
+	        type: "POST",
+	        data : {flag : flag, type: type},
+	        success: function (response) {
+	        	if (response != "") {
+	        		$(".table-responsive").empty();
+	        		$(".table-responsive").append(response);
+	        	}
+	        }
+	    });
+	}
+</script>

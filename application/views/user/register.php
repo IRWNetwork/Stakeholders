@@ -45,7 +45,8 @@
 				<div class="checkbox m-b-md m-t-none">
 					<label class="i-checks">
 						<input type="checkbox" name="terms" value="1" required>
-						<i></i> Agree the <a href="<?php echo base_url()?>page/terms">terms and policy</a> </label>
+						<i></i> Agree the <a href="<?php echo base_url()?>page/terms">terms and policy</a>
+					</label>
 				</div>
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Sign up</button>
 				<div class="line line-dashed"></div>

@@ -21,7 +21,7 @@ class Content extends CI_Controller
 		
 		$data['page_title'] 	 	= 'Content';
 		$data['page_heading']  		= 'Content';
-		$arr['name']            	= $this->input->get('name') ? $this->input->get('name') : '';
+		$arr['name']            	= $this->input->post('name') ? $this->input->post('name') : '';
 		$arr['portalUsers']	 		= $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
 		$config 			   	 	= array();
         $config["base_url"]     	= base_url() . "admin/content";
@@ -32,7 +32,7 @@ class Content extends CI_Controller
 		
         $this->pagination->initialize($config);
         $page 		           = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$data['contents']	   = $this->Content_model->getAllData(array(),$page,$config["per_page"]);
+		$data['contents']	   = $this->Content_model->getAllData(array(),$page,$config["per_page"],$arr['name']);
 		//echo "<pre>"; print_r($data['contents']);exit;
 		$data["links"]         = $this->pagination->create_links();
 		if($this->input->get('msg')){
@@ -309,6 +309,10 @@ class Content extends CI_Controller
 		$data['page_title'] 	= 'Edit Content';
 		$data['page_heading'] 	= 'Edit Content';
 		
+		$data['contentRow'] 	= $this->Content_model->getRow($this->input->get('id'));
+
+		$oldFileUrl = $data['contentRow']['file_url'];
+
 		if($this->input->post()) {
 			$rules = array(
               	array(
@@ -367,7 +371,22 @@ class Content extends CI_Controller
 							);
 							
 				
-				if($_FILES['file']['tmp_name']){
+				if ($_FILES['file']['tmp_name']) {
+
+					//Deleting Old file from GCloud
+					if ($oldFileUrl != '') {
+
+						$my_url_parts = explode('/', $oldFileUrl);
+						$myFileName = $my_url_parts[9];
+						$myFileName = explode('?', $myFileName);
+						$myFileName = $myFileName[0];
+						//echo $myFileName;exit;
+						$this->load->library('Gcloud');
+						$file_name = $this->gcloud->deleteFile($myFileName);
+
+					}
+					//End of Deleting old file from Gcloud
+
 					$file_name 	= 'file_' . time();
 					$source   	= $_FILES['file'];
 					$file_name 	= $this->Common_model->uploadFileToGoogle($source,$file_name);
@@ -414,7 +433,6 @@ class Content extends CI_Controller
 				}
 			}
 		}
-		$data['contentRow'] 	= $this->Content_model->getRow($this->input->get('id'));
 		
         $parser['content']		= $this->load->view('admin/contents/edit_content',$data,TRUE);
         $this->parser->parse('admin/template', $parser);

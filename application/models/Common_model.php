@@ -109,10 +109,10 @@ class Common_model extends CI_Model
 	}
 	
 	function updateContentImageWithBlackBackground($image,$background,$height,$width,$new_image_with_path){
-		
 		$ext_array 	= explode('.',$image);
 		$ext 		= strtolower($ext_array[count($ext_array)-1]);
 		$image1 	= imagecreatefromjpeg($background); //300 x 300
+		//echo $background;exit;
 		
 		if($ext == 'jpg' || $ext=='jpeg'){
 			$image2 = imagecreatefromjpeg($image); //150 x 150

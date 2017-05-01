@@ -56,30 +56,53 @@ class Users_model extends CI_Model
 	}
 
 	public function getAllAdmins() {
-		$query = $this->db->query('SELECT * FROM users JOIN users_groups ON users.id = users_groups.user_id WHERE users_groups.group_id=1');
-		$admins = $query->result();
+		$query = $this->db->query('SELECT users.* FROM users JOIN users_groups ON users.id = users_groups.user_id WHERE users_groups.group_id=1');
+		return $query->result();
+		//echo $this->db->last_query();exit;
 		return $admins;
 	}
 	
-	public function getAllUsers($data,$start,$limit){
+	public function getAllUsers($data,$start,$limit, $key=''){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
 		if(isset($data['name'])){
-			$this->db->like('users.firstname', $data['name']);
-			$this->db->or_like('users.lastname', $data['name']);
+			$this->db->like('users.brand_name', $data['name']);
+			$this->db->or_like('users.channel_name', $data['name']);
 			$this->db->or_like('users.email', $data['name']);
+		}
+		if(isset($key) && $key!=''){
+			$this->db->like('users.brand_name', $key);
+			$this->db->or_like('users.channel_name', $key);
+			$this->db->or_like('users.email', $key);
 		}
 
 		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
 		//$this->db->where('is_deleted !=', 1);
 		$query = $this->db->get('users');
-		//echo $this->db->last_query();exit;
+		//echo $this->db->last_query();die;
 		if($query->num_rows())
 		{
 			return $query->result();
 		}
 		return array();
 	}
+
+	public function getAllUsersByType($user_type) {
+		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		$this->db->where('users_groups.group_id', $user_type);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();die;
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+
 
 	public function soft_delete($id) {
 		$data = array(
@@ -854,8 +877,10 @@ group by users.channel_name order by users.sorting desc");
 	public function countTotalRows($data)
 	{
 		$where = "  1=1 ";	
-		if(isset($data['name']) && $data['name']!=''){
-			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		if(isset($data['name'])){
+			$this->db->like('users.brand_name', $data['name']);
+			$this->db->or_like('users.channel_name', $data['name']);
+			$this->db->or_like('users.email', $data['name']);
 		}
 		
 		$this->db->where($where,NULL,false);
@@ -1011,6 +1036,44 @@ group by users.channel_name order by users.sorting desc");
 		return array();
 	}
 	
+	public function getUserbannerById($id){
+		$this->db->select(' banner');
+		$this->db->where('id',$id);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
+	
+	public function getChannelsUserInfo(){
+		$this->db->select('id, channel_name');
+		$this->db->where('channel_name <>','');
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row;	
+		}
+		return array();
+	}
+	
+	public function getChannelNameById($id){
+		$this->db->select('channel_name');
+		$this->db->where('id',$id);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();
+		//die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
 	// function for payment cron jobs //////
 	public function getNextUserIDForCurrentLogs(){
 		$query  = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '".$this->db->database."' AND TABLE_NAME = 'payment_logs'";

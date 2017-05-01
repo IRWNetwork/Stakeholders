@@ -82,8 +82,11 @@ class User extends MY_Controller
 				if($this->ion_auth->login($identity,$password)) {
 					//$this->phpbb_login($identity,$password);
 					$user = $this->ion_auth->user()->row();
+					$user_groups = $this->ion_auth->get_users_groups($user->id)->row();
 					//$this->Phpbb->user_login($identity,$password);
+					$this->session->set_userdata('userGroup', $user_groups->id);
 					$this->session->set_userdata('email',$user->username);
+					$this->session->set_userdata('content_block',$user->content_block);
 					$this->session->set_userdata('id',$user->id);
 					$this->session->set_userdata('uname',$user->first_name." ".$user->last_name);
 					$this->session->set_userdata('username',$user->first_name."_".$user->last_name);
@@ -170,7 +173,7 @@ class User extends MY_Controller
 
 				
 			}
-			else if($this->input->post('flag') ==1){
+			else if($this->input->post('flag') ==1 || $this->input->post('flag') ==3){
 				$rules = array(
 					array(
 						 'field'   => 'firstname',
@@ -229,6 +232,12 @@ class User extends MY_Controller
 						'sales_pitch'  =>  $this->input->post('salespitch'),
 						'channel_subscription_price' =>  floatval($this->input->post('channel_price')),
 						'description' =>  floatval($this->input->post('description'))
+					);
+				}
+				if($flag==3){
+					$additional_data = array(
+						'first_name'   => $this->input->post('firstname'),
+						'last_name' 	=>  $this->input->post('lastname')
 					);
 				}
 				else{

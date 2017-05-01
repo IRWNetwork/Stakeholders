@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($usersRow);exit; ?>
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
 		<h1 class="m-n font-thin h3"><?php echo $page_heading?></h1>
@@ -20,10 +21,16 @@
 											<option value="4">Channel</option>
 											<option value="3">User</option>
 										</select>
-										<?php if(isset($usersRow['brand_name'])){?>
+										<?php if (isset($usersRow['brand_name'])) { ?>
 										<script type="text/javascript">
-											document.frm.type.value=<?php if($usersRow['brand_name'] != NULL){ echo 4; }else{
-												echo 4;}?>;
+											document.frm.type.value=<?php 
+                                                if ($usersRow['brand_name'] != NULL) { 
+                                                    echo 4;
+                                                }
+                                                else {
+												    echo 3;
+                                                }
+                                            ?>;
 										</script>
 										<?php }?>
 									</div>
@@ -102,7 +109,18 @@
                                                  <option <?php echo $usersRow['is_deleted']=='1' ? "selected" : ""; ?> value="1">Yes</option>
                                                </select>
                                             </div>
-                                        </div>                                  
+                                        </div>
+                                        <?php if ($usersRow['brand_name'] != NULL) { ?>
+                                        <div class="form-group">
+                                            <label class="col-lg-3 control-label">Content Block</label>
+                                            <div class="col-lg-6">
+                                               <select class="form-control" name="content_block">
+                                                 <option <?php echo $usersRow['content_block']=='0' ? "selected" : ""; ?>  value="0">No</option>
+                                                 <option <?php echo $usersRow['content_block']=='1' ? "selected" : ""; ?> value="1">Yes</option>
+                                               </select>
+                                            </div>
+                                        </div>
+                                        <?php } ?>
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Channel Description</label>
                                             <div class="col-lg-6">

@@ -31,8 +31,8 @@ class Gcloud {
 		    'projectId' => 'irw-network'
 		]);
     	$bucket = $storage->bucket('irw-network');
-		$object = $bucket->object('file_1489075950.jpg');
-		$info = $object->info();
+		$object = $bucket->object($file_name);
+		//$info = $object->info();
 		$result = $object->delete();
 	}
 

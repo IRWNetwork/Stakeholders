@@ -305,20 +305,21 @@ $(document).ready(function(){
 	</div>
 	<!-- / right col --> 
 </div>
-<?php if($this->session->userdata('websiteloaded')!='yes'){?>
+<?php //if($this->session->userdata('websiteloaded')!='yes'){?>
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/colorbox.css" type="text/css" />
 <script src="<?php echo base_url()?>assets/js/jquery.colorbox.js"></script> 
 <script type="text/javascript">
 
+
 $(document).ready(function(){
-	/*setTimeout(function(){
+	setTimeout(function(){
 		$.colorbox({
 			iframe:true, 
-			innerWidth:"90%", 
-			innerHeight:"90%",
+			innerWidth:"50%", 
+			innerHeight:"70%",
 			href: "<?php echo base_url()?>home/mainpopup",
 		});
-	},4000);*/
+	},4000);
 });
 </script>
-<?php }?>
+<?php// }?>

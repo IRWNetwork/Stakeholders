@@ -17,7 +17,7 @@
 			<!-- buttons -->
 			<div class="nav navbar-nav hidden-xs"> 
 				<a href="#" class="btn no-shadow navbar-btn" ui-toggle-class="app-aside-folded" target=".app"> <i class="fa fa-dedent fa-fw text"></i> <i class="fa fa-indent fa-fw text-active"></i> </a> 
-				<a href="#" class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user"> <i class="icon-user fa-fw"></i> </a> 
+				<!-- <a href="#" class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user"> <i class="icon-user fa-fw"></i> </a>  -->
 			</div>
 			<!-- / buttons --> 
 			
@@ -26,15 +26,18 @@
 			<!-- / link and dropdown --> 
 			
 			<!-- search form -->
-			<form class="navbar-form navbar-form-sm navbar-left shift" <?php if($this->router->fetch_class() == 'forum'){?> action="<?php echo site_url('home') ?>" <?php }?>>
+			<div class="navbar-form navbar-form-sm navbar-left shift" <?php if($this->router->fetch_class() == 'forum'){?> action="<?php echo site_url('home') ?>" <?php }?>>
 				<div class="form-group">
 					<div class="input-group">
-						<input type="text" name="search" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search">
+						<input id="search" type="text" name="search" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search">
 						<span class="input-group-btn">
-						<button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
-						</span> </div>
+							<a class="btn btn-sm bg-light rounded">
+								<i class="fa fa-search"></i>
+							</a>
+						</span>
+					</div>
 				</div>
-			</form>
+			</div>
 			<!-- / search form --> 
 			<?php if (!$this->ion_auth->logged_in()) {?>
 			<ul class="nav navbar-nav navbar-right">
@@ -62,13 +65,38 @@
 					<!-- dropdown -->
 					<ul class="dropdown-menu animated fadeInRight w">
 						<li> <a href="<?php echo base_url()?>user/profile">Profile</a> </li>
-                        <li> <a href="<?php echo base_url()?>user/upgradepackage">Become Permium User</a> </li>
-                        <li> <a href="<?php echo base_url()?>user/paymenthistory">Payment History </a></li>
-                        <li> <a href="<?php echo base_url()?>user/subscribechannel">Your Subscriptions </a> </li> 
+						<?php if ($this->session->userdata('userGroup') != 4) { ?>
+	                        <li> 
+	                        	<a href="<?php echo base_url()?>user/upgradepackage">Become Permium User</a>
+	                        </li>
+	                        <li>
+	                        	<a href="<?php echo base_url()?>user/paymenthistory">Payment History </a>
+	                        </li>
+	                        <li>
+	                        	<a href="<?php echo base_url()?>user/subscribechannel">Your Subscriptions
+	                        	</a>
+	                        </li> 
+                        <li>
+                        	<a href="<?php echo base_url()?>feedback">Feedback</a>
+                        </li>
+                        <?php } ?>
+                        <?php if ($this->session->userdata('userGroup') == 4) { ?>
+                        	<li>
+	                        	<a href="<?php echo base_url()?>advertisement/addAdvertisement">
+	                        		Add Advertisement
+	                        	</a>
+	                        </li>
+                        	<li>
+	                        	<a href="<?php echo base_url()?>advertisement">Your Ads</a>
+	                        </li>
+	                        <li>
+	                        	<a href="<?php echo base_url()?>feedback">Your Billing</a>
+	                        </li>
+                        <?php } ?>
                         <?php if($this->ion_auth->get_users_groups()->row()->id == 3){ ?>
                             <li> <a href="<?php echo base_url()?>content">Your Content</a> </li>
                             <li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
-                             <li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>
+                            <li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>
                         <?php } ?>
 						<li> <a href="<?php echo base_url()?>user/changepassword">Change Password </a> </li>
 						<li class="divider"></li>
@@ -89,5 +117,27 @@
 			$(".app-aside").removeClass('off-screen');
 			}
 		});
+
+		//Ajax Search
+
+		$('#search').keypress(function(e) {
+	        if (e.which == 13) {
+	        	var search_item = $(this).val();
+	            $.ajax({
+			        url: BASE_URL+"home",
+			        type: "get",
+			        data: {search:search_item, flag:1},
+			        success: function (response) {
+			        	 if (response != "") {
+			        	 	if (response != "") {
+			        	 		$("#content").empty();
+								$(".loader").show().delay(2000).fadeOut();
+								$("#content").append(response);
+							}
+			        	 }
+			        }
+			    });
+	        }
+	    });
 	});
 	</script>

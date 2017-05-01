@@ -1,5 +1,9 @@
 <html>
     <head>
+    <script type="text/javascript">
+        var BASE_URL = '<?php echo base_url()?>';
+    </script>
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css" type="text/css" />
     <?php if($dataRow['type']=='Podcasts' || $dataRow['type']== 'podcasts'){ ?>
     <style>
 	body{
@@ -16,17 +20,20 @@
 		}
 	</style>
 	<?php } ?>
-    
-    
-    <?php if($dataRow['type']!='text' || $dataRow['type']!= 'Text'){ ?>
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" type="text/css" />
+       <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" type="text/css" />
      <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css" type="text/css" />
+      <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
+   
+    <?php if($dataRow['type']!='text' || $dataRow['type']!= 'Text'){?>
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/ribbon.css" type="text/css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/jplayer.pink.flag.css" type="text/css" />
+    
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/justwave.player.css" type="text/css" />
     <link rel="screenshot" itemprop="screenshot" href="https://katspaugh.github.io/wavesurfer.js/example/screenshot.png" />
-    <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/wavesurfer.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/wavesurfer.regions.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/demo1.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/justwave.player.js"></script>
    
     <script src="<?php echo base_url(); ?>assets/js/jquery.jplayer.min.js"></script>
     <?php $fileExtension = substr($dataRow['file'], strrpos($dataRow['file'], '.') + 1); ?>
@@ -35,37 +42,30 @@
     	// Create an instance
 			var wavesurfer = Object.create(WaveSurfer);
 			
-			$(document).ready(function(){
-				$(".play-button").click(function(){		
+			/*$(document).ready(function(){
+				$(".play-button").click(function(){
 					var imageSource = $('#play-icon').attr('src');
 					if( $('.play-button').attr('data-status') == 'play'){
+						
 						$('.play-button').attr('data-status','pause');
-						$('#play-icon').attr('src','<?php echo base_url() ?>uploads/data/pause.png');
-					}else{
+						$('#play-icon').attr('src','<?php echo base_url(); ?>uploads/data/pause.png');
+					}
+                    else{
 						$('.play-button').attr('data-status','play');
-						$('#play-icon').attr('src','<?php echo base_url() ?>uploads/data/play.png');
+						$('#play-icon').attr('src','<?php echo base_url(); ?>uploads/data/play.png');
 					}
 				});
-				$('body').on('click',function(){
-					var imageSource = $('#play-icon').attr('src');
-					if( $('.play-button').attr('data-status') == 'play'){
-						$('.play-button').attr('data-status','pause');
-						$('#play-icon').attr('src','<?php echo base_url() ?>uploads/data/pause.png');
-					}else{
-						$('.play-button').attr('data-status','play');
-						$('#play-icon').attr('src','<?php echo base_url() ?>uploads/data/play.png');
-					}
-				});
-			});
+
+			});*/
 			
 			// Init & load audio file
 			document.addEventListener('DOMContentLoaded', function () {
 				// Init
 				wavesurfer.init({
 					container: document.querySelector('#waveform'),
-					waveColor: 'white',
-					progressColor: '#2e3344',
-					backend: 'MediaElement'
+					//waveColor: 'white',
+					//progressColor: '#2e3344',
+					//backend: 'MediaElement'
 				});
 			
 				// Load audio from URL
@@ -86,25 +86,28 @@
 				});
 			});
 	<?php } 
-		else{?>
+		else{ ?>
 		'use strict';
 
 		// Create an instance
 		var wavesurfer = Object.create(WaveSurfer);
-		$(document).ready(function(){
+		/*$(document).ready(function(){
 			$(".play-button").click(function(){
-				$('#play-icon').attr('src','../images/pause.png');
-				var imageSource = $('#play-icon').attr('src');
-				/*$('#play-icon').attr('src','../images/pause.png');*/
-				/*if( $('#play-icon').attr('src') == '../images/pause.png'){
-					
-					
-				}else{
-					$('#play-icon').attr('src','../images/play.png');
-					
-				}*/
-				});
-		});
+				 var video = $('#my-video').get(0);
+        			
+                var imageSource = $('#play-icon').attr('src');
+                if( $('.play-button').attr('data-status') == 'play'){
+        			video.play();
+                    $('.play-button').attr('data-status','pause');
+                    $('#play-icon').attr('src','<?php echo base_url(); ?>uploads/data/pause.png');
+                }
+                else{
+					video.pause()
+                    $('.play-button').attr('data-status','play');
+                    $('#play-icon').attr('src','<?php echo base_url(); ?>uploads/data/play.png');
+                }
+			});
+		});*/
 		// Init & load audio file
 		document.addEventListener('DOMContentLoaded', function () {
 			// Init
@@ -138,72 +141,30 @@
 		
 		<?php }?>
     </script>
-    <script type="text/javascript">
-		//<![CDATA[
-		/*
-		$(document).ready(function(){
-			var wavesurfer = WaveSurfer.create({
-    container: '#waveform',
-    waveColor: 'violet',
-    progressColor: 'purple'
-});
-
-
-
-wavesurfer.on('ready', function () {alert(1);
-    wavesurfer.play();
-});
-
-//wavesurfer.load('<?php echo base_url()?>uploads/files/demo.wav');
-wavesurfer.load('<?php echo base_url()?>uploads/files/BoWEp03.mp3');
-			
-			
-		
-			return true;
-			
-			
-		
-			$("#jquery_jplayer_1").jPlayer({
-				ready: function (event) {
-					$(this).jPlayer("setMedia", {
-						title: "<?php echo $dataRow['title'] ?>",
-						<?php echo $fileExtension; ?>: "<?php echo base_url()?>uploads/files/<?php echo $dataRow['file']?>",
-						poster: "<?php echo base_url() ?>uploads/files/thumb_400_<?php echo $dataRow['picture']?>"
-					});
-				},
-				swfPath: "<?php echo base_url(); ?>assets/js",
-				supplied: "<?php echo $fileExtension; ?>",
-				size: {
-				 width: "100%",
-				 height: "100%"
-                 },
-				wmode: "window",
-				useStateClassSkin: true,
-				autoBlur: true,
-				smoothPlayBar: true,
-				keyEnabled: true,
-				remainingDuration: true,
-				toggleDuration: true
-			});
-		});*/
-		//]]>
-		</script>
+    
 <?php } ?>
     </head>
 <body data-action="play" style="margin:0 0;">
 <?php if($dataRow['type']=='text' || $dataRow['type']== 'Text'){ ?>
-    <div class="col-sm-9">
-        <div class="blog-post">
-            <div class="panel no-border">
-                <div class="wrapper-lg">
-                    <h2 class="m-t-none"><?php echo $dataRow['title'] ?></h2>
-                    <div>
-                        <img src="<?php echo base_url() ?>uploads/listing/thumb_400_<?php echo $dataRow['picture']?>" align="left" style="margin:0px 20px 20px 0px" />
-                        <?php echo $dataRow['description']?>
+	<div class="container-fluid ">
+		<div class="row">
+               
+               <div style="padding-right: 5%;padding-bottom: 3%;" class="pull-right">
+                        <div class="player-logo"><a href="<?php echo base_url()?>home" target="_blank" ><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50" /></a></div>
+                        <a class="share-button glyphicon glyphicon-share js-item-action js-share share_click" data-test-id="contextmenu-share" href="javascript:void(0)" onClick="showSharePopup('<?php echo $dataRow['id'] ?>')">Share</a>
                     </div>
+                    
+                  <h3 style="padding-left: 4%;" class="col-xs-10"><?php echo $dataRow['title'] ?></h3> 
+                  <div style="clear:both"></div>  
+               	<div style="padding:0 5%;">
+                    <img  src="<?php echo base_url() ?>uploads/listing/thumb_400_<?php echo $dataRow['picture']?>" align="left" style=" max-width:20%; min-width:10%;margin:0px 20px 20px 0px" />
+                
+               
+                    <?php echo $dataRow['description']?>
                 </div>
-            </div>
-        </div>
+                <div style="clear:both"></div>
+                
+         </div>
     </div>
 <?php }
 else {	
@@ -212,94 +173,44 @@ else {
  <?php if($dataRow['type']=='video' || $dataRow['type']== 'Video'){ ?>
  
  	<div id="Container" class="container content">
-            <video id="my-video" data-action="play" class="video" src="<?php echo $dataRow['file_url']; ?>" type="video/mpeg" ></video>
+        
+        <video id="my-video" controls data-action="play" class="video" src="<?php echo $dataRow['file_url']; ?>" type="video/mpeg" ></video>
+      <!--  <video id="my-video" data-action="play" class="video" src="http://irwnetwork.com/uploads/files/file_1489176912.mov" type="video/mpeg" ></video> -->
 
-             <div class="container-fluid ">
+        <div class="container-fluid ">
             <div class="row">
                 <div class="col-md-12">
                    <div class="controls">
-                            <a class="play-button" data-action="play" href="javascript:void(0)" >
-                                <img id="play-icon" src="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture'] ?>" width="60">
-                            </a>
-                            <div class="song-title pull-right">
-                                <a href="" class="title"><span><?php echo $dataRow['title']; ?></span></a>
-                            </div>
-                            
+                       <!-- <a class="play-button" data-action="play" href="javascript:void(0)" >
+                            <img id="play-icon" src="<?php echo base_url() ?>uploads/data/play.png" width="60">
+                        </a>-->
+                        <div class="song-title pull-right">
+                            <a target="_blank" href="<?php echo base_url() ?>home/playvideo?id=<?php echo $id; ?>" class="title"><span><?php echo $dataRow['title']; ?></span></a>
                         </div>
-                        <div class="pull-right"><div class="player-logo"><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50"/></div> 
-                                <a href="">
-                                    <i class="glyphicon glyphicon-heart heart-icon"></i>
-                                </a>
-                                <button class="share-button glyphicon glyphicon-share">Share</button>
-                            </div>
+                        
+                    </div>
+                    <div class="pull-right">
+                        <div class="player-logo"><a href="<?php echo base_url()?>home" target="_blank" ><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50" /></a></div>
+                        <a class="share-button glyphicon glyphicon-share js-item-action js-share share_click" data-test-id="contextmenu-share" href="javascript:void(0)" onClick="showSharePopup('<?php echo $dataRow['id'] ?>')">Share</a>
+                    </div>
                 </div>
             </div>
         </div>
-            <div id="demo">
-                <div id="waveform">
-                    <!-- Here be the waveform -->
-                     <!--<div class="player-logo"><img  src="<?php echo base_url() ?>uploads/data/logo-old.png" width="50" height="50"/></div> -->
-                </div>
-            </div>
 
-
-        </div>
-    <!-- <div id="jp_container_1" class="jp-video" style="width:99.6%; height:85%;" role="application" aria-label="media player">
-        <div class="jp-type-single">
-            <div id="jquery_jplayer_1" class="jp-jplayer video-responsive"></div>
-            <div class="jp-gui">
-                <div class="jp-video-play">
-                    <button class="jp-video-play-icon" role="button" tabindex="0">play</button>
-                </div>
-                <div class="jp-interface">
-                    <div class="jp-progress">
-                        <div class="jp-seek-bar">
-                            <div class="jp-play-bar"></div>
-                        </div>
-                    </div>
-                    <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
-                    <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
-                    <div class="jp-details">
-                        <div class="jp-title" aria-label="title">&nbsp;</div>
-                    </div>
-                    <div class="jp-controls-holder">
-                        <div class="jp-volume-controls">
-                            <button class="jp-mute" role="button" tabindex="0">mute</button>
-                            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
-                            <div class="jp-volume-bar">
-                                <div class="jp-volume-bar-value"></div>
-                            </div>
-                        </div>
-                        <div class="jp-controls">
-                            <button class="jp-play" role="button" tabindex="0">play</button>
-                            <button class="jp-stop" role="button" tabindex="0">stop</button>
-                        </div>
-                        <div class="jp-toggles">
-                            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
-                            <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="jp-no-solution">
-                <span>Update Required</span>
-                To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
-            </div>
-        </div>
-    </div> -->
+    </div>
  <?php }
- else{?>
+ else{ ?>
+         <audio data-chained="1" class="justwave" src="<?php echo $dataRow['file_url']; ?>" data-wave_color="#2D2D2D" data-prog_color="#CCCCCC" data-back_color="#444444" data-type="gif" width="100%" height="80" data-buttonsize="70" data-buttoncolor="#111111" data-showtimes="1"></audio>
          <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="controls"> <a class="play-button" data-action="play" data-status="play"  > <img id="play-icon" src="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture']; ?>" width="60"> </a>
-                        <div class="song-title pull-right"> <a href="#" class="tag"><?php echo $dataRow['title']; ?></a>
+                    <div class="controls"> <!-- <a class="play-button" data-action="play" data-status="play"  > <img id="play-icon" src="<?php echo base_url() ?>uploads/data/play.png" width="60"> </a> -->
+                        <div class="song-title pull-right"> <a target="_blank" href="<?php echo base_url() ?>home/playaudio?id=<?php echo $dataRow['id']; ?>" class="tag"><?php echo $dataRow['title']; ?></a>
                         </div>
                     </div>
                     <div class="pull-right">
-                        <div class="player-logo"><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50" /></div>
-                        <a href=""> <i class="glyphicon glyphicon-heart heart-icon"></i> </a>
-                        <button class="share-button glyphicon glyphicon-share">Share</button>
+                        <div class="player-logo"><a href="<?php echo base_url()?>home" target="_blank" ><img  src="<?php echo base_url() ?>uploads/listing/logo-old.png" width="50" /></a></div>
+                        <a class="share-button glyphicon glyphicon-share js-item-action js-share share_click" data-test-id="contextmenu-share" href="javascript:void(0)" onClick="showSharePopup('<?php echo $dataRow['id'] ?>')">Share</a>
                     </div>
                 </div>
             </div>
@@ -361,5 +272,27 @@ else {
 
 
 <?php }?>
+
+<script type="text/javascript">
+function showSharePopup(id){
+
+    $.ajax({
+        url: BASE_URL+"home/showpopup/",
+        type: "post",
+        data: {id:id},
+        success: function (response) {
+            $("#share_popup_detail").html( response );
+            $(".modal").show();
+        }
+    });
+}
+function show_code(){
+    $("#embed_code").show(350);
+}
+</script>
+
+<div id="share-pop" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="share_popup_detail"></div>
+</div>
 </body>
 </html>

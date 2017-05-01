@@ -20,9 +20,9 @@ class Channel extends CI_Controller
 	public function index()
 	{
 		
-		$data['page_title'] 	 = 'Channel';
-		$data['page_heading']   = 'Channel';
-		$arr['name']            = $this->input->get('name') ? $this->input->get('name') : '';
+		$data['page_title'] 	 = 'Users';
+		$data['page_heading']   = 'Users';
+		$arr['name']            = $this->input->post('name') ? $this->input->post('name') : '';
 		//$arr['portalUsers']	 = $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
 		$config 			   	 = array();
         $config["base_url"]     = base_url()."admin/channel";
@@ -34,7 +34,7 @@ class Channel extends CI_Controller
         $this->pagination->initialize($config);
 
         $page 		         = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$data['channels']	 = $this->Users_model->getAllUsers(array(),$page,$config["per_page"]);
+		$data['channels']	 = $this->Users_model->getAllUsers(array(),$page,$config["per_page"], $arr['name']);
 		//echo "<pre>"; print_r($data['channels']);exit;
 		$data["links"]        = $this->pagination->create_links();
         $parser['content']	= $this->load->view('admin/channels/listing',$data,TRUE);
@@ -44,6 +44,18 @@ class Channel extends CI_Controller
 		$results = $this->Common_model->convert_images();
 		//$this->load->library('image_lib');
 		
+	}
+
+	public function user_filter() {
+		$data['page_title'] 	 = 'Users';
+		$data['page_heading']   = 'Users';
+
+		$user_type = $_POST['type'];
+
+		$data['channels'] = $this->Users_model->getAllUsersByType($user_type);
+		$data["links"] = '';
+		//echo "<pre>"; print_r($data['channels']);exit;
+        echo $this->load->view('admin/channels/channels_listing_filter',$data,TRUE);
 	}
 	public function addchannel()
 	{
@@ -216,8 +228,8 @@ class Channel extends CI_Controller
 	
 	public function editcontent()
 	{
-		$data['page_title'] 	= 'Edit Channel';
-		$data['page_heading']  = 'Edit Channel';
+		$data['page_title'] 	= 'Edit User';
+		$data['page_heading']  = 'Edit User';
 		if($this->input->post()) {
 			if($this->input->post('type')=='4'){
 				$rules = array(
@@ -291,6 +303,7 @@ class Channel extends CI_Controller
 						'description'  =>  $this->input->post('description'),
 						"sorting"      =>  (int)$this->input->post('sorting'),
                         "is_deleted"   =>  (int)$this->input->post('is_deleted'),
+                        "content_block"   =>  (int)$this->input->post('content_block'),
 						'channel_subscription_price' =>  floatval($this->input->post('channel_price'))
 					);
 				}

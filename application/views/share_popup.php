@@ -55,3 +55,9 @@
 		}
 	});
 </script>
+<script type="text/javascript">
+
+$(".close").on("click", function(){
+    $("#share-pop").css("display", "none");
+});
+</script>

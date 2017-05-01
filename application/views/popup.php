@@ -20,10 +20,10 @@
     <![endif]-->
   </head>
   <body>
-  	<section class="ruler-section">
     	<div class="container">
       	<div class="row">
-        	<div class="col-sm-8">
+        	<?php echo $popup_content;?>
+        	<!--<div class="col-sm-8">
           	<h1>Are You a Ruler ?</h1>
             <p>
             	As a wise man once said, “Pop culture is for the masses - Indie culture is for the RULERS! <a href="#">The Indies Rule the World Network</a> is THE hub for the global indie culture. Subscribe now to become a RULER for only $4.99 /mo and get all the best content from the culture you love, curated by masters of culture.”
@@ -35,7 +35,7 @@
         </div>
       </div>
     </section>
-    <!---// Section END-->
+    <!---// Section END
     <section class="ruler-boxs-section">
     	<div class="container">
       	<div class="row">
@@ -60,7 +60,7 @@
               </div>
             </div>
           </div>
-          <!--//-->
+          <!--//
           <div class="col-sm-3">
           	<div class="rule-box">
             	<div class="rule-box-img">
@@ -73,7 +73,7 @@
               </div>
             </div>
           </div>
-          <!--//-->
+          <!--//
           <div class="col-sm-3">
           	<div class="rule-box">
             	<div class="rule-box-img">
@@ -86,7 +86,7 @@
               </div>
             </div>
           </div>
-          <!--//-->
+          <!--//
           <div class="col-sm-3">
           	<div class="rule-box">
             	<div class="rule-box-img">
@@ -99,11 +99,11 @@
               </div>
             </div>
           </div>
-          <!--//-->
+          <!--//
         </div>
       </div>
     </section>
-    <!---// Section END-->
+    <!---// Section END-
     <section class="golden-ruler-section">
     	<div class="container">
       	<div class="row">
@@ -117,7 +117,7 @@
         </div>
       </div>
     </section>
-    <!---// Section END-->
+    <!---// Section END
     <section class="disc-ruler-section">
     	<div class="container">
       	<div class="row">
@@ -131,10 +131,9 @@
             	Save 15% on Exclusive merchandise such as Apparel and memorabilia that can be found in the IRW store.
             </p>
             <a href="#" class="subcribe-btn">Subscribe Now! </a>
-          </div>
+          </div>-->
         </div>
       </div>
-    </section>
     <!---// Section END-->
   </body>
    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -165,16 +165,17 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 });
 </script>
 <?php if(isset($dataRow)){?>
-<meta name="description" content="<?php echo $dataRow['description'];?>" />
+<meta name="description" content="<?php echo  strip_tags($dataRow['description']);?>" />
 <meta name="twitter:card" content="player">
-<meta name="twitter:title" content="<?php echo $dataRow['title'];?>">
-<meta name="twitter:description" content="<?php echo $dataRow['description'];?>">
+<meta name="twitter:title" content="<?php echo  strip_tags($dataRow['title']);?>">
+<meta name="twitter:description" content="<?php echo  strip_tags($dataRow['description']);?>">
 <meta name="twitter:image:src" content="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture']?>">
 <meta property="og:title" content="<?php echo $dataRow['title'];?>">
 <meta property="og:image" content="<?php echo base_url() ?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>">
 <meta property="og:url" content="<?php echo current_url();?>">
 <meta property="og:type" content="article"/>
-<meta property="og:description" content="<?php echo $dataRow['description'];?>">
+
+<meta property="og:description" content="<?php echo strip_tags($dataRow['description']);?>">
 <?php }?>
 <script src="<?php echo base_url(); ?>assets/js/jquery.bxslider.min.js"></script>
 <!-- bxSlider CSS file -->

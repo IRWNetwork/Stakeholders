@@ -74,12 +74,12 @@ class Users extends CI_Controller
 
 
 	public function edit_admin($id) {
-		//echo $id;exit;
 		$user_id = $id;
 		$data['page_title'] 	  = 'Edit Admin';
 		$data['page_heading'] 	= 'Edit Admin';
 		$query =  $this->db->query('Select * from users where users.id = '.$user_id);
 		$data['admin'] = $query->row_array();
+		//echo "<pre>"; print_r($data['admin']);exit;
 		$old_picture = $data['admin']['picture'];
 		if ($this->input->post()) {
 			//echo "<pre>"; print_r($this->input->post());exit;
@@ -221,6 +221,7 @@ class Users extends CI_Controller
 		$data['page_title'] 	 = 'Admins';
 		$data['page_heading']   = 'Admins';
 		$data['admins']	 = $this->Users_model->getAllAdmins();
+		//echo "<pre>"; print_r($data['admins']);exit;
         $parser['content']	= $this->load->view('admin/user/admin_listing',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
 	}

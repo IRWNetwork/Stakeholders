@@ -259,6 +259,7 @@
     });
 });
 </script> 
+
 <script type="text/javascript">
 	$(function () {
     Highcharts.chart('age_analytics', {

@@ -16,9 +16,22 @@ class Analytics_model extends CI_Model
 		return $this->db->insert_id();
 	}
 	
-	function getTotalByDay(){
-		
-		$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.'  GROUP BY date ORDER BY date');
+	function getTotalByDay($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' '.$where.'  GROUP BY date ORDER BY date');
 
 		 //echo $this->db->last_query();		
 		// die();
@@ -29,9 +42,24 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getTopByDay(){
+	
+	function getTopByDay($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  episode, date ORDER BY date');
+		$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' GROUP BY  episode, date ORDER BY date');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -40,6 +68,8 @@ class Analytics_model extends CI_Model
 					$data =  $query->result_array();
 					
 					foreach( $data as $field=> $value){
+						
+						$value['date'] = date('Y-m-d',strtotime($value['date'].' -1 months '));
 						$data[$field]['date'] =  str_replace("-",",",$value['date']);
 					}
 					foreach( $data as $value){
@@ -50,9 +80,24 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getTopCountries(){
+	function getTopCountries($user_id=0, $content_id = 0){
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  country ORDER BY count');
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		
+		$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -62,7 +107,22 @@ class Analytics_model extends CI_Model
 				}
 		return array();
 	}
-	function getMaxDateForCountries(){
+	function getMaxDateForCountries($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		
 		$query = $this->db->query('SELECT max(id) AS end, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
 
 		 //echo $this->db->last_query();		
@@ -75,8 +135,23 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getMinDateForCountries(){
-		$query = $this->db->query('SELECT min(id) AS start, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
+	function getMinDateForCountries($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		
+		$query = $this->db->query('SELECT min(id) AS start, date FROM '.$this->tablename.' '.$where.' limit 1');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -88,9 +163,24 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getTopCities(){
-		
-		$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' where  author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  country ORDER BY count');
+	
+	
+	function getTopCities($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -102,9 +192,22 @@ class Analytics_model extends CI_Model
 	}
 	
 	
-	function getTotalListens(){
-		
-		$query = $this->db->query('SELECT COUNT(*) AS total FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id );
+	function getTotalListens($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		$query = $this->db->query('SELECT COUNT(*) AS total FROM '.$this->tablename.' '.$where );
 
 		 //echo $this->db->last_query();		
 		 //die();
@@ -116,9 +219,23 @@ class Analytics_model extends CI_Model
 		return array();
 	}
 	
-	function getUrlReport(){
+	function getUrlReport($user_id=0, $content_id = 0){
+		if($user_id==0){
+			$user_id = $this->ion_auth->user()->row()->id;
+		}
 		
-		$query = $this->db->query('SELECT COUNT(*) AS total, referral_path FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' GROUP BY  referral_path');
+		if($content_id != 0){
+			if($this->ion_auth->get_users_groups()->row()->id == 1){
+				$where = "where  type_id= '".$content_id."'";
+			}
+			else{
+				$where = "where author_id = '".$user_id."' AND type_id= '".$content_id."'";
+			}
+		}
+		else{
+			$where = "where author_id = '".$user_id."'";
+		}
+		$query = $this->db->query('SELECT COUNT(*) AS total, referral_path FROM '.$this->tablename.' '.$where.' GROUP BY  referral_path');
 
 		 //echo $this->db->last_query();		
 		 //die();

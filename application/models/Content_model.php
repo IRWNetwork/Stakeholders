@@ -233,18 +233,22 @@ class Content_model extends CI_Model
 		return array();
 	}
 	
-	public function getAllData($data,$start,$limit){
+	public function getAllData($data,$start,$limit,$key=''){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
 		$where = "  1=1 ";	
 		if(isset($data['name']) && $data['name']!=''){
-			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
 		}
+		if(isset($key) && $key!=''){
+			$where.=" and (contents.title like '%".$key."%' or contents.description like '%".$key."%' or contents.type like'%".$key."%' )";
+		}
+		//echo $where;exit;
 		$this->db->where('show_date <=',date('Y-m-d'));
-		$this->db->where($where,NULL,false);
+		$this->db->where($where);
 		$this->db->select('contents.*, users.channel_name');
 		$this->db->from('users');
         $this->db->join('contents', 'users.id = contents.user_id','INNER');
@@ -257,15 +261,21 @@ class Content_model extends CI_Model
 		return array();
 	}
 	
-	public function getAllDataByUserId($user_id,$data,$start,$limit){
+	public function getAllDataByUserId($user_id,$data,$start,$limit, $key=''){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
 		$where = "  1=1 ";	
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
 		}
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
+		}
+		if(isset($key) && $key!=''){
+			$where.=" and (contents.title like '%".$key."%' or contents.description like '%".$key."%' or contents.type like'%".$key."%' )";
 		}
 		$where.=" and user_id='". $user_id."'";
 		$this->db->where($where,NULL,false);
@@ -284,7 +294,7 @@ class Content_model extends CI_Model
 		$this->db->order_by('id','desc');
 		$where = "  1=1 and is_featured='yes'";
 		if(isset($data['name']) && $data['name']!=''){
-			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
 		if(isset($data['type']) && $data['type']!=''){
 			$where.=" and type='". $data['type']."'";
@@ -295,7 +305,7 @@ class Content_model extends CI_Model
 		$this->db->from('users');
 		$this->db->join('contents','users.id = contents.user_id','INNER');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		//echo $this->db->last_query();exit;
 		if($query->num_rows())
 		{
 			return $query->result();
@@ -318,9 +328,9 @@ class Content_model extends CI_Model
 		$this->db->from('users');
 		$this->db->join('contents','users.id = contents.user_id','INNER');
 		$query = $this->db->get();
+		$r=array();
 		if($query->num_rows())
 		{
-			$r=array();
 			foreach ($query->result_array() as $row){
 				$title=$row["title"];
 				$src=site_url().'/uploads/files/'.$row["file"];
@@ -344,6 +354,7 @@ class Content_model extends CI_Model
 		$this->db->select('contents.*');
 		$this->db->from('contents');
 		$query  =   $this->db->get();
+		//echo $this->db->last_query();exit;
 		return $query->num_rows();
 	}
 	
@@ -393,6 +404,17 @@ class Content_model extends CI_Model
 			$rows =  $query->result();
 			//echo "<pre>"; print_r($rows);exit;
 			foreach($rows as $row){
+				if ($row->file_url != '') {
+
+					$my_url_parts = explode('/', $row->file_url);
+					$myFileName = $my_url_parts[9];
+					$myFileName = explode('?', $myFileName);
+					$myFileName = $myFileName[0];
+					//echo $myFileName;exit;
+					$this->load->library('Gcloud');
+					$file_name = $this->gcloud->deleteFile($myFileName);
+
+				}
 				@unlink('uploads/listing/'.$row->picture);
 				@unlink('uploads/listing/thumb_400_'.$row->picture);
 				@unlink('uploads/listing/thumb_469_'.$row->picture);
@@ -439,6 +461,20 @@ class Content_model extends CI_Model
 
 	}
 
+	public function getTotalEpisodeById($user_id){
+		
+		$query   = $this->db->query('SELECT COUNT(*) As total from contents where user_id = "'.$user_id.'" ');
+		//echo $this->db->last_query();		
+		//die();
+		if($query->num_rows())
+		{
+			$row = $query->result_array();
+			return $row[0]; 
+		}
+		return array();
+
+	}
+	
 	public function countUserContentByIds($ids){
 		$this->db->select('user_id, type, count(*) as TOTAL ');
 		$this->db->from('contents'); 
@@ -526,6 +562,20 @@ class Content_model extends CI_Model
 		{
 			$row = $query->result();
 			return $row;
+		}
+		return array();
+	}
+	
+	
+	function checkUserContent($id){
+		$user_id = $this->ion_auth->user()->row()->id;
+		$this->db->where('id',$id);
+		$this->db->where('user_id',$user_id);
+		$query = $this->db->get('contents');
+		
+		if($query->num_rows())
+		{
+			return $query->result();
 		}
 		return array();
 	}

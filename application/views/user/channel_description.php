@@ -90,10 +90,11 @@ $_SESSION['after_login'] = $_SERVER['REQUEST_URI'];
                     <div class="col-xs-4 col-md-3">
                         <img src="<?php echo base_url()."uploads/profile_pic/".(($channelDetail['picture'])?$channelDetail['picture']:"default-thumbnail.jpg")?>" class=" img-responsive"/>
                     </div>
-                   
+           
                     <div class="col-xs-8 col-md-9">
                         <p class="text-muted m-b-md" style="padding-top:10px;"><?php echo $channelDetail['description']?></p>
-                        <h4 class="m-b-md">Price: <br>
+                        <h4 class="m-b-md">Free Until June 1st!</h4>
+                        <h4 style="display:none;" class="m-b-md">Price: <br>
                         <?php if($channelDetail['channel_subscription_price']==0){echo "Free"; } else{ echo $channelDetail['channel_subscription_price']."$"; } ?>
                         </h4>
                     </div>

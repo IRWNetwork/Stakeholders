@@ -11,6 +11,7 @@
 						<input type="email" name="email" placeholder="Email" class="form-control no-border" required>
 					</div>
 				</div>
+				<div><br></div>
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Send</button>
 			</form>
 			<div class="text-center m-t m-b"><a href="<?php echo base_url()?>admin/users">Have Account?</a></div>

@@ -1,11 +1,28 @@
 <!-- content -->
 <div class="app-content-body ">
 <div class="bg-light lter b-b wrapper-md">
-	<h1 class="m-n font-thin h3"><?php echo $page_heading;?></h1>
+	<h1  class="m-n font-thin h3"><?php echo $page_heading;?></h1>
+     <div style="float:right;margin-top: -22px;">
+     	<select class="form-control" id="chnnel_name">
+        
+        	<?php foreach($channels_info as $channel){
+					if($channel_id ==$channel['id']){
+					?>
+						<option selected value="<?php echo $channel['id']; ?>"> <?php echo $channel['channel_name']; ?> </option>
+					<?php } 
+					else{ ?>
+						<option value="<?php echo $channel['id']; ?>"> <?php echo $channel['channel_name']; ?> </option>
+					<?php }?>	
+        	<?php }?>
+        </select>
+     </div>
+    
 </div>
 <div class="wrapper-md">
-	<div><img src="<?php echo base_url() ?>assets/images/bischoff_header_2017.png" style="width:100%" /></div>
-	<div style="background:#F00; padding:20px; color:#FFF; font-weight:bold; font-size:16px">
+	<?php if($channel_banner['banner1']){ ?>
+		<div><img src="<?php echo base_url()."uploads/profile_pic/".$channel_banner['banner1']?>" style="width:100%" /></div>
+	<?php }?>
+    <div style="background:#F00; padding:20px; color:#FFF; font-weight:bold; font-size:16px">
 		<div style="text-align:center"><img src="<?php echo base_url()?>assets/images/logo-old.png" style="width:150px" /></div>
 	<div style="line-height:23px; padding-top:5px">IRW Network is committed to statistical accuracy of your analytics. We realize this is an issue with other podcast players and platforms, so for your convenience and comfort, feel free to contact our advertiser relations team directly at <a href="mailto:AdRelations@IRWNetwork.com">AdRelations@IRWNetwork.com</a> for any clarity you might need. We appreciate you partnering with our platform and look forward to helping your brand shine!</div>
 	</div>
@@ -61,7 +78,7 @@
 				<table class="table table-bordered " style="background-color:#fff;">
 					<tbody>
 						<tr class="table_head">
-							<th>Country</th>
+							<th>City</th>
 							<th>Listens</th>
 						</tr>
                         <?php foreach($analytics_topCities as $value){?>
@@ -144,6 +161,9 @@
 </div>
 <script type="text/javascript">
 	$(function () {
+		$('#chnnel_name').on('change',function(){
+			window.location = '<?php echo base_url().'admin/analytics/';?>'+ $('#chnnel_name').val();
+		});
     Highcharts.chart('Total_Plays', {
         chart: {
             type: 'spline'

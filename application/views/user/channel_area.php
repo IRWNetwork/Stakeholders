@@ -79,10 +79,12 @@ $(document).ready(function(){
                                       	$a_event     = "javascript:void(0)";
                                     }
 								?>
+                                
                                 <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">      
                                     <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                 </a>
-                                <h3 style="color:#fff;">$<?php echo $list['channel_subscription_price']; ?> / mo</h3>
+                                <h3 style=" display:none; color:#fff;">$<?php echo $list['channel_subscription_price']; ?> / mo</h3>
+                                <h3 style=" color:#fff;">Free Until June 1st!</h3>
                             </div>
                        
                         <div class="col-xs-12">

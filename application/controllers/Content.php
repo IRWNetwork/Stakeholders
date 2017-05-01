@@ -22,7 +22,7 @@ class Content extends CI_Controller
 		
 		$data['page_title'] 	  = 'Content';
 		$data['page_heading'] 	= 'Content';
-		$arr['name']             = $this->input->get('name') ? $this->input->get('name') : '';
+		$arr['name']             = $this->input->post('name') ? $this->input->post('name') : '';
 		$arr['portalUsers']	  = $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
 		$config 			   	  = array();
         $config["base_url"]      = base_url() . "content";
@@ -33,7 +33,7 @@ class Content extends CI_Controller
 
         $this->pagination->initialize($config);
         $page 					= ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
-		$data['contents']	   = $this->Content_model->getAllDataByUserId($this->ion_auth->user()->row()->id, array(),$page,$config["per_page"]);
+		$data['contents']	   = $this->Content_model->getAllDataByUserId($this->ion_auth->user()->row()->id, array(),$page,$config["per_page"],$arr['name']);
 		$data["links"]         = $this->pagination->create_links();
 		
         $parser['content']	   = $this->load->view('contents/listing',$data,TRUE);
@@ -44,8 +44,17 @@ class Content extends CI_Controller
 		//$this->load->library('image_lib');
 		
 	}
+	
 	public function addcontent()
 	{
+		//echo "<pre>"; print_r($_SESSION);exit;
+		if (isset($_SESSION['content_block']) && $_SESSION['content_block'] == 1) {
+			$this->session->set_flashdata(
+							'error',
+							"You cannot add content, For more details please contact admin"
+			);
+			redirect(base_url()."content");
+		}
 		$data['page_title'] 	= 'Add Content';
 		$data['page_heading'] 	= 'Add Content';
 		

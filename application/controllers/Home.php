@@ -94,13 +94,14 @@ class Home extends MY_Controller
         $page 		                = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 		$this->data['contents']	  = $this->Content_model->getAllData($arr,$page,$config["per_page"]);
 		$this->data['contents1']	 = $this->Content_model->getAudio($arr,$page,$config["per_page"]);
+		//echo "<pre>"; print_r($this->data['contents1']);exit;
 		$this->data['featured']	  = $this->Content_model->getFeaturedData($arr);
 		$this->data['facebook_link'] =  $this->Preferences_model->getValue('facebook_link');
 		$this->data['twitter_link']  =  $this->Preferences_model->getValue('twitter_link');
 		$this->data['instagram_link']=  $this->Preferences_model->getValue('instagram_link'); 
 		$this->data["links"]         = $this->pagination->create_links();
 		$this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","new");
-		if (isset($_POST['flag'])) {
+		if (isset($_POST['flag']) || isset($_GET['flag'])) {
 			echo $this->load->view('main',$this->data,TRUE);
 		}
 		else {
@@ -128,6 +129,7 @@ class Home extends MY_Controller
 		}
 	}
 	
+	
 	public function playaudio(){
 	
 		$id = $this->input->get('id');
@@ -137,7 +139,7 @@ class Home extends MY_Controller
 		$this->data['page_title'] 		  = $video_row['title'];
 		$this->data['page_heading'] 		= $video_row['title'];
 		$this->data['featuredcontent']	 = $this->Content_model->getFeaturedData(array());
-		$parser['content']			=  $this->load->view('playvideo',$this->data,TRUE);
+		$parser['content']			=  $this->load->view('playaudio',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 	
@@ -266,10 +268,12 @@ class Home extends MY_Controller
 	
 	public function mainpopup()
 	{
+		$this->load->model('Preferences_model');
 		$this->session->set_userdata(array('websiteloaded'=>'yes'));
-		$this->data['page_title'] 	= 'Popup';
-		$this->data['page_heading'] 	= 'Popup';
-		$parser['content']		=  $this->load->view('popup',$this->data);		
+		$this->data['page_title'] 	 = 'Popup';
+		$this->data['page_heading']   = 'Popup';
+		$this->data['popup_content']  = base64_decode($this->Preferences_model->getValue('popup_content'));
+		$this->load->view('popup',$this->data);		
 	}
 	
 	public function showchart(){
