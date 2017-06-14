@@ -62,47 +62,6 @@ class Users_model extends CI_Model
 		return $admins;
 	}
 	
-	public function getAllUsers($data,$start,$limit, $key=''){
-		$this->db->limit($limit, $start);
-		$this->db->order_by('id','desc');
-		if(isset($data['name'])){
-			$this->db->like('users.brand_name', $data['name']);
-			$this->db->or_like('users.channel_name', $data['name']);
-			$this->db->or_like('users.email', $data['name']);
-		}
-		if(isset($key) && $key!=''){
-			$this->db->like('users.brand_name', $key);
-			$this->db->or_like('users.channel_name', $key);
-			$this->db->or_like('users.email', $key);
-		}
-
-		$this->db->select('users.*');
-		$this->db->select('users_groups.group_id');
-		$this->db->join('users_groups', 'users_groups.user_id = users.id');
-		//$this->db->where('is_deleted !=', 1);
-		$query = $this->db->get('users');
-		//echo $this->db->last_query();die;
-		if($query->num_rows())
-		{
-			return $query->result();
-		}
-		return array();
-	}
-
-	public function getAllUsersByType($user_type) {
-		$this->db->select('users.*');
-		$this->db->select('users_groups.group_id');
-		$this->db->join('users_groups', 'users_groups.user_id = users.id');
-		$this->db->where('users_groups.group_id', $user_type);
-		$query = $this->db->get('users');
-		//echo $this->db->last_query();die;
-		if($query->num_rows())
-		{
-			return $query->result();
-		}
-		return array();
-	}
-
 
 	public function soft_delete($id) {
 		$data = array(
@@ -112,7 +71,18 @@ class Users_model extends CI_Model
 		$this->db->update('users', $data);
 		return true;
 	}
-	
+
+
+	public function hard_delete($id) {
+		$data = array(
+			'id' => $id,
+		);
+		$this->db->where('id', $id);
+		$this->db->delete('users', $data);
+		return true;
+	}
+
+
 	public function getLatestUsersForDashboard(){
 		$this->db->limit(5, 0);
 		$this->db->order_by('id','desc');
@@ -143,12 +113,11 @@ class Users_model extends CI_Model
 	}
 
 	public function getRow($id){
-		$sSQL   =   $this->db->where("id",$id);
-		$query  =   $this->db->get('users');
-		
-		if($query->num_rows())
+		$query = $this->db->query('SELECT users.*, users_groups.group_id from users join users_groups on users.id = users_groups.user_id where users.id = '.$id);
+		$row = $query->result();
+
+		if(count($row) > 0)
 		{
-			$row = $query->result_array();
 			return $row[0];
 		}
 		return array();
@@ -204,8 +173,10 @@ class Users_model extends CI_Model
 
 	
 	public function update($data,$id){
+		//echo "<pre>"; print_r($data);exit;
 		$this->db->where('id',$id);
 		$this->db->update('users',$data);
+		//echo $this->db->last_query();exit;
 		return true;
 	}
 	
@@ -823,7 +794,7 @@ class Users_model extends CI_Model
         $chanel_users = $this->db->query("SELECT users.id, users.channel_subscription_price, users.channel_name, users.picture,users_groups.user_id,contents.user_id, contents.type, count(contents.id) as TOTAL FROM `users`
 left join users_groups on (users.id=users_groups.user_id)
 left join contents on (users.id = contents.user_id)
-where users_groups.group_id = '3' and users.is_deleted!='1'
+where users_groups.group_id = '3' and users.is_deleted!='1' and is_approved=1
 group by users.channel_name order by users.sorting desc");
         if($chanel_users->num_rows()>0){
             return $chanel_users->result_array();
@@ -869,26 +840,170 @@ group by users.channel_name order by users.sorting desc");
 		}
 		return array();
 	}
+
+
+	public function getUserDetails($id){
+		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		$this->db->where('users.id',$id);
+		$query = $this->db->get('users');
+		// echo $this->db->last_query();
+		// die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
+
+	public function brainTreeByChannelId($id){
+		$this->db->select('braintree_merchant_info.*');
+		$this->db->where('braintree_merchant_info.producer_id',$id);
+		$query = $this->db->get('braintree_merchant_info');
+		// echo $this->db->last_query();
+		// die();
+		if($query->num_rows()>0){
+			$row = $query->result_array();
+			return $row[0];	
+		}
+		return array();
+	}
+	
+	public function getProducerMerchantId($id){
+		$this->db->select('braintree_merchant_info.*');
+		$this->db->where('braintree_merchant_info.producer_id',$id);
+		$query = $this->db->get('braintree_merchant_info');
+		if($query->num_rows()>0){
+			$row = $query->row();
+			return $row->merchant_account_number;	
+		}
+		return 30; //by default
+	}
+
     
-	
-	
-	
-	
-	public function countTotalRows($data)
-	{
-		$where = "  1=1 ";	
-		if(isset($data['name'])){
+	public function getAllUsersByType($user_type) {
+		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		$this->db->where('users_groups.group_id', $user_type);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();die;
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+
+	public function getAllUsers($data,$start,$limit, $key=''){
+		//echo $limit;exit;
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		if(isset($key['name']) && $key['name'] != ''){
+			$this->db->like('users.brand_name', $key['name']);
+			$this->db->or_like('users.channel_name', $key['name']);
+			$this->db->or_like('users.email', $key['name']);
+		}
+		if (isset($key['name']) && $key['name']!=''){
+			$this->db->like('users.brand_name', $key['name']);
+			$this->db->or_like('users.channel_name', $key['name']);
+			$this->db->or_like('users.email', $key['name']);
+		}
+
+
+		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		if (isset($key['type']) && $key['type']!='') {
+			$this->db->where('users_groups.group_id', $key['type']);
+		}
+		$this->db->where('users.is_approved', 1);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();die;
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+
+	public function getAllChannels($data){
+		$this->db->order_by('id','desc');
+		if(isset($data['name']) && $data['name'] != ''){
 			$this->db->like('users.brand_name', $data['name']);
 			$this->db->or_like('users.channel_name', $data['name']);
 			$this->db->or_like('users.email', $data['name']);
 		}
-		
-		$this->db->where($where,NULL,false);
 		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		// if (isset($key['type']) && $key['type']!='') {
+		// 	$this->db->where('users_groups.group_id', $key['type']);
+		// }
+		// //$this->db->where('users.is_approved', 1);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();die;
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+
+
+	
+	public function getCountNonApprovedProducers($data) {
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		$this->db->where('users_groups.group_id', $data['type']);
 		$this->db->from('users');
+		$this->db->where('users.is_approved', 0);
 		$query  =  $this->db->get();
 		return $query->num_rows();
 	}
+
+	public function getAllNonApprovedProducers($data,$start,$limit, $key=''){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$this->db->select('users.*');
+		$this->db->select('users_groups.group_id');
+		$this->db->join('users_groups', 'users_groups.user_id = users.id');
+		$this->db->where('users_groups.group_id', $key['type']);
+		$this->db->where('users.is_approved', 0);
+		$query = $this->db->get('users');
+		//echo $this->db->last_query();die;
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	public function countTotalRows($data)
+	{
+		$where = "  1=1 ";	
+		if (isset($data['name']) && $data['name'] != '') {
+			$this->db->like('users.brand_name', $data['name']);
+			$this->db->or_like('users.channel_name', $data['name']);
+			$this->db->or_like('users.email', $data['name']);
+		}
+
+		$this->db->where($where,NULL,false);
+		$this->db->select('users.*');
+		if (isset($data['type']) && $data['type'] != '') {
+			$this->db->select('users_groups.group_id');
+			$this->db->join('users_groups', 'users_groups.user_id = users.id');
+			$this->db->where('users_groups.group_id', $data['type']);
+		}
+		$this->db->where('users.is_approved', 1);
+		$this->db->from('users');
+		$query  =  $this->db->get();
+		//echo $this->db->last_query();die;
+		return $query->num_rows();
+	}
+
+	
 	public function email_check($email, $id )
 	{
 		$where=" email= '".$email."' and id !=".$id;
@@ -904,7 +1019,7 @@ group by users.channel_name order by users.sorting desc");
 	
 	
 	public function getChannelSubscribeInfoByChannelId($id){
-		$this->db->select('channel_subscription_price, channel_name,picture');
+		$this->db->select('channel_subscription_price, channel_name,picture,irw_percentage, producer_royalty');
 		$this->db->where('id',$id);
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();
@@ -1004,6 +1119,7 @@ group by users.channel_name order by users.sorting desc");
 			$where.=" and (channel_name like '%".$data['name']."%')";
 		}
 		$where.=" and user_id='". $user_id."'";
+		$this->db->where($where,NULL,false);
 		$this->db->select('payment_logs.*, users.channel_name');
 		$this->db->from('users');
 		$this->db->join('payment_logs','users.id = payment_logs.channel_id','right outer');
@@ -1082,7 +1198,7 @@ group by users.channel_name order by users.sorting desc");
 		return $row[0]->AUTO_INCREMENT;
 	}
 	
-	public function getCurrentRenewPakcages($user_id){
+	public function getCurrentRenewPakcages($user_id=''){
 		$d = date("Y-m-d");
 		$this->db->where("next_recharge_date",$d);
 		$query = $this->db->get('channel_subscription');
@@ -1098,7 +1214,6 @@ group by users.channel_name order by users.sorting desc");
 		$this->db->update('channel_subscription',$data);
 		return true;
 	}
-	
 
-}
+}//end class
 ?>

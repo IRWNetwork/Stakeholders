@@ -93,11 +93,22 @@
 	                        	<a href="<?php echo base_url()?>feedback">Your Billing</a>
 	                        </li>
                         <?php } ?>
+
                         <?php if($this->ion_auth->get_users_groups()->row()->id == 3){ ?>
                             <li> <a href="<?php echo base_url()?>content">Your Content</a> </li>
                             <li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
-                            <li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>
+                            <li><a href="<?php echo base_url()?>stats/Analytics">Analytics</a></li>
+                            <li> <a href="<?php echo base_url()?>user/payment_report">Royalities</a> </li>
+                            <li> <a href="<?php echo base_url()?>user/bankingInformation">Banking information</a></li>
                         <?php } ?>
+
+						<?php if($this->ion_auth->in_group(3) && $this->ion_auth->get_users_groups()->row()->id == 2 && $this->session->userdata('is_approved') == 1){ ?>
+							<li> <a href="<?php echo base_url()?>content">Your Content</a> </li>
+							<li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
+							<li> <a href="<?php echo base_url()?>stats/Analytics">Analytics</a> </li>
+						<?php } ?>
+
+
 						<li> <a href="<?php echo base_url()?>user/changepassword">Change Password </a> </li>
 						<li class="divider"></li>
 						<li> <a href="<?php echo base_url()?>user/logout">Logout</a> </li>

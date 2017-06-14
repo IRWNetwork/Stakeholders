@@ -24,8 +24,7 @@ class Playlist extends MY_Controller
 		}else{
 			$this->session->set_flashdata('error','Invalid Email or Password');
 		}
-		
-        $parser['content']	=  $this->load->view('user/playlist',$this->data,TRUE);
+		$parser['content']	=  $this->load->view('user/playlist',$this->data,TRUE);
         $this->parser->parse('template', $parser);
 	}
 

@@ -1,4 +1,5 @@
 <!-- content -->
+<?php //echo "<pre>"; print_r($channels);exit; ?>
 <script type="text/javascript">
     function formSubmit(e){
         if(e.keyCode === 13){
@@ -6,26 +7,40 @@
 
         }
     }
+    function filter_users_form(val) {
+		$('#search').submit();    	
+    }
 </script>
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
-		<h1 class="m-n font-thin h3"><?php echo $page_heading;?></h1>
-         <div style=" margin-top:-24px;float:right; width:40%;" class="input-group">
-          <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
-          <form id="search" method='post'>
-          	<input name="name" onkeypress="formSubmit(event)"  class="form-control input-sm ng-pristine ng-valid ng-empty ng-touched" placeholder="search" aria-invalid="false" type="text">
-          </form>  
-        </div>
-         <div style=" margin-top:-24px;float:right; width:30%;margin-right: 50px;" class="input-group">
-		  <select name="type" class="form-control m-b" id="type" onchange="filter_users(this.value)">
-				<option value="">Filer By Type</option>
-				<option value="2">User</option>
-				<option value="3">Channel</option>
-				<option value="4">Advertiser</option>
-		  </select>
-        </div>
-        <div style=" margin-top:-24px;width:10%;margin-right: 50px;float: right;" class="input-group">
-		  <a href="" class="btn btn-info btn-sm">Clear Filter</a>
+		<div class="row">
+			<div class="col-md-3">
+				<h1 class="m-n font-thin h3"><?php echo $page_heading;?></h1>
+			</div>
+			<div class="col-md-4">
+			    <div class="input-group">
+			      <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
+			      <form id="search" method='post' name="frm">
+			      	<input name="name" onkeypress="formSubmit(event)"  class="form-control input-sm ng-pristine ng-valid ng-empty ng-touched" placeholder="search" aria-invalid="false" type="text" id="name">
+			    </div>
+		    </div>
+		    <div class="col-md-2">
+			    <div class="input-group">
+				  <?php 
+				  		$options = array(
+						        ''         => 'Filer By Type',
+						        '2'           => 'User',
+						        '3'         => 'Channel',
+						        '4'        => 'Advertiser',
+						);
+						echo form_dropdown('shirts', $options, $type, 'class="form-control m-b" id="type"');
+				  ?>
+			    </div>
+		    </div>
+		    <div class="col-md-3">
+				<input type="submit"  class="btn btn-info btn-md" value="Search" name="search">
+		    </div>
+		    </form>
 		</div>
 	</div>
 	<div class="wrapper-md">
@@ -46,7 +61,7 @@
                             <th>Sort Order</th>
                             <th>Subscription Price</th>
                             <th>Deleted</th>
-                            <th>Created Date</th>
+<!--                             <th>Created Date</th> -->
 							<th class=" no-link last"><span class="nobr">Action</span></th>
 						</tr>
 					</thead>
@@ -55,10 +70,13 @@
 							$i=1;
 							if(count($channels)>0){
 							foreach($channels as $row){
+								if ($row->group_id == 3 && $row->is_approved == 0) {
+									continue;
+								}
 						?>
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
-							<td><?php echo $row->username;?></td>
+							<td><?php echo $row->email;?></td>
 							<td><?php 
 								if($row->group_id == 2) {
 									echo "Users"; 
@@ -75,8 +93,11 @@
                             <td><?php echo $row->sorting;?></td>
                             <td><?php echo $row->channel_subscription_price;?></td>
                             <td><?php echo ($row->is_deleted == 1) ? "Yes" : "No" ; ?></td>
-							<td><?php echo date("m-d-Y",$row->created_on);?></td>
-							<td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>admin/channel/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>admin/channel/deletecontent/<?php echo $row->id?>" class="btn btn-danger btn-xs"  onClick="return confirm('Are you sure to delete this channel ?')" >Delete </a></td>
+<!-- 							<td><?php //echo date("m-d-Y",$row->created_on);?></td> -->
+							<td class=" last" nowrap="nowrap">
+							<a href="<?php echo base_url()?>admin/channel/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>admin/channel/deletecontent/<?php echo $row->id?>" class="btn btn-danger btn-xs"  onClick="return confirm('User will be permanently Deleted. Are you sure to delete this channel ?')" >Delete </a>
+							<a href="<?php echo base_url()?>admin/channel/viewDetails?id=<?php echo $row->id?>" class="btn btn-success btn-xs">Details</a>
+							</td>
 						</tr>
 						<?php }}else{?>
 						<tr>
@@ -91,16 +112,21 @@
 	</div>
 </div>
 <script type="text/javascript">
-	function filter_users(type) {
+
+	$('#search').on('submit', function(e){
+
+		e.preventDefault();
 		var BASE_URL = '<?php echo base_url()?>';
 		var flag = 1;
+		var type = $('#type').val();
+		var name = $('#name').val();
 
 		my_url = BASE_URL+"admin/channel/user_filter";
 
 	    $.ajax({
 	        url: my_url,
 	        type: "POST",
-	        data : {flag : flag, type: type},
+	        data : {flag : flag, type: type, name: name},
 	        success: function (response) {
 	        	if (response != "") {
 	        		$(".table-responsive").empty();
@@ -108,5 +134,6 @@
 	        	}
 	        }
 	    });
-	}
+
+	});
 </script>

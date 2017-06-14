@@ -73,8 +73,17 @@ class Home extends MY_Controller
 		*/	
 	}
 
+
+	public function wrestle_circus() {
+		$this->data['page_title'] 	  = 'IRW Live Room';
+		$this->data['page_heading'] 	= 'IRW Live Room';
+
+		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
+		$parser['content'] = $this->load->view('wrestle_circus',$this->data,TRUE);
+        $this->parser->parse('template', $parser);
+	}
 	public function index()
-	{	
+	{
 		$this->load->model('Preferences_model');
 		$this->data['page_title'] 	  = 'Home';
 		$this->data['page_heading'] 	= 'Home';
@@ -83,11 +92,15 @@ class Home extends MY_Controller
 		$config 			   = array();
         $config["base_url"]    = base_url() . "products/search";
         $config["total_rows"]  = $this->Content_model->countTotalRows($arr);
+
+
 		if($this->input->get('per_page')){
 			$config["per_page"]= $this->input->get('per_page');
 		}else{
         	$config["per_page"]= 20;
 		}
+
+
         $config["uri_segment"] = 3;
 		$config['reuse_query_string']   = true;
         $this->pagination->initialize($config);
@@ -107,6 +120,36 @@ class Home extends MY_Controller
 		else {
 			$parser['content']		=  $this->load->view('main',$this->data,TRUE);
         	$this->parser->parse('template', $parser);
+		}
+	}
+
+	public function refund_policy() {
+		$this->data['page_title'] 	  = 'Refund Policy';
+		$this->data['page_heading'] = 'Refund Policy';
+
+		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
+
+        if (isset($_POST['flag'])) {
+			echo $this->load->view('refund_policy',$this->data,TRUE);
+		}
+		else {
+			$parser['content'] = $this->load->view('refund_policy',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
+		}
+	}
+
+	public function contact_irw() {
+		$this->data['page_title'] 	  = 'Contact IRW';
+		$this->data['page_heading'] = 'Contact IRW';
+
+		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
+
+        if (isset($_POST['flag'])) {
+			echo $this->load->view('contact_irw',$this->data,TRUE);
+		}
+		else {
+			$parser['content'] = $this->load->view('contact_irw',$this->data,TRUE);
+	        $this->parser->parse('template', $parser);
 		}
 	}
 	

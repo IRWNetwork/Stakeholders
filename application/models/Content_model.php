@@ -249,6 +249,52 @@ class Content_model extends CI_Model
 		//echo $where;exit;
 		$this->db->where('show_date <=',date('Y-m-d'));
 		$this->db->where($where);
+		//$this->db->where('contents.is_featured !=', 'yes');
+		$this->db->select('contents.*, users.channel_name');
+		$this->db->from('users');
+        $this->db->join('contents', 'users.id = contents.user_id','INNER');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	public function countTotalRowsForAdmin($data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and type='". $data['type']."'";
+		}
+		$this->db->where($where,NULL,false);
+		$this->db->select('contents.*');
+		$this->db->from('contents');
+		$query  =   $this->db->get();
+		//echo $this->db->last_query();exit;
+		return $query->num_rows();
+	}
+	
+	public function getAllDataForAdmin($data,$start,$limit,$key=''){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and type='". $data['type']."'";
+		}
+		if(isset($key) && $key!=''){
+			$where.=" and (contents.title like '%".$key."%' or contents.description like '%".$key."%' or contents.type like'%".$key."%' )";
+		}
+		//echo $where;exit;
+		$this->db->where($where);
+		//$this->db->where('contents.is_featured !=', 'yes');
 		$this->db->select('contents.*, users.channel_name');
 		$this->db->from('users');
         $this->db->join('contents', 'users.id = contents.user_id','INNER');
@@ -369,6 +415,23 @@ class Content_model extends CI_Model
 		}
 		$where.=" and user_id='". $user_id."'";
 		$this->db->where('show_date <=',date('Y-m-d'));
+		$this->db->where($where,NULL,false);
+		$this->db->select('contents.*');
+		$this->db->from('contents');
+		$query  =   $this->db->get();
+		return $query->num_rows();
+	}
+	
+	public function countTotalRowsByUserIdForAccountListing($user_id,$data)
+	{
+		$where = "  1=1 ";	
+		if(isset($data['name']) && $data['name']!=''){
+			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+		}
+		if(isset($data['type']) && $data['type']!=''){
+			$where.=" and type='". $data['type']."'";
+		}
+		$where.=" and user_id='". $user_id."'";
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*');
 		$this->db->from('contents');

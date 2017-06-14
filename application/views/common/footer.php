@@ -1,4 +1,4 @@
-<footer id="footer" style="bottom: 0;position: absolute;width: 100%;">
+<footer id="footer" style="bottom: 0;position: fixed;width: 100%;">
 	<div class="wrapper b-t bg-light"> <span class="pull-right">2.6.9 <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span> &copy; copyright IRW Network, LLC. </div>
 </footer>
 <div id="share-pop" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
@@ -28,3 +28,13 @@
 		</div>
 	</div>
 </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-100200804-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

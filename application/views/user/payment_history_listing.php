@@ -13,7 +13,8 @@
 				</div>
 				<table id="example" class="table table-striped responsive-utilities jambo_table">
 					<thead>
-						<tr class="headings">
+
+					    <tr class="headings">
 							<th>&nbsp;</th>
 							<th>Channel Name</th>
                             <th> Payment Type</th>
@@ -22,14 +23,24 @@
 							<td>Card Number</td>
 							<th>Purchase Date</th>
 							<th>Status</th>
-                            <th>Recourse Type</th>
+                            <th>Resourse Type</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 							$i=1;
 							if(count($payment_logs)>0){
-							foreach($payment_logs as $row){ $data = json_decode($row->merchant_responce);
+							foreach($payment_logs as $row){
+
+								$response = str_replace('xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd"', '', $row->merchant_responce);
+								$str = ltrim($response, '?');
+								$xml = simplexml_load_string($str);
+								$json = json_encode($xml);
+								$data = json_decode($json);
+
+								/*echo '<pre>';
+								print_r($data);
+								echo '</pre>';*/
 						?>
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
@@ -37,17 +48,16 @@
 								else{      echo "IRW";   }?></td>
                             <td><?php echo $row->type?></td>
 							<td><?php echo $row->amount?>$</td>
-                            <td><?php echo $data->transaction->_attributes->id; ?></td>
-                            <td><?php if($data->transaction->_attributes->paymentInstrumentType=='credit_card'){ echo $data->transaction->_attributes->creditCard->bin."******".$data->transaction->_attributes->creditCard->last4?>
-									<?php }else{ echo $data->transaction->_attributes->paypal->payerEmail;?>
-									<?php }?></td>
+                            <td><?php echo $data->transactionResponse->transId; ?></td>
+                            <td><?php echo $data->transactionResponse->accountNumber; ?></td>
 							<td><?php echo $row->date_of_charge?></td>
 							<td><?php echo $row->status?></td>
-                            <td><?php if($data->transaction->_attributes->paymentInstrumentType=='credit_card'){ ?>
-                                <img src="<?php echo $data->transaction->_attributes->creditCard->imageUrl; ?>" width="40px">
-                                <?php }else{ ?>
-                                <img src="<?php echo $data->transaction->_attributes->paypal->imageUrl; ?>" width="40px">
-                                <?php }?></td>
+							<td><?php echo $data->transactionResponse->accountType; ?></td>
+                            <!--<td><?php /*// if($data->transaction->_attributes->paymentInstrumentType=='credit_card'){ */?>
+                                <img src="<?php /*// echo $data->transaction->_attributes->creditCard->imageUrl; */?>" width="40px">
+                                <?php /*// }else{ */?>
+                                <img src="<?php /*// echo $data->transaction->_attributes->paypal->imageUrl; */?>" width="40px">
+                                <?php /*// }*/?></td>-->
 						</tr>
 						<?php }}else{?>
 						<tr>

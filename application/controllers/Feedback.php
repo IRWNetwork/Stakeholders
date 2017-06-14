@@ -32,10 +32,9 @@ class Feedback extends CI_Controller
                      'rules'   => 'trim|required'
                 )
             );
-			
+			$this->form_validation->set_rules($rules);
 			}
 
-			$this->form_validation->set_rules($rules);
 
 			if ($this->form_validation->run()) {
 			

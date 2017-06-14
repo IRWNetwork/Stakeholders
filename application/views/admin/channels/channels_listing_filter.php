@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($channels);exit; ?>
 <table id="example" class="table table-striped responsive-utilities jambo_table">
 	<thead>
 		<tr class="headings">
@@ -18,6 +19,9 @@
 			$i=1;
 			if(count($channels)>0){
 			foreach($channels as $row){
+				if ($row->group_id == 3 && $row->is_approved == 0) {
+					continue;
+				}
 		?>
 		<tr class="odd pointer">
 			<td><?php echo $i++;?></td>

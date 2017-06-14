@@ -55,12 +55,14 @@ $(document).ready(function(){
             </div>
          </div>
 		<?php } ?>
+
+		<!----start----->
 		<div class="row row-sm">
-        
-			<?php 
-				$count=0; 
+
+			<?php
+				$count=0;
 				foreach($featured as $row){
-					
+
 					$url = $this->Common_model->getUrl($row);
 			?>
 			<div class="col-xs-6 col-sm-4 col-md-4 field" data-fullText="<?php echo $row->title?>">
@@ -71,24 +73,24 @@ $(document).ready(function(){
 						<?php }?>
 						<div class="item-overlay bg-black-opacity r r-2x r r-2x" data-url='<?php echo $url; ?>'>
 							<div class="center text-center m-t-n w-full dropdown">
-								<?php 
+								<?php
 									$featured_class = $this->Content_model->checkIsFeatured($row->id);
 									if($row->type=='Video'){
 								?>
-								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a> 
-								<a href="<?php echo $url;?>"><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
+								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a>
+								<a href="<?php echo $url;?>"><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }else if($row->type=='Text'){?>
-								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a> 
-								<a href="<?php echo $url;?>"><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
+								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a>
+								<a href="<?php echo $url;?>"><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }else{?>
-								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a> 
-								<a href="<?php echo $url;?>" data-image='<?php echo $row->picture?>' data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>' class="playSong"><i class="fa fa-2x fa-play-circle-o text-white"></i></a> 
+								<a href="javascript:void(0)" class="ellips featured featured<?php echo $row->id?>" data-id="<?php echo $row->id?>"><i class="<?php echo $featured_class;?>"></i></a>
+								<a href="<?php echo $url;?>" data-image='<?php echo $row->picture?>' data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>' class="playSong"><i class="fa fa-2x fa-play-circle-o text-white"></i></a>
 								<a href="#" class="ellips dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-h text-white"></i><b class="caret"></b></a>
 								<?php }?>
 								<ul class="dropdown-menu">
-									<div class="ui-widget ui-widget-content ui-corner-all ui-front ui-dialog ui-dialog--context-menu undefined contextmenu__arrow-top-left" tabindex="-1" role="dialog" aria-describedby="ui-id-3" aria-labelledby="ui-id-4" style="height: auto; width: 215px; top: 105px; left: 628px;"> 
+									<div class="ui-widget ui-widget-content ui-corner-all ui-front ui-dialog ui-dialog--context-menu undefined contextmenu__arrow-top-left" tabindex="-1" role="dialog" aria-describedby="ui-id-3" aria-labelledby="ui-id-4" style="height: auto; width: 215px; top: 105px; left: 628px;">
 										<div class="contextmenu-dialog ui-dialog-content ui-widget-content" id="ui-id-3" style="width: auto; min-height: 0px; max-height: none; height: auto;">
 											<div id="contextmenu">
 												<div>
@@ -134,13 +136,13 @@ $(document).ready(function(){
 						</div>
 						<a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><img src="<?php echo base_url()?>uploads/listing/thumb_400_<?php echo $row->picture?>" alt="" class="img-full r r-2x" ></a>
 					</div>
-					<div class="padder-v"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><?php echo nl2br($row->title);?></a> 
+					<div class="padder-v"> <a href="<?php echo $url;?>" class="playSong" data-title="<?php echo $row->title?>" data-song='<?php echo $row->file_url?>' data-id='<?php echo $row->id?>'><?php echo nl2br($row->title);?></a>
                     	<br />
 						<?php if($this->ion_auth->get_users_groups($row->user_id)->row()->id == 3){ ?>
                     		<small><strong>Posted by:</strong>&nbsp;<a href="<?php echo base_url()?>user/channeldescription/<?php echo $row->user_id?>"><?php echo $row->channel_name;?></a></small>
-                    	<?php } 
+                    	<?php }
 						  else{
-						?> 
+						?>
                        	 <small><strong>Posted by:</strong>&nbsp;IRW Network</small>
                     	<?php } ?>
 						<br/>
@@ -153,6 +155,11 @@ $(document).ready(function(){
 			</div>
 			<?php ++$count; }?>
 		</div>
+
+
+		<!-- till here--->
+
+
 		<div style="clear:both"></div>
 		<br />
 		<h3 class="font-thin m-t-n-xs m-b">Recommended for you</h3>
@@ -310,16 +317,28 @@ $(document).ready(function(){
 <script src="<?php echo base_url()?>assets/js/jquery.colorbox.js"></script> 
 <script type="text/javascript">
 
+<?php
+	if(!isset($_COOKIE['popup_check'])){
+?>
 
 $(document).ready(function(){
 	setTimeout(function(){
 		$.colorbox({
-			iframe:true, 
-			innerWidth:"50%", 
+			iframe:true,
+			innerWidth:"50%",
 			innerHeight:"70%",
 			href: "<?php echo base_url()?>home/mainpopup",
 		});
 	},4000);
 });
+
+
+<?php
+
+	setcookie('popup_check', 'triggered', time() + (10 * 365 * 24 * 60 * 60));
+
+	}
+?>
 </script>
+
 <?php// }?>

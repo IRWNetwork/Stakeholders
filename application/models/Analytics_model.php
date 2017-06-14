@@ -16,7 +16,8 @@ class Analytics_model extends CI_Model
 		return $this->db->insert_id();
 	}
 	
-	function getTotalByDay($user_id=0, $content_id = 0){
+	function getTotalByDay($user_id=0, $content_id = 0, $search_date = ''){
+
 		if($user_id==0){
 			$user_id = $this->ion_auth->user()->row()->id;
 		}
@@ -31,10 +32,19 @@ class Analytics_model extends CI_Model
 		else{
 			$where = "where author_id = '".$user_id."'";
 		}
-		$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' '.$where.'  GROUP BY date ORDER BY date');
 
-		 //echo $this->db->last_query();		
-		// die();
+		if($search_date == ''){
+			$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' '.$where.'  GROUP BY date ORDER BY date');
+		}else{
+			$year_month = explode('-',$search_date);
+			$year = $year_month[0];
+			$month = $year_month[1];
+			$query = $this->db->query('SELECT COUNT(*) AS count, date FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY date ORDER BY date');
+		}
+
+		///echo 'SELECT COUNT(*) AS count, date FROM '.$this->tablename.' '.$where.'  GROUP BY date ORDER BY date';
+		///echo $this->db->last_query();
+		/// die();
 		 if($query->num_rows())
 				{
 					return $query->result_array();
@@ -43,7 +53,7 @@ class Analytics_model extends CI_Model
 	}
 	
 	
-	function getTopByDay($user_id=0, $content_id = 0){
+	function getTopByDay($user_id=0, $content_id = 0, $search_date = ''){
 		if($user_id==0){
 			$user_id = $this->ion_auth->user()->row()->id;
 		}
@@ -58,29 +68,41 @@ class Analytics_model extends CI_Model
 		else{
 			$where = "where author_id = '".$user_id."'";
 		}
-		
-		$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' GROUP BY  episode, date ORDER BY date');
 
-		 //echo $this->db->last_query();		
-		 //die();
-		 if($query->num_rows())
-				{
-					$data =  $query->result_array();
-					
-					foreach( $data as $field=> $value){
-						
-						$value['date'] = date('Y-m-d',strtotime($value['date'].' -1 months '));
-						$data[$field]['date'] =  str_replace("-",",",$value['date']);
-					}
-					foreach( $data as $value){
-						$dataReturn[$value['episode']]['date'][$value['date']] = $value['count'];	
-					}
-					return $dataReturn;
-				}
+		if($search_date == ''){
+
+		}else{
+
+		}
+
+
+		if($search_date == ''){
+			$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' GROUP BY  episode, date ORDER BY date');
+		}else{
+			$year_month = explode('-',$search_date);
+			$year = $year_month[0];
+			$month = $year_month[1];
+			$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  episode, date ORDER BY date');
+		}
+
+
+
+		if($query->num_rows()) {
+			$data =  $query->result_array();
+
+			foreach( $data as $field=> $value){
+				$value['date'] = date('Y-m-d',strtotime($value['date'].' -1 months '));
+				$data[$field]['date'] =  str_replace("-",",",$value['date']);
+			}
+			foreach( $data as $value){
+				$dataReturn[$value['episode']]['date'][$value['date']] = $value['count'];
+			}
+			return $dataReturn;
+		}
 		return array();
 	}
 	
-	function getTopCountries($user_id=0, $content_id = 0){
+	function getTopCountries($user_id=0, $content_id = 0, $search_date = ''){
 		
 		if($user_id==0){
 			$user_id = $this->ion_auth->user()->row()->id;
@@ -97,9 +119,25 @@ class Analytics_model extends CI_Model
 			$where = "where author_id = '".$user_id."'";
 		}
 		
-		$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
+		//$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
 
-		 //echo $this->db->last_query();		
+
+
+		if($search_date == ''){
+			$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
+		}else{
+			$year_month = explode('-',$search_date);
+			$year = $year_month[0];
+			$month = $year_month[1];
+			$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.'  GROUP BY  country ORDER BY count');
+			//$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  episode, date ORDER BY date');
+		}
+
+
+
+
+
+		//echo $this->db->last_query();
 		 //die();
 		 if($query->num_rows())
 				{
@@ -124,7 +162,7 @@ class Analytics_model extends CI_Model
 		}
 		
 		$query = $this->db->query('SELECT max(id) AS end, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1');
-
+        //echo 'SELECT max(id) AS end, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1';
 		 //echo $this->db->last_query();		
 		 //die();
 		 if($query->num_rows())
@@ -165,7 +203,7 @@ class Analytics_model extends CI_Model
 	
 	
 	
-	function getTopCities($user_id=0, $content_id = 0){
+	function getTopCities($user_id=0, $content_id = 0, $search_date = ''){
 		if($user_id==0){
 			$user_id = $this->ion_auth->user()->row()->id;
 		}
@@ -180,11 +218,29 @@ class Analytics_model extends CI_Model
 		else{
 			$where = "where author_id = '".$user_id."'";
 		}
-		$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
 
-		 //echo $this->db->last_query();		
+
+		//$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
+
+
+		if($search_date == ''){
+			$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
+		}else{
+			$year_month = explode('-',$search_date);
+			$year = $year_month[0];
+			$month = $year_month[1];
+			$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  country ORDER BY count');
+			///$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  episode, date ORDER BY date');
+		}
+
+
+
+
+		//echo 'SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count';
+		 //echo $this->db->last_query();
 		 //die();
-		 if($query->num_rows())
+
+		if($query->num_rows())
 				{
 					return $query->result_array();
 				}
@@ -209,7 +265,7 @@ class Analytics_model extends CI_Model
 		}
 		$query = $this->db->query('SELECT COUNT(*) AS total FROM '.$this->tablename.' '.$where );
 
-		 //echo $this->db->last_query();		
+		 //echo $this->db->last_query();
 		 //die();
 		 if($query->num_rows())
 				{

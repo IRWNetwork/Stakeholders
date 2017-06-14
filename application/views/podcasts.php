@@ -201,13 +201,19 @@ $(document).ready(function(){
 $(window).scroll(function() {
 
 if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+	debugger;
     var value = parseInt(document.getElementById('limit_count').value, 10);
     var max_limit = $("#max_limit").val();
+    	if (max_limit <= value) {
+    		return false;
+    	}
 		value = isNaN(value) ? 0 : value;
 		my_url = BASE_URL+"/podcasts/podcasts_ajax/"+value;
 		if(value){
 			$.ajax({
 				url: my_url,
+				//async:false,
+				data : {per_page:value},
 				type: "get",
 				success: function (response) {
 					if (response != "") {

@@ -33,7 +33,7 @@ class Banner extends CI_Controller
 
         $this->pagination->initialize($config);
 
-        $page 		           = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $page 		           = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
 
 		$data['banners']	   = $this->Content_model->getAllBannersData(array(),$page,$config["per_page"]);
 		$data["links"]         = $this->pagination->create_links();
@@ -133,7 +133,7 @@ class Banner extends CI_Controller
 			$this->form_validation->set_rules($rules);
 
 			if ($this->form_validation->run()) {
-				$picture_name	= "";
+				//$picture_name	= "";
 				
 				
 				if($_FILES['banner_picture']['tmp_name']){
@@ -149,14 +149,21 @@ class Banner extends CI_Controller
 					$full_picture_path = $path.$picture_name;
 					$this->Common_model->generateThumb($full_picture_path,array('400',400),"thumb_400_".$picture_name);
 					$this->Common_model->generateThumb($full_picture_path,array('153',153),"thumb_153_".$picture_name);
+					$data	= array(
+						"banner_link"    => $this->input->post('banner_link'),
+						"page" 	       => $this->input->post('page'),
+						"target" 	     => $this->input->post('target'),
+						"banner_image"   => $picture_name
+					);
 				}
-				
-				$data	= array(
-								"banner_link"    => $this->input->post('banner_link'),
-								"page" 	       => $this->input->post('page'),
-								"target" 	     => $this->input->post('target'),
-								"banner_image"   => $picture_name
-							);
+				else {
+					$data	= array(
+						"banner_link"    => $this->input->post('banner_link'),
+						"page" 	       => $this->input->post('page'),
+						"target" 	     => $this->input->post('target'),
+					);
+				}
+
 				$result = $this->Content_model->updateBanner($data,$id);
 				if($result){
 					$this->session->set_flashdata(

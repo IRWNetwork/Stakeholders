@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <title><?php echo $page_title?></title>
-<?php if($meta_description){?>
+<?php if(isset($meta_description)){?>
 <meta name="description" content="<?php echo $meta_description?>" />
 <?php }?>
-<?php if($meta_keywords){?>
+<?php if(isset($meta_keywords)){?>
 <meta name="keywords" content="<?php echo $meta_keywords?>" />
 <?php }?>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />

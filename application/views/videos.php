@@ -170,25 +170,35 @@ $(window).scroll(function() {
 	if ($(window).scrollTop() + $(window).height() == $(document).height()) {
 		var value = parseInt(document.getElementById('limit_count').value, 10);
 		var max_limit = $("#max_limit").val();
+		if (max_limit < value) {
+			return false;
+		}
 			value = isNaN(value) ? 0 : value;
 			
 			//var base_url = window.location.origin;
 			//my_url = base_url+"/videos/videos_ajax/"+value;
 	
 			my_url = BASE_URL+"/videos/videos_ajax/"+value;
-	
-			$.ajax({
-				url: my_url,
-				type: "get",
-				success: function (response) {
-					if (response != "") {
-						$(".loader").show().delay(2000).fadeOut();
+			if (value) {
+				$.ajax({
+					url: my_url,
+					data : {per_page:value},
+					type: "get",
+					success: function (response) {
+						if (response != "") {
+							$(".loader").show().delay(2000).fadeOut();
+						}
+						value = value+20;
+						if (max_limit<value) {
+							document.getElementById('limit_count').value = 0;
+						}
+						else {
+							document.getElementById('limit_count').value = value;
+						}
+						$("#content").append(response);
 					}
-					value = value+20;
-					document.getElementById('limit_count').value = value;
-					$("#content").append(response);
-				}
-			});
+				});
+			}
 	   }
 	   else{
 	   		return false;

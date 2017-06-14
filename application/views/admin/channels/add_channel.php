@@ -14,22 +14,23 @@
                                     <div class="form-group">
                                     	<label class="col-lg-3 control-label">First Name</label>
                                         <div class="col-lg-6">
-                                        	<input placeholder="First Name" name="firstname" value="<?php echo $this->input->post('firstname')?>" class="form-control " required />
+                                        	<input placeholder="First Name" name="first_name" value="<?php echo $this->input->post('first_name')?>" class="form-control " required />
                                    		</div>
                                     </div>
                                     <div class="form-group">
                                     	<label class="col-lg-3 control-label">Last Name</label>
                                         <div class="col-lg-6">
-                                        	<input placeholder="Last Name" name="lastname" value="<?php echo $this->input->post('lastname')?>" class="form-control " required />
+                                        	<input placeholder="Last Name" name="last_name" value="<?php echo $this->input->post('last_name')?>" class="form-control " required />
                                    		</div>
                                     </div>
                                     <div class="form-group">
-									<label class="col-lg-3 control-label">Type</label>
+									<label class="col-lg-3 control-label">User Type</label>
 									<div class="col-lg-6">
 										<select name="type" class="form-control m-b" id="type">
 											<option value="">Select Type</option>
-											<option value="4">Channel</option>
-											<option value="3">User</option>
+											<option value="4">Advertiser</option>
+											<option value="3">Channel</option>
+											<option value="2">User</option>
 										</select>
 										<?php if(isset($contentRow['type'])){?>
 										<script type="text/javascript">
@@ -55,19 +56,122 @@
                                     <div class="form-group">
                                     	<label class="col-lg-3 control-label">Confirm Password</label>
                                         <div class="col-lg-6">
-                                        	<input type="password" name="confirmPassword" placeholder="Confirm Password" class="form-control "  required>
+                                        	<input type="password" name="confirmPassword" placeholder="Confirm Password" class="form-control"  required>
                                    		</div>
                                     </div>
                                       <div class="form-group">
                                         <label class="col-lg-3 control-label">Profile Picture</label>
                                         <div class="col-lg-6">
-                                            
-                                            <label>
-                                              <input type="file" name="picture" id="picture" />
-                                          </label>
+                                              <input type="file" name="picture" id="picture" class="form-control" />
                                         </div>
                                     </div>
-									<div id="channel_fields">
+									<div class="form-group" id="percentage_error" style="display:none;">
+										<label class="col-lg-3 control-label">&nbsp;</label>
+										<div class="col-lg-6">
+											<p style="color:red;">
+												Sum of IRW% and Producer royalty should not be less then 100%
+											</p>
+										</div>
+									</div>
+									<div id="channel_fields"> <!--- Producer Form Fields Start -->
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">IRW %</label>
+											<div class="col-lg-6">
+												<input type="text" id="irw_percentage" name="irw_percentage" placeholder="IRW %" value="20" class="form-control">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Producer Royalty</label>
+											<div class="col-lg-6">
+												<input type="text" id="producer_royalty" name="producer_royalty" placeholder="Producer Royalty" value="80" class="form-control">
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Monitization Background</label>
+											<div class="col-lg-6">
+												<input type="file" name="monitization_background_on_brand" placeholder="Monitization Background on Brand" value="<?php echo $this->input->post('monitization_background_on_brand')?>" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">General Background</label>
+											<div class="col-lg-6">
+												<input type="file" name="general_background_on_brand" placeholder="General Background On Brand" value="<?php echo $this->input->post('general_background_on_brand')?>" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Phone Number</label>
+											<div class="col-lg-6">
+												<input type="text" name="phone" placeholder="Phone Number" value="<?php echo $this->input->post('phone')?>" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Day To Contact</label>
+											<div class="col-lg-6">
+												<select type="text" name="day_of_contact" placeholder="Day To Contact" class="form-control">
+													<option value="mon"> Monday </option>
+													<option value="tue"> Tuesday </option>
+													<option value="wed"> Wednesday </option>
+													<option value="thu"> Thursday </option>
+													<option value="fri"> Friday </option>
+												</select>
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Time To Contact</label>
+											<div class="col-lg-6">
+												<select type="text" name="day_time_of_contact" placeholder="Time To Contact" class="form-control">
+													<option value="morning"> Morning </option>
+													<option value="afternoon"> Afternoon </option>
+													<option value="evening"> Evening </option>
+												</select>
+											</div>
+										</div>
+
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Brand Twitter Followers</label>
+											<div class="col-lg-6">
+												<input type="text" name="brand_twitter_followers" placeholder="Brand Twitter Followers" value="<?php echo $this->input->post('brand_twitter_followers')?>" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Brand Facebook Likes</label>
+											<div class="col-lg-6">
+												<input type="text" name="brand_facebook_likes" placeholder="Brand Facebook Likes" value="<?php echo $this->input->post('brand_facebook_likes')?>" class="form-control">
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Brand Instagram Followers</label>
+											<div class="col-lg-6">
+												<input type="text" name="brand_instagram_followers" placeholder="Brand Instagram Followers" value="<?php echo $this->input->post('brand_instagram_followers')?>" class="form-control">
+											</div>
+										</div>
+
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Sales Pitch</label>
+											<div class="col-lg-6">
+												<input type="type" name="salespitch" value="<?php echo $this->input->post('salespitch')?>" placeholder="Sales Pitch" class="form-control">
+											</div>
+										</div>
+
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Brand Name</label>
                                             <div class="col-lg-6">
@@ -87,6 +191,7 @@
                                             <div class="col-lg-6">
                                                 <input type="text" name="channel_price" value="<?php echo $this->input->post('channel_price')?>" placeholder="Channel Price" class="form-control " >                                            </div>
                                         </div>                                  
+
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Channel Description</label>
                                             <div class="col-lg-6">
@@ -94,10 +199,41 @@
                                                 </textarea>
                                             </div>
                                         </div>
-                                    </div>
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">How Were You Monitizing Content Before</label>
+											<div class="col-lg-6">
+												<textarea type="text" name="how_were_you_monitizing_content_before" placeholder="How Were You Monitizing Content Before" value="<?php echo $this->input->post('how_were_you_monitizing_content_before')?>" class="form-control"></textarea>
+											</div>
+										</div>
+
+
+										<div>
+											<br/>
+											<h3 class="page-header">Bank Information</h3>
+										</div>
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Routung Number</label>
+											<div class="col-lg-6">
+												<input class="form-control" type="text" name="routing_number" placeholder="Routing Number" value="" class="form-control no-border">
+											</div>
+										</div>
+
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label">Account Number</label>
+											<div class="col-lg-6">
+												<input class="form-control" type="text" name="account_number" placeholder="Account Number" value="" class="form-control no-border">
+											</div>
+										</div>
+
+
+
+									</div> <!--- Producer Form Fields End -->
                                     <div class="form-group">
 									<div class="col-lg-offset-3 col-lg-10">
-										<button type="submit" class="btn btn-sm btn-info">Register</button>
+										<button type="submit" id="submit" class="btn btn-sm btn-info">Register</button>
 									</div>
 								</div>
                              </div>  
@@ -112,8 +248,7 @@
 	$(document).ready(function(){
 		$("#type").change(function(){
 			var val = $("#type").val();
-			showHideVideoContent(val);
-			if(val=='3'){
+			if(val=='2' || val=='4'){
 			 	$( "#channel_fields" ).fadeOut( 500, "linear" );
 			}else{
 				$( "#channel_fields" ).fadeIn( 200, "linear" );
@@ -121,11 +256,25 @@
 		});
 		
 		function showHideVideoContent(val){
-			if(val=='4'){
+			if(val=='3'){
 				$("#channel_fields").fadeIn( 500, "linear" );
 			}else{
 				$("#channel_fields").fadeOut( 500, "linear" );
 			}
 		}
+
+		$("#irw_percentage, #producer_royalty").focusout(function () {
+			var irw_percentage = $("#irw_percentage").val();
+			var producer_royalty = $("#producer_royalty").val();
+			var sum_both =  parseInt(irw_percentage, 10) + parseInt(producer_royalty, 10);
+			if (sum_both <100 || sum_both >100) {
+				$("#percentage_error").show();
+				$('#submit').prop('disabled', true);
+			}
+			else {
+				$("#percentage_error").hide();
+				$('#submit').prop('disabled', false);
+			}
+		});
 	});
 </script>

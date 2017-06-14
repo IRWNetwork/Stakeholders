@@ -1,14 +1,11 @@
 <?php
 	if(!defined('BASEPATH')) exit('No direct script access allowed');
 	class Emailtemplates_model extends CI_Model {
-		
 		var $_tableName = "email_templates";
 		var $_options = "";
-		
 		function __construct() {
 			parent::__construct();
 		}
-		
 		/* save row... */
 		function saveRow($data) {
 			$this->db->insert($this->_tableName, $data);
@@ -150,7 +147,7 @@
 				$data = array(
 					"name" => $template_name ,
 					"from_name" => $from_name ,
-					"from_email" => $from_email ,
+					"from_email" => $from_email,
 					"email_to" => $arr['email'],
 					"subject" => $subject ,
 					"message" => stripslashes($message),

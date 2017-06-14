@@ -19,7 +19,6 @@ class Dashboard extends CI_Controller
 		$this->load->library('ion_auth');
 
     }
-
     
 
 	public function index()

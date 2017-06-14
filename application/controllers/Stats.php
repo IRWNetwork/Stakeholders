@@ -28,17 +28,24 @@ class Stats extends CI_Controller
 				);
 				redirect(base_url().'content');
 			}
-		} 
+		}
+
+		if(isset($_GET['date'])){
+			$search_date = $_GET['date'];
+		}else{
+			$search_date = '';
+		}
+
 		$data = array();
 		$data['page_title']     = 'Analytics';
 		$data['page_heading']   = 'Analytics';
 		$data['channel_banner'] = $this->Users_model->getUserbanner();
-		$data['data_analytics_totalPlays'] = $this->Analytics_model->getTotalByDay(0, $content_id);
-		$data['analytics_topPlays']   		= $this->Analytics_model->getTopByDay(0, $content_id);
-		$data['analytics_topCountries']	= $this->Analytics_model->getTopCountries(0, $content_id);
+		$data['data_analytics_totalPlays'] = $this->Analytics_model->getTotalByDay(0, $content_id, $search_date);
+		$data['analytics_topPlays']   		= $this->Analytics_model->getTopByDay(0, $content_id, $search_date);
+		$data['analytics_topCountries']	= $this->Analytics_model->getTopCountries(0, $content_id, $search_date);
 		$date['maxDate'] 		= $this->Analytics_model->getMaxDateForCountries(0, $content_id);
 		$date['minDate'] 		= $this->Analytics_model->getMinDateForCountries(0, $content_id);  
-		$data['analytics_topCities'] = $this->Analytics_model->getTopCities(0, $content_id);
+		$data['analytics_topCities'] = $this->Analytics_model->getTopCities(0, $content_id, $search_date);
 		$data['totalPostcast']	   = $this->Content_model->getTotalEpisode();
 		$data['totalListens']		= $this->Analytics_model->getTotalListens(0, $content_id);
 		$data['pagesTotal']		   = $this->Analytics_model->getUrlReport(0, $content_id); 

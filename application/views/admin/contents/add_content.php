@@ -1,4 +1,4 @@
-<link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" media="all" type="text/css" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url()?>assets/css/jquery-ui-timepicker-addon.css" />
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
@@ -26,7 +26,7 @@
 										<select name="type" class="form-control m-b" id="type">
 											<option value="'">Select Type</option>
 											<option value="Video">Video</option>
-											<option value="Audio">Audio</option>
+											<!----<option value="Audio">Audio</option>----->
 											<option value="Article">Article</option>
 											<option value="Podcasts">Podcasts</option>
 										</select>
@@ -278,13 +278,12 @@ tinymce.init({
     
     
 </script>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>assets/js/jquery-ui-timepicker-addon.js"></script>
-
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#show_date').datepicker({
-		dateFormat: 'm-d-yy'
+		dateFormat: 'mm-dd-yy'
 	});
 });
 </script>

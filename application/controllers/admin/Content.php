@@ -25,14 +25,14 @@ class Content extends CI_Controller
 		$arr['portalUsers']	 		= $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
 		$config 			   	 	= array();
         $config["base_url"]     	= base_url() . "admin/content";
-        $config["total_rows"]   	= $this->Content_model->countTotalRows($arr);
+        $config["total_rows"]   	= $this->Content_model->countTotalRowsForAdmin($arr);
         $config["per_page"]     	= 10;
         $config["uri_segment"]  	= 3;
 		$config['reuse_query_string'] = TRUE;
 		
         $this->pagination->initialize($config);
         $page 		           = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$data['contents']	   = $this->Content_model->getAllData(array(),$page,$config["per_page"],$arr['name']);
+		$data['contents']	   = $this->Content_model->getAllDataForAdmin(array(),$page,$config["per_page"],$arr['name']);
 		//echo "<pre>"; print_r($data['contents']);exit;
 		$data["links"]         = $this->pagination->create_links();
 		if($this->input->get('msg')){
@@ -41,6 +41,7 @@ class Content extends CI_Controller
         $parser['content']	   = $this->load->view('admin/contents/listing',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
 	}
+
 	public function convert_images() {
 		$results = $this->Common_model->convert_images();
 		//$this->load->library('image_lib');	
@@ -170,11 +171,11 @@ class Content extends CI_Controller
         $this->parser->parse('admin/template', $parser);
 	}
 	*/
+
     public function addcontent()
 	{
 		$data['page_title'] 	= 'Add Content';
-		$data['page_heading'] 	= 'Add Content';
-		
+		$data['page_heading'] 	= 'Add Content'; // testing
 		if($this->input->post()) {
 			//echo "<pre>"; print_r($_POST);exit;
 			$rules = array(
@@ -255,7 +256,7 @@ class Content extends CI_Controller
 					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_400_".$picture_name,$path."pic_400_400.jpg",400,400,$path."thumb_400_".$picture_name);
 					$this->Common_model->updateContentImageWithBlackBackground($path."thumb_469_".$picture_name,$path."pic_469_469.jpg",469,469,$path."thumb_469_".$picture_name);
 				}
-				
+
 				$is_premium  = ($this->input->post('is_premium')!='') ? $this->input->post('is_premium') : "";
 				$is_featured = ($this->input->post('is_featured')!='') ? $this->input->post('is_featured') : "";
 				$data	= array(
@@ -266,7 +267,7 @@ class Content extends CI_Controller
 								"embed_code"		=> $this->input->post('embed_code'),
 								"meta_keywords"		=> $this->input->post('meta_keywords'),
 								"meta_description"	=> $this->input->post('meta_description'),
-								"show_date"			=> changeDateTimeToSQLDateTime($this->input->post('show_date')),
+								"show_date"			=> changeDateToSQLDate($this->input->post('show_date')),
 								"is_premium" 		=> $is_premium,
 								"is_featured" 		=> $is_featured,
 								"file_url" 			=> $file_name,
@@ -364,8 +365,6 @@ class Content extends CI_Controller
 								"embed_code"		=> $this->input->post('embed_code'),
 								"meta_keywords"		=> $this->input->post('meta_keywords'),
 								"meta_description"	=> $this->input->post('meta_description'),
-								//"show_date"			=> changeDateTimeToSQLDateTime($this->input->post('show_date')),
-								"show_date"			=> '',
 								"is_premium" 		=> $is_premium,
 								"is_featured" 		=> $is_featured,
 							);

@@ -67,7 +67,12 @@ $(document).ready(function(){
 						</div>
 					</div>
 				</div>
-				<?php }?>				
+				<?php }?>
+                <h3>Contact IRW</h3>
+                <p>You can reach IRWNetwork for most purposes at CS@IRWNetwork.com</p>
+				<p>IRW network is a subsidiary of Binge Indy, LLC</p>
+				<!-- <p>Columbia, TN 38401 </p> -->
+                <!-- <p>Phone: 9316262045</p> -->
 			</div>
 		</div>
 	</div>

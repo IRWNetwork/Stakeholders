@@ -1,6 +1,7 @@
 <?php 
-//echo "<pre>"; print_r($contents);exit;
+echo "<pre>"; print_r($contents);exit;
  ?>
+
 <div class="app-content-body fade-in-up ng-scope" ui-view="">
 	<div class="hbox hbox-auto-xs hbox-auto-sm ng-scope"> 
 		<!-- main -->
@@ -16,7 +17,8 @@
 				<?php ++$count;}?>
 			</ul>
 		</div>
-		<!-- / main --> 
+
+		<!-- / main -->
 		<!-- right col -->
 		<div class="col">
 			<div class="wrapper-md">
@@ -26,6 +28,7 @@
 						<div class="text-muted"> Total Songs: <span class="badge m-r-sm"><?php echo count($contents);?></span> </div>
 					</div>
 				</div>
+
 				<p class="text-muted m-b-md"><?php echo $playListRow->description?></p>
 				<h4 class="m-b-md">Featured</h4>
 				<div class="row row-sm">

@@ -2,10 +2,42 @@
 <div class="app-content-body ">
 <div class="bg-light lter b-b wrapper-md">
 	<h1 class="m-n font-thin h3"><?php echo $page_heading;?></h1>
+
+    <div style="float:right;margin-top: -22px;">
+        <div style="display:inline-block; padding-right:8px;">
+            <select class="form-control" id="month">
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div style="display:inline-block; padding-right:8px;">
+            <select class="form-control" id="year">
+                <?php $date = (int) date("Y");
+                for($i=1; $date >= 2017 && $i<= 3 ; $date--, $i++  ){
+                    ?>
+                    <option value="<?php echo $date; ?>"><?php echo $date; ?></option>
+                <?php }?>
+            </select>
+        </div>
+        <div style="display:inline-block">
+            <button id="search" class="btn btn-info btn-sm" onclick="search_month(this)">Search</button>
+        </div>
+    </div>
+
 </div>
-<div class="wrapper-md">
-	<?php if($channel_banner['banner1']){ ?>
-		<div><img src="<?php echo base_url()."uploads/profile_pic/".$channel_banner['banner1']?>" style="width:100%" /></div>
+    <div class="wrapper-md">
+	<?php if($channel_banner['banner']){ ?>
+		<div><img src="<?php echo base_url()."uploads/profile_pic/".$channel_banner['banner']?>" style="width:100%" /></div>
 	<?php }?>
     <div style="background:#F00; padding:20px; color:#FFF; font-weight:bold; font-size:16px">
 		<div style="text-align:center"><img src="<?php echo base_url()?>assets/images/logo-old.png" style="width:150px" /></div>
@@ -146,6 +178,9 @@
 </div>
 <script type="text/javascript">
 	$(function () {
+
+
+
     Highcharts.chart('Total_Plays', {
         chart: {
             type: 'spline'
@@ -188,17 +223,17 @@
             // of 1970/71 in order to be compared on the same x axis. Note
             // that in JavaScript, months start at 0 for January, 1 for February etc.
             data: [
-			<?php 
+			<?php
 				foreach( $data_analytics_totalPlays as $data){?>
 					[Date.UTC(<?php echo $data['date'];?>), <?php echo $data['count'];?>],
 			<?php }
 			?>
-            
+
             ]
         }]
     });
 });
-</script> 
+</script>
 <script type="text/javascript">
 	$(function () {
     Highcharts.chart('Top_Plays', {
@@ -239,26 +274,26 @@
 
         series: [
 		<?php foreach( $analytics_topPlays as $title=> $value ){ ?>
-		
+
 		{
             name: '<?php echo $title;?>',
             // Define the data points. All series have a dummy year
             // of 1970/71 in order to be compared on the same x axis. Note
             // that in JavaScript, months start at 0 for January, 1 for February etc.
             data: [
-			<?php 
+			<?php
 				foreach( $value['date'] as $data=> $count){?>
 					[Date.UTC(<?php echo $data;?>), <?php echo $count;?>],
 			<?php }
 			?>
 
             ]
-        }, 
+        },
 		<?php } ?>
 		]
     });
 });
-</script> 
+</script>
 
 <script type="text/javascript">
 	$(function () {
@@ -349,4 +384,11 @@
         }]
     });
 });
+
+    function search_month(){
+            var m = $("#month").val();
+            var y = $("#year").val();
+            window.location = '<?php echo base_url().'stats/Analytics?date=';?>'+ y+'-'+m;
+    }
+
 </script>

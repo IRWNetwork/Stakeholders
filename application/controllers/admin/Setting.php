@@ -55,10 +55,9 @@ class Setting extends CI_Controller
                      'rules'   => 'trim|required|valid_email'
                 )
             );
-			
+			$this->form_validation->set_rules($rules);
 			}
 
-			$this->form_validation->set_rules($rules);
 
 
 		if($this->input->post()){
@@ -69,6 +68,28 @@ class Setting extends CI_Controller
 		$parser['content']      = $this->load->view('admin/edit_feedback_email_notice',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
 	
-	} 
-	
-}
+	}
+
+
+	public function payment_preferences() {
+		$data['page_title']    = 'Preferences';
+		$data['page_heading']  = 'Payment Settings';
+
+		if($this->input->post()){
+			if($this->input->post('payment_checkbox')){
+				$payment_status = $this->input->post('payment_checkbox');
+			}else{
+				$payment_status = 'no';
+			}
+			$this->Preferences_model->update('payment', $payment_status);
+			$this->session->set_flashdata('success', "Settings Updated Successfully.");
+		}
+
+		$data['payment_status']  =  $this->Preferences_model->getValue('payment');
+		$parser['content']      = $this->load->view('admin/payment_preferences',$data,TRUE);
+		$this->parser->parse('admin/template', $parser);
+	}
+
+
+
+}// end class

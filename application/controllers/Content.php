@@ -26,7 +26,7 @@ class Content extends CI_Controller
 		$arr['portalUsers']	  = $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
 		$config 			   	  = array();
         $config["base_url"]      = base_url() . "content";
-        $config["total_rows"]  	= $this->Content_model->countTotalRowsByUserId($this->ion_auth->user()->row()->id, $arr);
+        $config["total_rows"]  	= $this->Content_model->countTotalRowsByUserIdForAccountListing($this->ion_auth->user()->row()->id, $arr);
         $config["per_page"]      = 10;
         $config["uri_segment"]   = 2;
 		$config['reuse_query_string'] = TRUE;

@@ -58,11 +58,9 @@ $(document).ready(function(){
                 ?>
                 <div class="col-md-4 col-xs-12 for-tab-height" style="display:inline-block; min-height: 220px; margin-top:15px;background-color:#4d4d4d; padding-top:6px; box-shadow: 2px 4px 5px 4px #a6a6a6;" >
                 	<div class="col-md-11">
-                        
                             <div class="col-xs-5"> 
                                 <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
                                     <img src="<?php echo base_url()."uploads/profile_pic/".(($list['picture'])?$list['picture']:"default-thumbnail.jpg")?>" class=" img-responsive"/>
-                                    
                                  </a>
                             </div>
                             <div class="col-xs-7">
@@ -70,21 +68,39 @@ $(document).ready(function(){
                                  <?php $a_event        =  base_url() . "user/channelsubscription/".$list['id'];?>
                                  <?php $onclick_log    =  "";?>
                             	 <?php 
-								 	if($this->Common_model->checkAlreadyBuy($list['id'])){
+
+								 		if($this->Common_model->checkAlreadyBuy($list['id'])){
                                     	$subscribe_text = "Subscribed";
                                         $a_event     = "javascript:void(0)";
-                                    }
-									if (!$this->ion_auth->logged_in()) {
+                                        }
+
+									   if (!$this->ion_auth->logged_in()){
                                     	$onclick_log = "click_login()";
                                       	$a_event     = "javascript:void(0)";
                                     }
-								?>
-                                
-                                <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">      
-                                    <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
-                                </a>
+
+                                 ?>
+
+                                <?php if($payment_gateway == 'yes'){ ?>
+
+                                        <?php if($this->Common_model->checkAlreadyBuy($list['id'])){ ?>
+                                        <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
+                                            <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
+                                        </a>
+                                        <?php }else{ ?>
+                                        <a href="<?php echo base_url()."user/channelsubscription/".$list['id']; ?>">
+                                            <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
+                                        </a>
+                                        <?php } ?>
+
+                                <?php }else{ ?>
+                                    <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
+                                        <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
+                                    </a>
+                                <?php } ?>
+
                                 <h3 style=" display:none; color:#fff;">$<?php echo $list['channel_subscription_price']; ?> / mo</h3>
-                                <h3 style=" color:#fff;">Free Until June 1st!</h3>
+                                <h3 style=" color:#fff;">Content Free Until Launch!<!--$--><?php //echo $list['channel_subscription_price']; ?></h3>
                             </div>
                        
                         <div class="col-xs-12">

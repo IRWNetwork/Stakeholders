@@ -3066,3 +3066,9 @@ a.text-#000000:hover { color: #131e25; }
         width: 100%;
     }
 }
+
+
+.list-group-item_extended{
+	width: 50%;
+	float: left;
+}

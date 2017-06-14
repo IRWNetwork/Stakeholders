@@ -28,6 +28,7 @@
 		</div>
 		<!-- / main --> 
 		<!-- right col -->
-		<!-- / right col --> 
-	</div>
+		<!-- / right col -->
+
+		</div>
 </div>

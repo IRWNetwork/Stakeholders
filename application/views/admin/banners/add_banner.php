@@ -63,7 +63,7 @@
 										<input type="file" name="banner_picture" />
 									</div>
 								</div>
-                                <?php if($bannerRow['banner_image']!=''){?>
+                                <?php if(isset($bannerRow['banner_image'])){?>
                                 <div class="form-group">
 									<label class="col-sm-3 control-label">Banner Image</label>
 									<div class="col-sm-9">

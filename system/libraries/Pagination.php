@@ -258,7 +258,7 @@ class CI_Pagination {
 	 *
 	 * @var	bool
 	 */
-	protected $page_query_string = FALSE;
+	protected $page_query_string = TRUE;
 
 	/**
 	 * Query string segment

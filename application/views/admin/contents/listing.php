@@ -53,9 +53,9 @@
 							<td><?php echo ($row->is_featured == 'yes') ? 'Yes' : 'No' ?></td>
 							<td class=" last" nowrap="nowrap">
                             	<?php if($row->is_featured=='yes'){?>
-                                <a href="<?php echo base_url()?>admin/content/unfeatured/<?php echo $row->id?>" class="btn btn-primary btn-xs"><i class="fa fa-times"></i> Unfeatured </a> 
+                                <a href="<?php echo base_url()?>admin/content/unfeatured/<?php echo $row->id?>" class="btn btn-primary btn-xs"><i class="fa fa-times"></i> Unfeature </a>
                                 <?php }else{?>
-                                <a href="<?php echo base_url()?>admin/content/featured/<?php echo $row->id?>" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Featured </a> 
+                                <a href="<?php echo base_url()?>admin/content/featured/<?php echo $row->id?>" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Make Feature </a>
                                 <?php }?>
                                 
                                 <a href="<?php echo base_url()?>admin/analytics/?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-flask"></i>Analytics</a>

@@ -12,6 +12,14 @@ function changeDateTimeToSQLDateTime($date){
 	return $new_date." ".$time;
 }
 
+function changeDateToSQLDate($date){
+	$date = explode('-',$date);
+
+	$new_date = $date[2]."-".$date[0]."-".$date[1];
+
+	return $new_date;
+}
+
 function getContentUrl($row){
 	if ($this->ion_auth->logged_in()) {
 		if($row->is_premium=='yes'){
@@ -50,6 +58,14 @@ function init_Braintree(){
 	Braintree_Configuration::publicKey("cggnwvrvz44nrmfh");
 	Braintree_Configuration::privateKey("c0cc81d6242af896bfef79f19e004538");
 	return Braintree_ClientToken::generate();
+}
+
+function initialize_Braintree(){
+	require_once APPPATH."/third_party/braintree-php/lib/Braintree.php";
+	Braintree_Configuration::environment("sandbox");
+	Braintree_Configuration::merchantId("cnh6d5kt9f839mfh");
+	Braintree_Configuration::publicKey("cggnwvrvz44nrmfh");
+	Braintree_Configuration::privateKey("c0cc81d6242af896bfef79f19e004538");
 }
 
 function get_random_auth_code()

@@ -14,7 +14,6 @@ $_SESSION['after_login'] = $_SERVER['REQUEST_URI'];
                         <select name="filter" style="width:80%" onchange="filterData(this.value)">
                             <option value="">All</option>
                             <option value="Video">Video</option>
-                            <option value="Audio">Audio</option>
                             <option value="Text">Text</option>
                             <option value="Podcasts">Podcasts</option>
                         </select>
