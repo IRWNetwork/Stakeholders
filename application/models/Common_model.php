@@ -350,7 +350,7 @@ class Common_model extends CI_Model
 	}
 
 	public function uploadFileToGoogle($source,$file_name){
-		$allowed_types = 'mkv|ogv|ogg|m4v|wmv|avi|mp3|flv|mp4|doc|docx|pdf|csv|ppt|pptx|jpeg|jpg|png|JPG|JPEG|PNG|rv|wav|mpeg|mpg|mov|avi|mp3|mp4|Svlc';
+		$allowed_types = 'mkv|ogv|ogg|m4v|wmv|avi|mp3|flv|mp4|doc|docx|pdf|csv|ppt|pptx|jpeg|jpg|png|JPG|JPEG|PNG|rv|wav|mpeg|mpg|mov|avi|mp3|mp4|Svlc|m4a';
 		$allowed_types = explode('|',$allowed_types);
 		$ext = pathinfo($source['name']);
 		$file_name = $file_name.".".$ext['extension'];

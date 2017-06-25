@@ -148,12 +148,40 @@
 					<li> <a href="<?php echo base_url()?>admin/reports/user_statistics"> <span>User Statistics</span> </a> </li>
 					</ul>
 					</li>
-					<li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span>  <i class="fa fa-flask" aria-hidden="true"></i> <span>Analytics</span> </a>
-					<li> <a href class="auto"> <span class="pull-right text-muted"> </span>  <i class="fa fa-flask" aria-hidden="true"></i> <span>Enquiry Messages</span> </a>
+					<li>
+						<a href class="auto">
+							<span class="pull-right text-muted">
+							<i class="fa fa-fw fa-angle-right text"></i>
+							<i class="fa fa-fw fa-angle-down text-active"></i>
+							</span>
+							<i class="fa fa-flask" aria-hidden="true"></i>
+							<span>Analytics</span>
+						</a>
 						<ul class="nav nav-sub dk">
-							<li> <a href="<?php echo base_url()?>admin/analytics/"> <span>Analytics</span> </a> </li>
+							<li>
+								<a href="<?php echo base_url()?>admin/analytics/">
+									<span>Analytics</span>
+								</a> 
+							</li>
 						</ul>
 					</li>
+					<!-- <li>
+						<a href class="auto">
+							<span class="pull-right text-muted">
+							<i class="fa fa-fw fa-angle-right text"></i>
+							<i class="fa fa-fw fa-angle-down text-active"></i>
+							</span>
+							<i class="fa fa-flask" aria-hidden="true"></i>
+							<span>Enquiry</span>
+						</a>
+						<ul class="nav nav-sub dk">
+							<li>
+								<a href="<?php //echo base_url()?>admin/">
+									<span>Enquiry</span>
+								</a> 
+							</li>
+						</ul>
+					</li> -->
 				</ul>
 			</nav>
 		</div>

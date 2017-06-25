@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($user);exit; ?>
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
 		<h1 class="m-n font-thin h3">Profile</h1>
@@ -9,7 +10,7 @@
 					<div class="panel-heading font-bold">Profile</div>
 					<div class="panel-body">
 						<?php $this->load->view('admin/common/messages');?>
-						<form class="bs-example form-horizontal" method="post">
+						<form class="bs-example form-horizontal" method="post" enctype="multipart/form-data">
 							<div class="col-md-12">
 								<div class="form-group">
 									<label class="col-lg-3 control-label">First Name</label>
@@ -27,6 +28,12 @@
 									<label class="col-lg-3 control-label">Phone</label>
 									<div class="col-lg-6">
 										<input type="text" class="form-control" name="phone" value="<?php echo $user->phone?>" placeholder="Phone">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-lg-3 control-label">Profile Picture</label>
+									<div class="col-lg-6">
+										<input type="file" class="form-control" name="picture">
 									</div>
 								</div>
 								<div class="form-group">

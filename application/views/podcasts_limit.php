@@ -85,7 +85,7 @@
 			 }?>
 		</div>
 		<div class="loader" style="margin: 0 auto;text-align: center;display: none">
-			<img src="<?php echo base_url()?>uploads/files/loading.gif" width="200" height="200">
+			<img src="<?php echo base_url()?>uploads/listing/loading.gif" width="200" height="200">
 		</div>
 		<?php //echo $links; ?>
 	</div>

@@ -45,7 +45,7 @@ class Analytics extends CI_Controller
 		$data['pagesTotal']		  		= $this->Analytics_model->getUrlReport($user_id, $content_id); 
 		$data['total_plays']		 	   = 0;
 		$data['channels_info']			 = $this->Users_model->getChannelsUserInfo();
-		//print_r($data['channels_info']); die();
+		//echo "<pre>"; print_r($data['channels_info']); die();
 		//print_r($date);die();
 		foreach( $data['data_analytics_totalPlays'] as $field=> $value){
 			$value['date'] = date('Y-m-d',strtotime($value['date'].' -1 months '));

@@ -126,7 +126,7 @@ $(document).ready(function(){
 			<?php }?>
 		</div>
 		<div class="loader" style="margin: 0 auto;text-align: center;display: none">
-			<img src="<?php echo base_url()?>uploads/files/loading.gif" width="200" height="200">
+			<img src="<?php echo base_url()?>uploads/listing/loading.gif" width="200" height="200">
 		</div>
 	</div>
 	<!-- / main --> 
@@ -157,7 +157,7 @@ $(window).scroll(function() {
 if ($(window).scrollTop() + $(window).height() == $(document).height()) {
     var value = parseInt(document.getElementById('limit_count').value, 10);
     var max_limit = $("#max_limit").val();
-    if (max_limit < value) {
+    if (max_limit <= value || value == 0 ) {
 		return false;
 	}
 	value = isNaN(value) ? 0 : value;
@@ -171,6 +171,9 @@ if ($(window).scrollTop() + $(window).height() == $(document).height()) {
 		        success: function (response) {
 		        	if (response != "") {
 		        		$(".loader").show().delay(2000).fadeOut();
+		        		setTimeout(function(){ 
+							$("#content").append(response);
+						}, 2000);
 		        	}
 		    		value = value+20;
 		    		if (max_limit<value) {
@@ -179,7 +182,6 @@ if ($(window).scrollTop() + $(window).height() == $(document).height()) {
 					else {
 						document.getElementById('limit_count').value = value;
 					}
-					$("#content").append(response);
 		        }
 		    });
 		}

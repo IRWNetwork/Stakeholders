@@ -96,7 +96,7 @@ $(document).ready(function(){
 								?>
 
 								<div id="form_fields" <?php if(!empty($card_number)) echo 'style="display: none"' ?> >
-									<div class="row">
+									<!-- <div class="row">
 										<div class="col-md-6">
 											<div class="form-group" for="expiration">
 												<span class="field-name">First Name</span>
@@ -111,7 +111,7 @@ $(document).ready(function(){
 												<div class="invalid-bottom-bar"></div>
 											</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="form-group" for="credit-card-number">
 										<span class="field-name">Card Number</span>
 										<input id="credit-card-number" name="credit-card-number" class="card-field form-control" inputmode="numeric" maxlength="16" placeholder="Card Number" autocomplete="off" type="tel">

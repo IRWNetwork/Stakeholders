@@ -14,15 +14,27 @@
 			</tr>
 			<tr>
 				<th>Background</th>
-				<td><img src="<?php echo base_url() . '/uploads/profile_pic/' . $user['monitization_background'] ?>" width="100" height="80" /> </td>
+				<td>
+					<object data="<?php echo base_url() . '/uploads/profile_pic/' . $user['monitization_background'] ?>" type="image/png" width="100" height="80">
+					   <img src="<?php echo base_url() . 'uploads/profile_pic/broken.jpg' ?>" width="100" height="80" />
+					</object>
+				</td>
 			</tr>
 			<tr>
 				<th>General Background</th>
-				<td><img src="<?php echo base_url() . '/uploads/profile_pic/' . $user['general_background']; ?>" width="100" height="80"  /> </td>
+				<td>
+					<object data="<?php echo base_url() . '/uploads/profile_pic/' . $user['general_background']; ?>" type="image/png" width="100" height="80">
+					   <img src="<?php echo base_url() . 'uploads/profile_pic/broken.jpg' ?>" width="100" height="80"  />
+					</object>
+				</td>
 			</tr>
 			<tr>
 				<th>Profile Picture</th>
-				<td><img src="<?php echo base_url() . '/uploads/profile_pic/' . $user['picture']?> width="100" height="80" /> </td>
+				<td>
+					<object data="<?php echo base_url() . '/uploads/profile_pic/' . $user['picture']?>" type="image/png" width="100" height="80">
+					   <img src="<?php echo base_url() . 'uploads/profile_pic/broken.jpg' ?>" width="100" height="80" />
+					</object>
+				</td>
 			</tr>
 			<tr>
 				<th>User Name</th>

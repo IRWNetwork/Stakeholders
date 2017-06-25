@@ -19,8 +19,8 @@
     
 </div>
 <div class="wrapper-md">
-	<?php if($channel_banner['banner1']){ ?>
-		<div><img src="<?php echo base_url()."uploads/profile_pic/".$channel_banner['banner1']?>" style="width:100%" /></div>
+	<?php if(isset($channel_banner['banner']) && $channel_banner['banner'] != ''){ ?>
+		<div><img src="<?php echo base_url()."uploads/profile_pic/".$channel_banner['banner']?>" style="width:100%" /></div>
 	<?php }?>
     <div style="background:#F00; padding:20px; color:#FFF; font-weight:bold; font-size:16px">
 		<div style="text-align:center"><img src="<?php echo base_url()?>assets/images/logo-old.png" style="width:150px" /></div>

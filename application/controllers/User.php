@@ -1179,7 +1179,9 @@ class User extends MY_Controller
         $this->data['page_heading'] 	= 'Upgrade Package';
         $this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","upgradepackage");
         //$this->init_braintree();
-
+        $channel_info   = $this->Users_model->getChannelSubscribeInfoByChannelId(42);
+        $irw_subs_price = $channel_info['channel_subscription_price'];
+        
         if($this->input->post()) {
             $user_id = $this->ion_auth->user()->row()->id;
 
@@ -1190,7 +1192,7 @@ class User extends MY_Controller
             initialize_Braintree();
 
             $result = Braintree_Transaction::sale(array(
-						"amount" => '1.99',
+						"amount" => $irw_subs_price,
 						"creditCard" => array(
 							"number" => $credit_card,
 							"cvv" 	=> $cvv,
@@ -1222,7 +1224,7 @@ class User extends MY_Controller
                     "user_id" 			 	=> $user_id,
                     "channel_id" 		  	=> 0,
                     "type" 					=> "subscription",
-                    "amount"			  	=> 1.99,
+                    "amount"			  	=> $irw_subs_price,
                     "date_of_charge" 	  	=> date("Y-m-d"),
                     "merchant_responce"  	=> $merchant_responce,
                     "txn_id"              	=> $txn_id,
@@ -1332,23 +1334,20 @@ class User extends MY_Controller
         }
         $user_row = $this->ion_auth->user()->row();
 
-        /*if($user_row->is_premium){
-         if($user_row->is_premium!='yes'){
-          redirect(base_url()."user/upgradepackage");
-         }
-        }
-        else{
-         redirect(base_url()."user/upgradepackage");
-        }*/
-
         $this->data['page_title']    = 'Subscrible Channel';
         $this->data['page_heading']  = 'Subscrible Channel';
-        //$this->init_braintree();
         $this->data['channelInfo']   = $this->Users_model->getChannelSubscribeInfoByChannelId($id);
         $this->data['bannerDetail']  = $this->Content_model->getBannerRowByField("page","channel_subscription");
         $this->data['alreadyBuy']    = $this->Users_model->checkAlreadyBuy($id);
 
-        $subs_price                  = $this->data['channelInfo']['channel_subscription_price'];
+        $subs_price = $this->data['channelInfo']['channel_subscription_price'];
+
+        $irw_percentage = $this->data['channelInfo']['irw_percentage'];
+        $irw_amount = ($subs_price * $this->data['channelInfo']['irw_percentage'])/100;
+        
+        $producer_royality_percentage = $this->data['channelInfo']['producer_royalty'];
+        $producer_royalty_amount = ($subs_price * $this->data['channelInfo']['producer_royalty'])/100;
+
         $this->data['officalInfo']   = $this->Users_model->getChannelSubscribeInfoByChannelId("42");
         $this->data['flag_div']      = false;
 		
@@ -1393,7 +1392,8 @@ class User extends MY_Controller
 			}
 			else{
 				$merchant_id = $this->Users_model->getProducerMerchantId($id);
-				$merchant_id = 'janesladders_instant_3q7cmdy4';
+                //echo "<pre>"; print_r($merchant_id);exit;
+				// $merchant_id = 'janesladders_instant_3q7cmdy4';
 				$irw_percentage = $this->data['channelInfo']['irw_percentage'];
 				$irw_share = ($this->data['channelInfo']['channel_subscription_price']*$irw_percentage)/100;
 				
@@ -1420,9 +1420,9 @@ class User extends MY_Controller
 						"amount" => number_format($subs_price,2),
 						"creditCard" => array(
 							"number" => $credit_card,
-							"cvv" => '123',
-							"expirationMonth" => '12',
-							"expirationYear" => '20'
+							"cvv" => $cvv,
+							"expirationMonth" => $epiration_month,
+							"expirationYear" => $epiration_year
 						),
 						'serviceFeeAmount' => number_format($irw_share,2),
 						"options" => array(
@@ -1446,32 +1446,53 @@ class User extends MY_Controller
 				if(isset($user_row->is_premium) && $user_row->is_premium!='yes' ){
                     //$next_recharge_date = getNextRechargeDate('month');
 
+                    $txn = $result->transaction;
+                    
+                    if ($txn->paymentInstrumentType == 'credit_card') {
+                        $braintree_token = $txn->creditCardDetails->token;
+                    }else if ($txn->paymentInstrumentType == 'paypal_account') {
+                        $braintree_token = $txn->paypalDetails->token;
+                    }
+
                     $data_update   = array(
                         "next_recharge_date"   	=> $next_recharge_date,
-                        "is_premium"    		=> "yes"
+                        "is_premium"    		=> "yes",
+                        'braintree_payment_token'   =>  $braintree_token
                     );
 
                     $array_payment_log = array(
                         "user_id"     		=> $user_id,
-                        "channel_id"     	=> "42",
+                        "channel_id"     	=> $id,
                         "type"     			=> "channel",
                         "amount"     		=> $this->data['officalInfo']['channel_subscription_price'],
                         "date_of_charge"    => date("Y-m-d"),
                         "merchant_responce" => json_encode($result),
+                        'merchant_account_id'   => $merchant_id,
+                        'producer_royality_percentage'  => $producer_royality_percentage,
+                        'producer_royality_amount'  =>  $producer_royalty_amount,
+                        'irw_percentage'    => $irw_percentage,
+                        'irw_amount'    =>  $irw_amount,
                         "status"     		=> "Complete"
                     );
 
 
                     $insert = array(
                         'user_id'             	=> $user_id,
-                        'channel_id'          	=> '42',
+                        'channel_id'          	=> $id,
                         'channel_name'        	=> $this->data['officalInfo']['channel_name'],
                         'amount'              	=> $this->data['officalInfo']['channel_subscription_price'],
                         'type'           		=> "monthly",
                         'next_recharge_date'  	=> $next_recharge_date,
                         'date'        			=> date('Y-m-d'),
+                        'merchant_account_id'   =>  $merchant_id,
+                        'producer_royality_percentage'  => $producer_royality_percentage,
+                        'producer_royality_amount'  =>  $producer_royalty_amount,
+                        'irw_percentage'    => $irw_percentage,
+                        'irw_amount'    =>  $irw_amount,
                         'status'     			=> 'active'
                     );
+
+                
 
                     $this->ion_auth->update($user_id,$data_update);
                     $this->Users_model->insertpaymentLogs($array_payment_log);
@@ -1487,6 +1508,11 @@ class User extends MY_Controller
                         "amount"     		=> $this->data['channelInfo']['channel_subscription_price'],
                         "date_of_charge"    => date("Y-m-d"),
                         "merchant_responce" => json_encode($result),
+                        'producer_royality_percentage'  => $producer_royality_percentage,
+                        'producer_royality_amount'  =>  $producer_royalty_amount,
+                        'irw_percentage'    => $irw_percentage,
+                        'irw_amount'    =>  $irw_amount,
+                        'merchant_account_id'   =>  $merchant_id,
                         "status"     		=> "Complete"
                     );
 
@@ -1498,9 +1524,27 @@ class User extends MY_Controller
                         'type'           	  => "monthly",
                         'next_recharge_date'  => $next_recharge_date,
                         'date'        		  => date('Y-m-d'),
+                        'merchant_account_id'   =>  $merchant_id,
+                        'producer_royality_percentage'  => $producer_royality_percentage,
+                        'producer_royality_amount'  =>  $producer_royalty_amount,
+                        'irw_percentage'    => $irw_percentage,
+                        'irw_amount'    =>  $irw_amount,
                         'status'     		  => 'active'
                     );
 
+                    $txn = $result->transaction;
+                    
+                    if ($txn->paymentInstrumentType == 'credit_card') {
+                        $braintree_token = $txn->creditCardDetails->token;
+                    }else if ($txn->paymentInstrumentType == 'paypal_account') {
+                        $braintree_token = $txn->paypalDetails->token;
+                    }
+
+                    $data_update   = array(
+                        'braintree_payment_token'   =>  $braintree_token
+                    );
+
+                    $this->ion_auth->update($user_id,$data_update);
                     $this->Users_model->insertpaymentLogs($array_payment_log);
                     $this->Users_model->insertChannelSubscriptionDetail($insert);
                 }

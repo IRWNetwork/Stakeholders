@@ -1,3 +1,4 @@
+<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
 <div class="modal-dialog">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 	<div class="modal-content">
@@ -30,7 +31,7 @@
 								<a href="javascript:void(0)" onclick="window.open('http://www.facebook.com/share.php?u=<?php echo $url?>&title=<?php echo $dataRow['title']?>&description=<?php echo substr($dataRow['description'],0,250)?>&picture=<?php echo base_url()?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>', 'sharer', 'toolbar=0,status=0,width=548,height=325')"> <button type="submit" class="btn">Facebook</button></a>
 							</li>
 							<li>
-								<a href="javascript:void(0)" onclick="window.open('http://twitter.com/home?status=<?php echo $dataRow['title']; ?>+<?php echo $url?>', 'sharer', 'toolbar=0,status=0,width=548,height=325')"><button type="submit" class="btn">Twitter</button></a>
+								<a class="btn" href="http://twitter.com/intent/tweet?text=<?php echo $dataRow['title']; ?>+<?php echo $url?>" >Twitter</a>
 							</li>
                             <li>
 								<a href="javascript:void(0)" onclick="show_code();" > <button type="submit" class="btn">Embeded</button></a>

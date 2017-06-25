@@ -170,7 +170,7 @@ $(window).scroll(function() {
 	if ($(window).scrollTop() + $(window).height() == $(document).height()) {
 		var value = parseInt(document.getElementById('limit_count').value, 10);
 		var max_limit = $("#max_limit").val();
-		if (max_limit < value) {
+		if (max_limit <= value || value == 0 ) {
 			return false;
 		}
 			value = isNaN(value) ? 0 : value;
@@ -187,6 +187,9 @@ $(window).scroll(function() {
 					success: function (response) {
 						if (response != "") {
 							$(".loader").show().delay(2000).fadeOut();
+							setTimeout(function(){ 
+								$("#content").append(response);
+							}, 2000);
 						}
 						value = value+20;
 						if (max_limit<value) {
@@ -195,7 +198,6 @@ $(window).scroll(function() {
 						else {
 							document.getElementById('limit_count').value = value;
 						}
-						$("#content").append(response);
 					}
 				});
 			}

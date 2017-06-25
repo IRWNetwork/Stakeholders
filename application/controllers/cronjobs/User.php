@@ -54,72 +54,37 @@ class User extends MY_Controller
 	}
 
 	function renewPackages(){
-		//echo __FUNCTION__;
-		//die();
-
-		/*Braintree_Configuration::environment("sandbox");
-		Braintree_Configuration::merchantId("cnh6d5kt9f839mfh");
-		Braintree_Configuration::publicKey("cggnwvrvz44nrmfh");
-		Braintree_Configuration::privateKey("c0cc81d6242af896bfef79f19e004538");*/
 		
 		$packages = $this->Users_model->getCurrentRenewPakcages();
 
-		/*print_r($packages);
-
-		die();*/
+		
 		foreach($packages as $row){
 
-			echo '<pre>';
+			initialize_Braintree();
+			
 			$amount 		= $row->amount;
 			$userRow = $this->ion_auth->user($row->user_id)->row();
-
-			/*echo '<br>';
-			echo $userRow->first_name;
-			echo '<br>';
-
-			echo $userRow->last_name;
-			echo '<br>';
-
-			print_r($userRow);
-
-			die();*/
-			/*$braintreeToken = $userRow->braintree_payment_token;
-			$invoice_id 	= $this->Users_model->getNextUserIDForCurrentLogs();
-			$result = Braintree_Transaction::sale(array(
-				'orderId' => $invoice_id,
-				'amount' => $amount,
-				'paymentMethodToken' => $braintreeToken
-			));
-			$merchant_responce = json_encode($result);*/
-
-
-			$this->url_use = 'https://apitest.authorize.net/xml/v1/request.api';
 			$user_id = $this->ion_auth->get_user_id();
-			$this->login    = '6RG5b3yk9V';
-			$this->transkey = '6VPpb7H5uGz7G92u';
-			$has_profile = $this->Authorize_model->has_profile($user_id);
-			$this->profileId =  $has_profile[0]->profile_id;
-			$this->setParameter('customerProfileId', $this->profileId);
-			$has_payment_profile = $this->Authorize_model->has_payment_profile($this->profileId);
-			$this->setParameter('customerPaymentProfileId', $has_payment_profile[0]->payment_profile_id);
-			$this->getCustomerPaymentProfile();
-			$credit_card_number = $this->xml_rezponse->paymentProfile->payment->creditCard->cardNumber;
-			$has_shipping_address = $this->Authorize_model->has_shipping_address($has_profile[0]->profile_id);
+			$braintree_payment_token = $row->braintree_payment_token;
 
-			@$this->setParameter('customerShippingAddressId', $has_shipping_address[0]->shipping_address_id);
-			@$this->setParameter('cardCode', $credit_card_number);
-			@$this->setParameter('customerPaymentProfileId', $has_payment_profile[0]->payment_profile_id);
-			@$this->setParameter('refId', $this->paymentProfileId);
-			//@$this->setParameter('cardCode', $cvv);
-			@$this->setParameter('amount', $row->amount);
-			///create transaction
-			$this->ChargeCustomerProfile();
+			$merchantAccountId= $this->Users_model->getBraintreeAccountId($row->user_id);
+			//echo $merchantAccountId = $userRow->merchant_account_id;exit;
+			$amount = $row->amount;
+			$serviceFeeAmount = $row->irw_amount;
 
+			$result = Braintree_Transaction::sale(array(
+			 'merchantAccountId' => $merchantAccountId,
+			 'amount' => $amount,
+			 'paymentMethodToken' => $braintree_payment_token,
+			 'serviceFeeAmount' => $serviceFeeAmount
+			));
 
-
+			//echo "<pre>"; print_r($result->transaction);exit;
+			//echo "<pre>"; print_r($result);exit;
+			
 			$merchant_responce = $this->response_use;
 
-			if ($this->resultCode == "Ok") {
+			if ($result->success) {
 				
 
 				if( date('d') == 31 || (date('m') == 1 && date('d') > 28)){
@@ -130,14 +95,14 @@ class User extends MY_Controller
 				
 				$next_recharge_date = date('Y-m-d', $date);
 
-				$txnId = $this->results['transId'];
+				$txnId = $result->transaction->id;
 				$array_payment_log = array(
 						"user_id" 			 => $row->user_id,
 						"channel_id" 		  => $row->channel_id,
 						"type" 				=> "channel",
 						"amount"			  => $row->amount,
 						"date_of_charge" 	  => date("Y-m-d"),
-						"merchant_responce"   => $merchant_responce,
+						"merchant_responce"   => json_encode($result),
 					    "txn_id"              => $txnId,
 						"status"			  => "Complete"
 					);
@@ -164,7 +129,7 @@ class User extends MY_Controller
 						"charge_date" 	=> date("m/d/Y"),
 						"email"     	=> $userRow->email
 					);
-				$result = $this->Emailtemplates_model->sendMail('update_channel',$arr);
+				$result = $this->Emailtemplates_model->sendMail('update_package',$arr);
 			}else{
 				$array_payment_log = array(
 						"user_id" 			 => $row->user_id,
@@ -172,7 +137,7 @@ class User extends MY_Controller
 						"type" 				=> "channel",
 						"amount"			  => $row->amount,
 						"date_of_charge" 	  => date("Y-m-d"),
-						"merchant_responce"   => $merchant_responce,
+						"merchant_responce"   => json_encode($result),
 						"status"			  => "pending"
 					);
 				$this->Users_model->insertpaymentLogs($array_payment_log);

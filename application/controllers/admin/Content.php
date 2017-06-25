@@ -223,8 +223,7 @@ class Content extends CI_Controller
                 
 				$file_name 		= "";
 				$picture_name	= "";
-				// if ($_FILES['file']['tmp_name']) {
-				// 	//echo "<pre>"; print_r($_FILES['file']);exit;
+				//echo "<pre>"; print_r($_FILES['file']);exit;
 				// 	$ext = explode('.',$_FILES['file']['name']);
 				// 	$ext = $ext[1];
 				// 	$file_name 	= 'file_' . time().'.'.$ext;
@@ -239,7 +238,13 @@ class Content extends CI_Controller
 					$file_name 	= 'file_' . time().'.'.$ext;
 					$source   	= $_FILES['file'];
 					$file_name 	= $this->Common_model->uploadFileToGoogle($source,$file_name);
-					$data['file_url'] = $file_name;
+					if ($file_name) {
+
+						$data['file_url'] = $file_name;
+					}
+					else {
+						$this->session->set_flashdata('error', 'This File type not allowed');
+					}
 				}
 				
 				if($_FILES['picture']['tmp_name']){

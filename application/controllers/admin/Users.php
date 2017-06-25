@@ -45,6 +45,9 @@ class Users extends CI_Controller
 				
 				if($this->ion_auth->login($identity,$password)) {
 					$user = $this->ion_auth->user()->row();
+					//echo '<pre>';print_r($user);exit;
+					$this->session->set_userdata('user_name', $user->first_name." ".$user->last_name);
+					$this->session->set_userdata('profile_picture', $user->picture);
 					$this->session->set_flashdata(
 							'uname',
 							$user->first_name." ".$user->last_name
@@ -427,19 +430,28 @@ class Users extends CI_Controller
 				
 				$user_id = $this->ion_auth->user()->row()->id;
 				// finally change the password
-				
+				if(isset($_FILES['picture']) and $_FILES['picture']['name']!=''){
+                    $profile_pic = "profile_pic".time().str_replace(' ','_',$_FILES['picture']['name']);
+                    $profile_pic = $this->Common_model->uploadImageByFieldName('picture',$profile_pic, 'uploads/profile_pic/');
+                    if($profile_pic != true) {
+                        $this->session->set_flashdata('error', 'Some error picture not upload');
+                    }else{
+                        $data['picture'] = $profile_pic;
+                    }
+                }
 				$data = array(
 							"first_name" 	=> $this->input->post('first_name'),
 							"last_name" 	=> $this->input->post('last_name'),
-							"phone" 		=> $this->input->post('phone')
+							"phone" 		=> $this->input->post('phone'),
+							"picture" 		=> $profile_pic
 						);
-			
 				$change = $this->ion_auth->update($user_id, $data);
 
 				if ($change)
 				{
 					//if the password was successfully changed
 					$this->session->set_flashdata('success', "Updated successfully");
+					$this->session->set_userdata('profile_picture', $profile_pic);
 					//$this->logout();
 					redirect(site_url('admin/users/profile'), 'refresh');
 				}

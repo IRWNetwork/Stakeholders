@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($_SESSION);exit; ?>
 <header id="header" class="app-header navbar" role="menu"> 
     <!-- navbar header -->
     <div class="navbar-header bg-dark">
@@ -25,7 +26,10 @@
                     <?php } else if($this->ion_auth->user()->row()->id==15){  ?>
  					<img src="<?php echo base_url()?>assets/images/Eric.jpg" alt="..."> <i class="on md b-white bottom"></i> </span> <span class="hidden-sm hidden-md">Eric</span> <b class="caret"></b> </a> 
 					<?php }else{?>
-                	<img src="<?php echo base_url()?>assets/images/a0.jpg" alt="..."> <i class="on md b-white bottom"></i> </span> <span class="hidden-sm hidden-md">M.G. Dockery</span> <b class="caret"></b> </a> 
+                	<object data="<?php echo base_url().'uploads/profile_pic/'.$this->session->userdata('profile_picture'); ?>" type="image/png" width="50" height="40">
+                       <img src="<?php echo base_url() . 'assets/images/Eric.jpg' ?>" width="50" height="40" />
+                    </object>
+                    <i class="on md b-white bottom"></i> </span> <span class="hidden-sm hidden-md"><?php echo ($_SESSION['user_name'] ? $_SESSION['user_name'] : ''); ?></span> <b class="caret"></b> </a> 
                     <?php } ?>
                 <!-- dropdown -->
                 <ul class="dropdown-menu animated fadeInRight w">

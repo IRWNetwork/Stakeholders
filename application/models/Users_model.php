@@ -874,6 +874,8 @@ group by users.channel_name order by users.sorting desc");
 		$this->db->select('braintree_merchant_info.*');
 		$this->db->where('braintree_merchant_info.producer_id',$id);
 		$query = $this->db->get('braintree_merchant_info');
+		// echo $this->db->last_query();
+		// die();
 		if($query->num_rows()>0){
 			$row = $query->row();
 			return $row->merchant_account_number;	
@@ -1089,6 +1091,15 @@ group by users.channel_name order by users.sorting desc");
 		}
 		return array();
 	}
+
+	public function  getBraintreeAccountId($producer_id) {
+		$query  = "SELECT *  FROM `braintree_merchant_info` WHERE `producer_id` = ".$producer_id;
+		$result = $this->db->query($query);
+		$row    = $result->row();
+		$braintree_merchant = $row->merchant_account_number;
+		return $braintree_merchant;
+		//echo "<pre>"; print_r($row);die();
+	}
 	
 	public function insertpaymentLogs($data){
 		$this->db->insert('payment_logs',$data);
@@ -1166,11 +1177,11 @@ group by users.channel_name order by users.sorting desc");
 	}
 	
 	public function getChannelsUserInfo(){
-		$this->db->select('id, channel_name');
+		$this->db->select('id, channel_name, banner');
 		$this->db->where('channel_name <>','');
 		$query = $this->db->get('users');
-		//echo $this->db->last_query();
-		//die();
+		// echo $this->db->last_query();
+		// die();
 		if($query->num_rows()>0){
 			$row = $query->result_array();
 			return $row;	
@@ -1200,8 +1211,17 @@ group by users.channel_name order by users.sorting desc");
 	
 	public function getCurrentRenewPakcages($user_id=''){
 		$d = date("Y-m-d");
-		$this->db->where("next_recharge_date",$d);
+		// $this->db->where("next_recharge_date",$d);
+		// $query = $this->db->get('channel_subscription');
+
+		$this->db->select('channel_subscription.*');
+		$this->db->select('users.braintree_payment_token');
+		$this->db->join('users', 'channel_subscription.user_id = users.id');
+		$this->db->where("channel_subscription.next_recharge_date",$d);
 		$query = $this->db->get('channel_subscription');
+		// echo $this->db->last_query();
+		// die();
+
 		if($query->num_rows()){
 			$row = $query->result();
 			return $row;
