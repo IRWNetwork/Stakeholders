@@ -20,6 +20,7 @@ if (isset($_COOKIE['customer_logout'])) {
 
 }
 ?>
+<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
 <script type="text/javascript">
 function loadRssFeed(id){
 	$.post("<?php echo base_url()?>home/rss_feeds?id="+id,function(data){
@@ -31,6 +32,14 @@ $(document).ready(function(){
 		pager: false,
 		auto: true,
 		pause: 9000
+	});
+
+	$(".smallText").click(function () {
+		$(".dropdown-menu").css("display", "none");
+	});
+
+	$(".dropdown-toggle").click(function () {
+		$(".dropdown-menu").css("display", "block");
 	});
 });
 </script>
@@ -56,7 +65,7 @@ $(document).ready(function(){
          </div>
 		<?php } ?>
 
-		<!----start----->
+		<!--start -->
 		<div class="row row-sm">
 
 			<?php

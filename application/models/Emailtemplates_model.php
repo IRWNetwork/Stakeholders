@@ -134,14 +134,16 @@
 				}
 			}
 			
-			$header="From: $from_name <$from_email>\r\n";
-			$header.="Content-type:text/html";
+			$header = 'MIME-Version: 1.0' . "\r\n";
+			$header.="Content-type: text/html; charset=iso-8859-1\r\n";
+			$header.='From: $from_name <$from_email>\r\n';
 			
-			if($_SERVER['HTTP_HOST']=='localhost'){
-				$ok=true;
-			}else{				
-				$ok=mail($arr['email'],$subject,$message,$header);
-			}
+			// if($_SERVER['HTTP_HOST']=='localhost'){
+			// 	$ok=true;
+			// }else{		
+			// echo 'else';exit;
+				mail($arr['email'],$subject,$message,$header);
+			//}
 			$ok=1;
 			if($ok=='1'){
 				$data = array(

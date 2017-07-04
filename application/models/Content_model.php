@@ -236,7 +236,8 @@ class Content_model extends CI_Model
 	public function getAllData($data,$start,$limit,$key=''){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
-		$where = "  1=1 ";	
+		//$where = "  1=1 ";
+		$where = "  1=1 and is_featured !='yes'";
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}

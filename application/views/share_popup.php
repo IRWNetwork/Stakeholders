@@ -1,4 +1,3 @@
-<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
 <div class="modal-dialog">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 	<div class="modal-content">
@@ -28,7 +27,7 @@
 						<input type="text" id="popup_textbox" value="<?php echo $url;?>" placeholder="<?php echo $url;?>" class="share-dialog__copiable">
 						<ul class="link-holder">
 							<li>
-								<a href="javascript:void(0)" onclick="window.open('http://www.facebook.com/share.php?u=<?php echo $url?>&title=<?php echo $dataRow['title']?>&description=<?php echo substr($dataRow['description'],0,250)?>&picture=<?php echo base_url()?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>', 'sharer', 'toolbar=0,status=0,width=548,height=325')"> <button type="submit" class="btn">Facebook</button></a>
+								<a href="javascript:void(0)" onclick='window.open("http://www.facebook.com/share.php?u=<?php echo $url?>&title=<?php echo str_replace("'", "", $dataRow['title']);?>&picture=<?php echo base_url()?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>", "sharer", "toolbar=0,status=0,width=548,height=325")'> <button type="submit" class="btn">Facebook</button></a>
 							</li>
 							<li>
 								<a class="btn" href="http://twitter.com/intent/tweet?text=<?php echo $dataRow['title']; ?>+<?php echo $url?>" >Twitter</a>
@@ -60,5 +59,28 @@
 
 $(".close").on("click", function(){
     $("#share-pop").css("display", "none");
+});
+</script>
+<script>
+  window.fbAsyncInit = function(){
+FB.init({
+    appId: '114379515845260', status: true, cookie: true, xfbml: true }); 
+};
+(function(d, debug){var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+    if(d.getElementById(id)) {return;}
+    js = d.createElement('script'); js.id = id; 
+    js.async = true;js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+    ref.parentNode.insertBefore(js, ref);}(document, /*debug*/ false));
+function postToFeed(title, desc, url, image){
+var obj = {method: 'feed',link: url, picture: image,name: title,description: desc};
+function callback(response){}
+FB.ui(obj, callback);
+}
+
+  $('.btnShare').click(function(){
+elem = $(this);
+postToFeed(elem.attr('data-title'), elem.attr('data-desc'), elem.attr('my-href'), elem.attr('data-image'));
+
+return false;
 });
 </script>

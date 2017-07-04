@@ -118,7 +118,7 @@ class Home extends MY_Controller
 			echo $this->load->view('main',$this->data,TRUE);
 		}
 		else {
-			$parser['content']		=  $this->load->view('main',$this->data,TRUE);
+			$parser['content'] = $this->load->view('main',$this->data,TRUE);
         	$this->parser->parse('template', $parser);
 		}
 	}
