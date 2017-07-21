@@ -880,7 +880,19 @@ group by users.channel_name order by users.sorting desc");
 			$row = $query->row();
 			return $row->merchant_account_number;	
 		}
-		return 30; //by default
+		return ''; //by default
+	}
+	
+	public function getStripeProducerAccountID($id){
+		$this->db->where('id',$id);
+		$query = $this->db->get('users');
+		// echo $this->db->last_query();
+		// die();
+		if($query->num_rows()>0){
+			$row = $query->row();
+			return $row->stripe_user_id;	
+		}
+		return ''; //by default
 	}
 
     
@@ -920,7 +932,9 @@ group by users.channel_name order by users.sorting desc");
 		if (isset($key['type']) && $key['type']!='') {
 			$this->db->where('users_groups.group_id', $key['type']);
 		}
-		$this->db->where('users.is_approved', 1);
+		if($key['type']==3){
+			$this->db->where('users.is_approved', 1);
+		}
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();die;
 		if($query->num_rows())
@@ -998,7 +1012,10 @@ group by users.channel_name order by users.sorting desc");
 			$this->db->join('users_groups', 'users_groups.user_id = users.id');
 			$this->db->where('users_groups.group_id', $data['type']);
 		}
-		$this->db->where('users.is_approved', 1);
+		if (isset($data['type']) && $data['type'] == '3') {
+			$this->db->where('users.is_approved', 1);
+		}
+		
 		$this->db->from('users');
 		$query  =  $this->db->get();
 		//echo $this->db->last_query();die;

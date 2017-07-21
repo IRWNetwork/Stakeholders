@@ -58,7 +58,7 @@ label { line-height: 43px; font-size:20px;padding-right:20px; color:#000 !import
                                     <div class="form-group">
                                         <label for="message" class="col-lg-3 control-label">Birthdate</label>
                                         <div class="col-lg-6">
-                                            <input type="text" name="birth_day" id="show_date" class="form-control" value="<?php if (isset($_REQUEST['birth_day'])) {echo $_REQUEST['birth_day'];} else {echo $row['birth_day'];}?>" />
+                                            <input type="text" name="birth_day" id="show_date" class="form-control" placeholder="YYYY-mm-dd" value="<?php if (isset($_REQUEST['birth_day'])) {echo $_REQUEST['birth_day'];} else {echo $row['birth_day'];}?>" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -73,12 +73,12 @@ label { line-height: 43px; font-size:20px;padding-right:20px; color:#000 !import
                                            <input type="text" name="buss_mobile" class="form-control" value="<?php if (isset($_REQUEST['buss_mobile'])) {echo $_REQUEST['buss_mobile'];} else {echo $row['buss_mobile'];}?>" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <!--<div class="form-group">
                                         <label for="message" class="col-lg-3 control-label">SSN</label>
                                         <div class="col-lg-6">
                                            <input type="text" name="ssn" class="form-control" placeholder="XXX-XXX-XXXX" value="<?php if (isset($_REQUEST['ssn'])) {echo $_REQUEST['ssn'];} ?>" />
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="form-group">
                                         <label for="message" class="col-lg-3 control-label">Street Address</label>
                                         <div class="col-lg-6">
@@ -171,13 +171,13 @@ label { line-height: 43px; font-size:20px;padding-right:20px; color:#000 !import
                                 <div class="form-group">
                                     <label for="message" class="col-lg-3 control-label">Account Number</label>
                                     <div class="col-lg-6">
-                                       <input type="text" name="buss_acc_num" class="form-control" value="<?php if (isset($_REQUEST['buss_acc_num'])) {echo $_REQUEST['buss_acc_num'];} ?>" />
+                                       <input type="text" name="buss_acc_num" class="form-control" placeholder="1123581321" value="<?php if (isset($_REQUEST['buss_acc_num'])) {echo $_REQUEST['buss_acc_num'];} ?>" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="message" class="col-lg-3 control-label">Routing Number</label>
                                     <div class="col-lg-6">
-                                       <input type="text" name="buss_routing_num" class="form-control" value="<?php if (isset($_REQUEST['buss_routing_num'])) {echo $_REQUEST['buss_routing_num'];} ?>" />
+                                       <input type="text" name="buss_routing_num" class="form-control" placeholder="071101307" value="<?php if (isset($_REQUEST['buss_routing_num'])) {echo $_REQUEST['buss_routing_num'];} ?>" />
                                     </div>
                                 </div>
                                     
@@ -299,6 +299,7 @@ label { line-height: 43px; font-size:20px;padding-right:20px; color:#000 !import
 		}
 	}
 	function show_business() {
+		
 		var n=$('.business').is(':checked');
 		if (n) {
 			$('.business_account').css("display", "block");
@@ -311,6 +312,8 @@ label { line-height: 43px; font-size:20px;padding-right:20px; color:#000 !import
 			$('.business_account').css("display", "none");
 		}
 	}
+	show_individual();
+	show_business();
 </script>
 <script type="text/javascript">
 $(document).ready(function(){

@@ -53,19 +53,42 @@ function getPrepaidNextRechargeDate($add_month){
 
 function init_Braintree(){
 	require_once APPPATH."/third_party/braintree-php/lib/Braintree.php";
-	Braintree_Configuration::environment("sandbox");
+	/*Braintree_Configuration::environment("sandbox");
 	Braintree_Configuration::merchantId("cnh6d5kt9f839mfh");
 	Braintree_Configuration::publicKey("cggnwvrvz44nrmfh");
 	Braintree_Configuration::privateKey("c0cc81d6242af896bfef79f19e004538");
+	return Braintree_ClientToken::generate();*/
+	
+	Braintree_Configuration::environment("production");
+	Braintree_Configuration::merchantId("hs5r3g5k94gcyp8h");
+	Braintree_Configuration::publicKey("4q7q675rsbnpfsz6");
+	Braintree_Configuration::privateKey("c3dc5930abfd64ee0d6a0160fa372e68");
 	return Braintree_ClientToken::generate();
 }
 
 function initialize_Braintree(){
 	require_once APPPATH."/third_party/braintree-php/lib/Braintree.php";
-	Braintree_Configuration::environment("sandbox");
-	Braintree_Configuration::merchantId("cnh6d5kt9f839mfh");
-	Braintree_Configuration::publicKey("cggnwvrvz44nrmfh");
-	Braintree_Configuration::privateKey("c0cc81d6242af896bfef79f19e004538");
+	Braintree_Configuration::environment("production");
+	Braintree_Configuration::merchantId("hs5r3g5k94gcyp8h");
+	Braintree_Configuration::publicKey("4q7q675rsbnpfsz6");
+	Braintree_Configuration::privateKey("c3dc5930abfd64ee0d6a0160fa372e68");
+	return Braintree_ClientToken::generate();
+}
+
+function initialize_Stripe(){
+	
+	require_once(APPPATH.'/third_party/vendor/autoload.php');
+	
+	$stripe = array(
+	  "secret_key"      => "37tP6XmxuWPM7eTEDyA88uW2SO73pfuu", //"gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ",
+	  "publishable_key" => "pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E" //"pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A"
+	);
+	
+	\Stripe\Stripe::setApiKey($stripe['secret_key']);
+	define('CLIENT_ID', 'ca_B33H2b60dEqQu5cpCZ8JRABujzZC68O3');//'ca_B33HB66WwwwMj3t7q5FPcldJI4BomTY5');
+	define('API_KEY', '37tP6XmxuWPM7eTEDyA88uW2SO73pfuu');//'gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ');
+	define('TOKEN_URI', 'https://connect.stripe.com/oauth/token');
+	define('AUTHORIZE_URI', 'https://connect.stripe.com/oauth/authorize');
 }
 
 function get_random_auth_code()

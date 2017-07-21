@@ -164,6 +164,13 @@
 								</a> 
 							</li>
 						</ul>
+						<ul class="nav nav-sub dk">
+							<li>
+								<a href="<?php echo base_url()?>admin/analytics/listAnalytics">
+									<span>List</span>
+								</a> 
+							</li>
+						</ul>
 					</li>
 					<!-- <li>
 						<a href class="auto">

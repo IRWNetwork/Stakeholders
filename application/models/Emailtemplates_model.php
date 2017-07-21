@@ -134,19 +134,41 @@
 				}
 			}
 			
-			$header = 'MIME-Version: 1.0' . "\r\n";
-			$header.="Content-type: text/html; charset=iso-8859-1\r\n";
-			$header.='From: $from_name <$from_email>\r\n';
+			//$header = 'MIME-Version: 1.0' . "\r\n";
+			//$header.="Content-type: text/html; charset=iso-8859-1\r\n";
+			//$header.='From: $from_name <$from_email>\r\n';
 			
 			// if($_SERVER['HTTP_HOST']=='localhost'){
 			// 	$ok=true;
 			// }else{		
 			// echo 'else';exit;
-				mail($arr['email'],$subject,$message,$header);
+				//mail($arr['email'],$subject,$message,$header);
 			//}
-			$ok=1;
-			if($ok=='1'){
-				$data = array(
+			
+			
+			
+			$this->load->library('email');
+
+		//if($this->config->item('protocol')=="smtp" or true)
+{			$config['protocol'] = 'smtp';
+			$config['smtp_crypto'] = 'tls'; 
+			$config['smtp_host'] = 'smtp.gmail.com';
+			$config['smtp_user'] ='cs@irwnetwork.com';
+			$config['smtp_pass'] = '$;cWTqbHCLf[q6J';
+			$config['smtp_port'] = '587';
+			$config['smtp_timeout'] = '60';
+			$config['mailtype'] = "html";
+			$config['starttls']  = FALSE;
+			 $config['newline']  = "\r\n";
+			$this->email->initialize($config);
+		}
+		$fromemail='cs@irwnetwork.com';//$from_email
+		$this->email->to($arr['email']);//
+		$this->email->from($fromemail, $from_name);
+		$this->email->subject($subject);
+		$this->email->message($message);
+		if($this->email->send()){
+			$data = array(
 					"name" => $template_name ,
 					"from_name" => $from_name ,
 					"from_email" => $from_email,
@@ -157,10 +179,20 @@
 				);
 				$this->saveRowCustom($data,'email_logs');
 				return true;
-			}
-			else{
-				return false;
-			}
+		}
+		else{
+			return false;
+		} 
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 		
 	}

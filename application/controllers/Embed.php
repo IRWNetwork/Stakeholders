@@ -74,10 +74,10 @@ class Embed extends MY_Controller
 			$info = $this->ipinfo->getCity($userIP);
 			$infoArr = json_decode($info);
 			$data = array();
-			$data['ip'] 			= $infoArr->ipAddress;
-			$data['country']   	   = $infoArr->countryName; 
-			$data['region_name']   = $infoArr->regionName;
-			$data['city']   		  = $infoArr->cityName;
+			$data['ip'] 			= @$infoArr->ipAddress;
+			$data['country']   	   = @$infoArr->countryName; 
+			$data['region_name']   = @$infoArr->regionName;
+			$data['city']   		  = @$infoArr->cityName;
 			$data['broswer']	   = $browser;
 			$data['referral_path'] = $url;
 			$data['postal_code']   = $infoArr->countryCode;
@@ -94,10 +94,43 @@ class Embed extends MY_Controller
 			echo "404 Page Not Found";
 			die();
 		}
+		$this->data['id'] = $id;
 		//echo "<pre>"; print_r($content_row);die();
 		$this->data['dataRow']		= $content_row;
 		$this->data['page_heading']   = $content_row['title'];
 		$parser['content']			=  $this->load->view('embed_code_view',$this->data);
+	}
+
+	public function savePlayAnalytics($id) {
+		if ($id>0) {
+			$content_row = $this->Content_model->getRow($id);
+			$userIP  = $this->ipinfo->getIPAddress();
+			$browser = $this->ipinfo->getUserAgent();
+			$url = $this->ipinfo->getURL();
+			$info = $this->ipinfo->getCity($userIP);
+			$infoArr = json_decode($info);
+			$data = array();
+			$data['ip'] 			= $infoArr->ipAddress;
+			$data['country']   	   = $infoArr->countryName; 
+			$data['region_name']   = $infoArr->regionName;
+			$data['city']   		  = $infoArr->cityName;
+			$data['broswer']	   = $browser;
+			$data['referral_path'] = $url;
+			$data['postal_code']   = $infoArr->countryCode;
+			$data['source']		= "";
+			$data['type']		  = $content_row['type'];
+			$data['type_id']	   = $content_row['id'];
+			$data['episode']	   = $content_row['title'];
+			$data['author_id']	 = $content_row['user_id'];
+			$data['date']		  = date("Y-m-d");
+			$data['not_embed']		  = 1;
+			$this->Analytics_model->saveAnalytics($data);
+
+		}
+		else {
+			echo "404 Page Not Found";
+			die();
+		}
 	}
 	public function iframe(){
 		$this->load->view('test',NULL);

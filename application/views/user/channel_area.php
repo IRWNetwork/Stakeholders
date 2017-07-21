@@ -64,7 +64,7 @@ $(document).ready(function(){
                                  </a>
                             </div>
                             <div class="col-xs-7">
-                                 <?php $subscribe_text = "Subscribe Now"; ?>
+                                 <?php $subscribe_text = "Free Till 31 July";//"Subscribe Now"; ?>
                                  <?php $a_event        =  base_url() . "user/channelsubscription/".$list['id'];?>
                                  <?php $onclick_log    =  "";?>
                             	 <?php 
@@ -81,23 +81,25 @@ $(document).ready(function(){
 
                                  ?>
 
-                                <?php if($payment_gateway == 'yes'){ ?>
+                                <?php /*if($payment_gateway == 'yes'){ ?>
 
                                         <?php if($this->Common_model->checkAlreadyBuy($list['id'])){ ?>
                                         <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
                                             <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                         </a>
                                         <?php }else{ ?>
-                                        <a href="<?php echo base_url()."user/channelsubscription/".$list['id']; ?>">
+                                        <?php //echo base_url()."user/channelsubscription/".$list['id']; ?>
+                                        <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
                                             <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                         </a>
                                         <?php } ?>
 
                                 <?php }else{ ?>
+	                                <?php //echo base_url()."user/channeldescription/".$list['id']; ?>
                                     <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
                                         <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                     </a>
-                                <?php } ?>
+                                <?php }*/ ?>
 
                                 <h3 style=" display:none; color:#fff;">$<?php echo $list['channel_subscription_price']; ?> / mo</h3>
                                 <h3 style=" color:#fff;">Content Free Until Launch!<!--$--><?php //echo $list['channel_subscription_price']; ?></h3>

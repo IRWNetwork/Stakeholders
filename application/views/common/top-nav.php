@@ -98,8 +98,12 @@
                             <li> <a href="<?php echo base_url()?>content">Your Content</a> </li>
                             <li> <a href="<?php echo base_url()?>content/addcontent">Add Content</a> </li>
                             <li><a href="<?php echo base_url()?>stats/Analytics">Analytics</a></li>
-                            <li> <a href="<?php echo base_url()?>user/payment_report">Royalities</a> </li>
-                            <li> <a href="<?php echo base_url()?>user/bankingInformation">Banking information</a></li>
+                            <!--<li> <a href="<?php echo base_url()?>user/payment_report">Royalities</a> </li>-->
+
+                            <li> <a href="<?php echo base_url()?>stats/analytics_list">Analytics List</a></li>
+
+                            <!--<li> <a href="<?php echo base_url()?>user/bankingInformation">Banking information</a></li>-->
+                            <li> <a href="<?php echo base_url()?>user/connectStrip">Connect Stripe for payment</a></li>
                         <?php } ?>
 
 						<?php if($this->ion_auth->in_group(3) && $this->ion_auth->get_users_groups()->row()->id == 2 && $this->session->userdata('is_approved') == 1){ ?>

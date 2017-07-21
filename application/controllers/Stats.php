@@ -64,6 +64,20 @@ class Stats extends CI_Controller
 		//$parser['content'] = $this->load->view('stats/stats',$data,TRUE);
 	    //$this->parser->parse('template', $parser);	
 	}
+
+	public function analytics_list() {
+		$data['page_title']     = 'Analytics List';
+		$data['page_heading']   = 'Analytics List';
+
+		$user_id = $this->ion_auth->user()->row()->id;
+		$channel_name = $this->Users_model->getChannelNameById($user_id);
+		
+		$data['analytics_totalPlays'] = $this->Analytics_model->getTotalByDayOfProducer($user_id);
+		//echo "<pre>"; print_r($data['records']);exit;
+
+		$parser['content'] = $this->load->view('stats/list',$data,TRUE);
+	    $this->parser->parse('template', $parser);
+	}
 }
 
 ?>

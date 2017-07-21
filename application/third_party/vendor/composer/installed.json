@@ -17,7 +17,7 @@
         "require": {
             "php": ">=5.4.0"
         },
-        "time": "2015-01-13 13:32:24",
+        "time": "2015-01-13T13:32:24+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -67,7 +67,7 @@
             "phpdocumentor/phpdocumentor": "~2",
             "phpunit/phpunit": "~3.7"
         },
-        "time": "2014-08-25 02:48:14",
+        "time": "2014-08-25T02:48:14+00:00",
         "bin": [
             "bin/validate-json"
         ],
@@ -119,12 +119,12 @@
         "target-dir": "Symfony/Component/EventDispatcher",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/EventDispatcher.git",
+            "url": "https://github.com/symfony/event-dispatcher.git",
             "reference": "f75989f3ab2743a82fe0b03ded2598a2b1546813"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/f75989f3ab2743a82fe0b03ded2598a2b1546813",
+            "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/f75989f3ab2743a82fe0b03ded2598a2b1546813",
             "reference": "f75989f3ab2743a82fe0b03ded2598a2b1546813",
             "shasum": ""
         },
@@ -142,7 +142,7 @@
             "symfony/dependency-injection": "",
             "symfony/http-kernel": ""
         },
-        "time": "2015-02-01 16:10:57",
+        "time": "2015-02-01T16:10:57+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -225,7 +225,7 @@
             "zendframework/zend-cache": "2.*,<2.3",
             "zendframework/zend-log": "2.*,<2.3"
         },
-        "time": "2014-08-11 04:32:36",
+        "time": "2014-08-11T04:32:36+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -264,7 +264,8 @@
             "http client",
             "rest",
             "web service"
-        ]
+        ],
+        "abandoned": "guzzlehttp/guzzle"
     },
     {
         "name": "opentok/opentok",
@@ -290,7 +291,7 @@
             "phing/phing": "dev-master",
             "phpunit/phpunit": "~4.1"
         },
-        "time": "2014-06-20 05:34:33",
+        "time": "2014-06-20T05:34:33+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -330,12 +331,12 @@
         "version_normalized": "2.5.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/codeguy/Slim.git",
+            "url": "https://github.com/slimphp/Slim.git",
             "reference": "04958a10ed95bc7bc97568e573877d4f9b62db48"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/codeguy/Slim/zipball/04958a10ed95bc7bc97568e573877d4f9b62db48",
+            "url": "https://api.github.com/repos/slimphp/Slim/zipball/04958a10ed95bc7bc97568e573877d4f9b62db48",
             "reference": "04958a10ed95bc7bc97568e573877d4f9b62db48",
             "shasum": ""
         },
@@ -345,7 +346,7 @@
         "suggest": {
             "ext-mcrypt": "Required for HTTP cookie encryption"
         },
-        "time": "2014-12-09 19:59:29",
+        "time": "2014-12-09T19:59:29+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -370,6 +371,63 @@
             "microframework",
             "rest",
             "router"
+        ]
+    },
+    {
+        "name": "stripe/stripe-php",
+        "version": "v5.1.1",
+        "version_normalized": "5.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/stripe/stripe-php.git",
+            "reference": "b2998cf8a495a03d541f274a077277afcf662a12"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/stripe/stripe-php/zipball/b2998cf8a495a03d541f274a077277afcf662a12",
+            "reference": "b2998cf8a495a03d541f274a077277afcf662a12",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "ext-mbstring": "*",
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0",
+            "satooshi/php-coveralls": "~0.6.1",
+            "squizlabs/php_codesniffer": "~2.0"
+        },
+        "time": "2017-07-03T17:51:56+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Stripe\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Stripe and contributors",
+                "homepage": "https://github.com/stripe/stripe-php/contributors"
+            }
+        ],
+        "description": "Stripe PHP Library",
+        "homepage": "https://stripe.com/",
+        "keywords": [
+            "api",
+            "payment processing",
+            "stripe"
         ]
     }
 ]

@@ -59,6 +59,21 @@ class Analytics extends CI_Controller
 		//$parser['content'] = $this->load->view('stats/stats',$data,TRUE);
 	    //$this->parser->parse('template', $parser);	
 	}
+
+	public function listAnalytics($user_id=0) {
+		
+		$data['page_title']     = 'Analytics';
+		$data['page_heading']   = 'Analytics';
+		$channel_name = $this->Users_model->getChannelNameById($user_id);
+
+		$data['channel_id']	 = $user_id;
+		$data['channels_info']			 = $this->Users_model->getChannelsUserInfo();
+		$data['analytics_totalPlays'] = $this->Analytics_model->getList($user_id);
+		//$data['analytics_totalPlaysNotEmbed'] = $this->Analytics_model->getNonEmbedList($user_id);
+		//echo "<pre>"; print_r($data['analytics_totalPlays']);exit;
+		$parser['content'] = $this->load->view('admin/stats/list',$data,TRUE);
+	    $this->parser->parse('admin/template', $parser);
+	}
 }
 
 ?>

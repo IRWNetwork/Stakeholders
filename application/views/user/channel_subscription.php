@@ -37,7 +37,7 @@ $(document).ready(function(){
 						<?php if($alreadyBuy && $this->session->flashdata('success')==''){?>
 						<div>You Are already Subscribe this channel.</div>
 						<?php }else{?>
-							<form action="#" method="post" class="grid card-form">
+							<!--<form action="#" method="post" class="grid card-form">-->
                                   <?php  $subscription_amount=0 ?>
 
 								<div class="form-group">
@@ -67,8 +67,15 @@ $(document).ready(function(){
 								</div>
 
 								<input type="hidden" name="chargable_amount" value="<?php echo $subscription_amount;?>" />
-
-								<?php
+								<form  method="post">
+                                	<?php //pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A;?>
+                                	<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                          data-key="pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E"
+                                          data-description="Access for a month"
+                                          data-amount="<?php echo $subscription_amount*100;?>"
+                                          data-locale="auto"></script>
+                                </form>
+								<?php /*?><?php
 								if(!empty($card_number)){
 									?>
 
@@ -168,9 +175,6 @@ $(document).ready(function(){
 											</div>
 										</div>
 									</div>
-
-
-
 									<div class="form-group" for="CVV">
 										<span class="field-name">CVV</span>
 										<input id="cvv" name="cvv" class="expiration card-field form-control"  maxlength="3" inputmode="numeric" placeholder="CVV" autocomplete="off" type="text">
@@ -178,11 +182,10 @@ $(document).ready(function(){
 									</div>
 
 								</div>
-
 								<label class="card-label expiration-label  form-group" for="expiration">
 									<input id="submit" type="submit" name="make_transaction" class="btn btn-primary">
 									<span><img id="processing" src="<?php echo base_url()."uploads/files/processing.gif" ?>" style="width: 42px; float: right; display: none;" class="img-responsive" /></span>
-								</label>
+								</label><?php */?>
 
 							</form>
 						<?php }?>

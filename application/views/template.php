@@ -115,7 +115,6 @@ $(document).on('click', '.playSong', function() {
 		var song = $(this).attr('data-song');
 		var id = $(this).attr('data-id');
 		var image = $(this).attr("data-image");
-		
 		//var base_url = window.location.origin;
 		
 		var current_song_image = '<img src='+BASE_URL+'/uploads/listing/thumb_153_'+image+' class="img-small r r-2x"/>';
@@ -124,6 +123,7 @@ $(document).on('click', '.playSong', function() {
 		
 		$(".song-name h3").text(title);
 		addSong(song,title,id);
+		saveAnalytics(id);
 	});
 	$(".playNext").click(function(){
 		var title = $(this).attr('data-title');
@@ -140,7 +140,19 @@ $(document).on('click', '.playSong', function() {
 	});
 
 });
-
+function saveAnalytics(id) {
+	my_url = BASE_URL+"/embed/savePlayAnalytics/"+id;
+	$.ajax({
+		url: my_url,
+		data : {id:id},
+		type: "get",
+		success: function (response) {
+			if (response != "") {
+				
+			}
+		}
+	});
+}
 function addSong(song,title,id){
 	$(".sm2-playlist-bd").html("<li id='song"+id+"' data-id='song"+id+"'><a href='"+song+"'></a></li>");
 	window.sm2BarPlayers[0].actions.play(0);

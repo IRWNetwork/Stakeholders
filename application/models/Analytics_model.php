@@ -51,6 +51,66 @@ class Analytics_model extends CI_Model
 				}
 		return array();
 	}
+
+	function getTotalByDayOfProducer($user_id) {
+			if ($user_id == 0) {
+				$where = '';
+			}
+			else {
+				$where = " AND author_id = '".$user_id."'";
+			}
+			
+			$sql = 'SELECT analytics.type_id,analytics.date, contents.title
+	          FROM analytics,contents where analytics.type_id=contents.id '  .$where.'
+	           GROUP BY analytics.date ORDER BY analytics.date DESC';
+	          $query1 = $this->db->query($sql);
+	          $result = $query1->result_array();
+	          foreach ($result as $key => $value) {
+	          	$inSite = "select count(*) as inSite from analytics  where not_embed = 0 AND date = '".$value['date']."'";
+				$inSite = $this->db->query($inSite);
+	          	$inSiteResult = $inSite->row_array();
+	          	$result[$key]['inSite'] = $inSiteResult['inSite'];
+
+
+	          	$offSite = "select count(*) as offSite from analytics  where not_embed = 1 AND date = '".$value['date']."'";
+				$offSite = $this->db->query($offSite);
+	          	$offSiteResult = $offSite->row_array();
+	          	$result[$key]['offSite'] = $offSiteResult['offSite'];
+	          }
+	          //echo "<pre>"; print_r($result);exit;
+		
+			return $result;
+		}
+
+	function getList($user_id) {
+		if ($user_id == 0) {
+			$where = '';
+		}
+		else {
+			$where = " AND author_id = '".$user_id."'";
+		}
+		
+		$sql = 'SELECT analytics.type_id,analytics.date, contents.title
+          FROM analytics,contents where analytics.type_id=contents.id '  .$where.'
+           GROUP BY analytics.date ORDER BY analytics.date DESC';
+          $query1 = $this->db->query($sql);
+          $result = $query1->result_array();
+          foreach ($result as $key => $value) {
+          	$inSite = "select count(*) as inSite from analytics  where not_embed = 0 AND date = '".$value['date']."'";
+			$inSite = $this->db->query($inSite);
+          	$inSiteResult = $inSite->row_array();
+          	$result[$key]['inSite'] = $inSiteResult['inSite'];
+
+
+          	$offSite = "select count(*) as offSite from analytics  where not_embed = 1 AND date = '".$value['date']."'";
+			$offSite = $this->db->query($offSite);
+          	$offSiteResult = $offSite->row_array();
+          	$result[$key]['offSite'] = $offSiteResult['offSite'];
+          }
+          //echo "<pre>"; print_r($result);exit;
+	
+		return $result;
+	}
 	
 	
 	function getTopByDay($user_id=0, $content_id = 0, $search_date = ''){
