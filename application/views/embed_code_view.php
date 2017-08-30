@@ -1,7 +1,10 @@
+<?php //echo "<pre>"; print_r($dataRow);exit; ?>
 <html>
     <head>
     <script type="text/javascript">
         var BASE_URL = '<?php echo base_url()?>';
+        var premiumPopup = '<?php echo $dataRow['is_premium'];?>';
+        var contentId = '<?php echo $dataRow['id'];?>';
     </script>
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/app.css" type="text/css" />
     <?php if($dataRow['type']=='Podcasts' || $dataRow['type']== 'podcasts'){ ?>
@@ -20,6 +23,8 @@
 		}
 	</style>
 	<?php } ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.6/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.6/sweetalert2.min.css">
        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" type="text/css" />
      <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css" type="text/css" />
       <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
@@ -289,6 +294,10 @@ function showSharePopup(id){
 function show_code(){
     $("#embed_code").show(350);
 }
+
+$("body").click(function () {
+    
+});
 </script>
 
 <div id="share-pop" class="modal" tabindex="-1" role="dialog" aria-hidden="true">

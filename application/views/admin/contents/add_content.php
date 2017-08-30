@@ -1,3 +1,4 @@
+<?php //echo "<pre>"; print_r($channels);exit; ?>
 <link rel="stylesheet" media="all" type="text/css" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url()?>assets/css/jquery-ui-timepicker-addon.css" />
 <div class="app-content-body ">
@@ -14,6 +15,19 @@
 						<form onsubmit="return my_submit(this)" class="bs-example form-horizontal" name="frm" method="post" enctype="multipart/form-data">
 							<div class="col-md-12">
 								<div class="form-group">
+									<label class="col-lg-3 control-label">Producer</label>
+									<div class="col-lg-6">
+										<select name="producer_id" class="form-control m-b">
+											<option value="">Select A Producer</option>
+											<?php foreach ($channels as $key => $value) : ?>
+												<option value="<?php echo $value['id']; ?>">
+													<?php echo $value['channel_name']; ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="col-lg-3 control-label">Title</label>
 									<div class="col-lg-6">
 										<textarea onkeyup="countCharacter('content_title','remaning_title_character','100')" id="content_title" maxlength="100" class="form-control" name="title"><?php if(isset($contentRow['title'])){ echo $contentRow['title']; }?></textarea>
@@ -26,7 +40,7 @@
 										<select name="type" class="form-control m-b" id="type">
 											<option value="'">Select Type</option>
 											<option value="Video">Video</option>
-											<!----<option value="Audio">Audio</option>----->
+											<!--<option value="Audio">Audio</option>-->
 											<option value="Article">Article</option>
 											<option value="Podcasts">Podcasts</option>
 										</select>

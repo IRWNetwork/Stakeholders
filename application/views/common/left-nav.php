@@ -44,13 +44,13 @@
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="editorial"> <i class="icon-list icon"></i> <span>Editorial</span> </a> </li>
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="videos"> <i class="icon-social-youtube icon"></i> <span>Videos</span> </a> </li>
 					<!--<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="page/fantasy-league"> <i class="fa fa-futbol-o"></i> <span>Fantasy League</span> </a> </li>-->
-					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li>
+					<!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/map"> <i class="fa fa-calendar"></i> <span>World Calendar</span> </a> </li> -->
 					<!--<li ui-sref-active="active"> <a href="<?php echo base_url()?>store"> <i class="fa fa-shopping-cart "></i> <span>Store</span> </a> </li>
 					<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>-->
 					<li ui-sref-active="active"> <a href="<?php echo base_url()?>forum/thread" data-for="forum"> <i class="fa fa-comments-o"></i> <span>Ruler Forums</span> </a> </li>
                     <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="faq"> <i class="fa fa-question" aria-hidden="true"></i><span>FAQ</span> </a> </li>
                     <!--<li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/contact_irw"> <i class="fa fa-comment-o"></i> <span>Contact IRW</span> </a> </li>-->
-                    <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/refund_policy"><i class="fa fa-usd" aria-hidden="true"></i> <span>Refund Policy</span> </a> </li>
+                    <!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="home/refund_policy"><i class="fa fa-usd" aria-hidden="true"></i> <span>Refund Policy</span> </a> </li> -->
                    <!-- <li ui-sref-active="active"> <a href="javascript:void(0)" data-for="user/channelmarketplace"> <i class="icon-list icon"></i> <span>Channel Marketplace</span> </a> </li>-->
 				</ul>
 				<ul class="nav load_data_ajax">

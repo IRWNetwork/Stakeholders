@@ -325,6 +325,19 @@
 			
 			// bind play/pause button
 			song.find('.justwave_playpause').click(function(e) {
+				if (premiumPopup == 'yes') {
+					swal({
+					  title: 'Premium Content',
+					  type: 'info',
+					  html:
+					    'This is Premium Content on IRW Network! Please '+'<a href="https://irwnetwork.com/" target="blank">Login</a>'+' in to your account or subscribe to this channel for access!',
+					  showCloseButton: true,
+					  confirmButtonText:
+					    'Ok',
+					});
+					return false;
+				}
+				saveAnalytics(contentId);
 				e.stopPropagation();
 				e.preventDefault();
 				// target an audio element
@@ -474,3 +487,16 @@
 	};
 	
 })(jQuery);
+function saveAnalytics(id) {
+	my_url = BASE_URL+"/embed/savePlayAnalytics/"+id;
+	$.ajax({
+		url: my_url,
+		data : {id:id},
+		type: "get",
+		success: function (response) {
+			if (response != "") {
+				
+			}
+		}
+	});
+}

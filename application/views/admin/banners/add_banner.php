@@ -23,7 +23,6 @@
                                         	<option value="">Select Page</option>
 											<option value="new">New</option>
 											<option value="podcasts">Podcasts</option>
-											<option value="Arcade">Arcade</option>
 											<option value="editorial">Editorial</option>
 											<option value="videos">Videos</option>
                                             <option value="fantasy-league">Fantasy League</option>
@@ -61,6 +60,7 @@
 									<label class="col-sm-3 control-label">Banner Image</label>
 									<div class="col-sm-9">
 										<input type="file" name="banner_picture" />
+										<span style="color:red;font-weight: bold">Banner size Should be "1500 X 375"</span>
 									</div>
 								</div>
                                 <?php if(isset($bannerRow['banner_image'])){?>

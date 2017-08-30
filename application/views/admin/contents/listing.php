@@ -1,4 +1,5 @@
 <!-- content -->
+<?php //echo "<pre>"; print_r($contents);exit; ?>
 <script type="text/javascript">
     function formSubmit(e){
         if(e.keyCode === 13){
@@ -30,6 +31,7 @@
 							<th>&nbsp;</th>
 							<th>File</th>
 							<th>Title</th>
+							<th>Avg Time Listen</th>
 							<th>Type</th>
 							<th>Is Premium</th>
 							<th>Featured</th>
@@ -48,6 +50,18 @@
 								<img style="width: 62px;height: 62px;" src="<?php echo base_url()?>uploads/listing/<?php echo "thumb_153_".$row->picture?>" />
 								<?php }?></td>
 							<td><?php echo $row->title?></td>
+							<td><?php if ($row->type == 'Podcasts') {
+									//echo gmdate("H:i:s", $row->play_time);
+									$count = $row->listenCount;
+									if ($count > 0) {
+										$abc = (gmdate("H:i:s", $row->play_time))/$count;
+										echo gmdate("H:i:s", $abc);
+
+									}
+									else {
+										echo gmdate("H:i:s", 0);
+									}
+								} ?></td>
 							<td><?php echo $row->type?></td>
 							<td><?php echo ($row->is_premium == 'yes') ?  'Yes' : 'No' ?></td>
 							<td><?php echo ($row->is_featured == 'yes') ? 'Yes' : 'No' ?></td>

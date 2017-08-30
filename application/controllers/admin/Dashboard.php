@@ -33,6 +33,11 @@ class Dashboard extends CI_Controller
 			);
 			redirect(site_url('admin/'), 'refresh');
 		}
+
+		$data['allData'] = $this->Users_model->getUserAnalytics();
+		$data['allanalytics'] = $this->Users_model->getAnalyticsOfWeek();
+		//$data['allAnalyticsClicks'] = $this->Users_model->getAnalyticsOfWeekClicked();
+		//echo "<pre>"; print_r($data['allAnalyticsClicks']);exit;
 		$data['page_title'] 	= 'Dashboard';
 		$data['page_heading'] 	= 'Dashboard';
         $parser['content']		=	$this->load->view('admin/dashboard',$data,TRUE);

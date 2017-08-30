@@ -35,7 +35,7 @@ $(document).ready(function(){
 				<div class="panel panel-default">
 					<div class="panel-heading font-bold">Membership Upgrade!</div>
 					<div class="panel-body">
-						<?php if($this->ion_auth->user()->row()->is_premium=='yes' && $this->session->flashdata('success')==''){?>
+						<?php if(!$buyPackage){?>
 						<div>You Are already premium user</div>
 						<?php }else{?>
 
@@ -49,10 +49,25 @@ $(document).ready(function(){
 										</div>
 									</div>
 								</div>
-
 								<input type="hidden" name="chargable_amount" value="1.99" />
-
-								<div id="form_fields" <?php if(!empty($card_number)) echo 'style="display: none"' ?> >
+                                <div class="row">
+                                	<div class="col-md-12">
+                                    <img style="width: 50px;" src="<?php echo base_url()."uploads/profile_pic/".(($officalInfo['picture'])?$officalInfo['picture']:"default-thumbnail.jpg")?>" class=" img-responsive"/>
+                                    $<?php echo $officalInfo['channel_subscription_price'];
+                                    $subscription_amount+=$officalInfo['channel_subscription_price'];
+                                    ?>/Month
+                                    </div>
+                                </div>
+								<form  method="post">
+                                	<?php //pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A;?>
+                                	<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                          data-key="<?php echo STRIPE_PUBLISHABLE_KEY?>"
+                                          data-description="Access for a month"
+                                          data-amount="<?php echo $officalInfo['channel_subscription_price']*100;?>"
+                                          data-locale="auto"
+                                          data-label="Subscribe"></script>
+                                </form>
+								<?php /*?><div id="form_fields" <?php if(!empty($card_number)) echo 'style="display: none"' ?> >
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group" for="expiration">
@@ -138,7 +153,7 @@ $(document).ready(function(){
 
 								<label class="card-label expiration-label  form-group" for="expiration">
 									<input type="submit" name="make_transaction" class="btn btn-primary">
-								</label>
+								</label><?php */?>
 
 							</form>
 

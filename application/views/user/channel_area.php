@@ -53,6 +53,7 @@ $(document).ready(function(){
             <?php } ?>
             <div class="row-fluid" >
             <?php $i=0; foreach( $ContentList as $list){ 
+
                 //print_r($list);
                 $list[$list['type'].'Total'] = $list['TOTAL'];
                 ?>
@@ -64,7 +65,7 @@ $(document).ready(function(){
                                  </a>
                             </div>
                             <div class="col-xs-7">
-                                 <?php $subscribe_text = "Free Till 31 July";//"Subscribe Now"; ?>
+                                 <?php $subscribe_text = "Subscribe Now"; ?>
                                  <?php $a_event        =  base_url() . "user/channelsubscription/".$list['id'];?>
                                  <?php $onclick_log    =  "";?>
                             	 <?php 
@@ -81,30 +82,31 @@ $(document).ready(function(){
 
                                  ?>
 
-                                <?php /*if($payment_gateway == 'yes'){ ?>
+                                <?php if($list['stripe_user_id'] != '' && $list['id'] != 555){ ?>
 
                                         <?php if($this->Common_model->checkAlreadyBuy($list['id'])){ ?>
-                                        <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
+                                        <a href="<?php echo base_url()."user/channelsubscription/".$list['id']; ?>">
                                             <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                         </a>
                                         <?php }else{ ?>
                                         <?php //echo base_url()."user/channelsubscription/".$list['id']; ?>
-                                        <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
+                                        <a href="<?php echo base_url()."user/channelsubscription/".$list['id']; ?>">
                                             <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                         </a>
                                         <?php } ?>
 
-                                <?php }else{ ?>
+                                <?php } /*else{ ?>
 	                                <?php //echo base_url()."user/channeldescription/".$list['id']; ?>
                                     <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
                                         <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn"><?php echo $subscribe_text; ?></button>
                                     </a>
-                                <?php }*/ ?>
-
-                                <h3 style=" display:none; color:#fff;">$<?php echo $list['channel_subscription_price']; ?> / mo</h3>
-                                <h3 style=" color:#fff;">Content Free Until Launch!<!--$--><?php //echo $list['channel_subscription_price']; ?></h3>
-                            </div>
-                       
+                                <?php }*/?>
+								<?php if($list['stripe_user_id'] != '' && $list['id'] != 555){ ?>
+                                <h3 style="color:#fff;">$<?php echo $list['channel_subscription_price']; ?> / mo</h3>
+                                <?php }else{?>
+                                <h3 style=" color:#fff;">Content Free Until Launch!</h3>
+                                <?php }?>
+                            </div>                       
                         <div class="col-xs-12">
                             <h3 class="col-xs-12 for-margin-top" style="color:#fff; margin-top:0px !important;">
                             <a style="font-size:17px; font-weight: bold;" href="javascript:void(0)" data-for="<?php echo base_url() . "user/channeldescription/".$list['id']; ?>" class="channel_area">
@@ -114,6 +116,10 @@ $(document).ready(function(){
                             <p class="col-xs-12" style="color:#fff;">Audio/Podcasts: <?php if(isset($list['PodcastsTotal'])){ echo $list['PodcastsTotal']; } else{ echo '0';}?><br>Video: <?php if(isset($list['VideoTotal'])){ echo $list['VideoTotal']; } else{ echo '0';}?><br>
                                 Editorial: <?php if(isset($list['TextTotal'])){ echo $list['TextTotal']; } else{ echo '0';}?>
                              </p>
+                             <a href="<?php echo base_url()."user/channeldescription/".$list['id']; ?>">
+                                <button   type="button"  style="padding: 3px 10px; color:#fff;background-color:#F60;"class="btn">View Channel</button>
+                            </a>
+                            <br /><br />
                         </div>
                 	</div>
                   

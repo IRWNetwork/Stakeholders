@@ -22,7 +22,7 @@
                      <div style="float:right; padding-right:10px" ><a href="<?php echo base_url()."admin/feedback/"; ?>" class="btn btn-primary btn-sm"> <i class="fa fa-reply" aria-hidden="true"> </i> detail </a></div>
                     	<div class="col-xs-12">
                         <div class="info-label col-xs-4 col-md-2">From:</div>
-                        <div class=" info-feed col-xs-6"> <?php  echo $feedbackInfo['full_name'];?></div>
+                        <div class=" info-feed col-xs-6"> <?php  echo $feedbackInfo['first_name'] . ' ' .$feedbackInfo['last_name'];?></div>
                         <div class="clearfix"></div>
                         <div class="info-label col-md-2 col-xs-4">Subject:</div>
                         <div class="info-feed col-xs-6"> <?php  echo $feedbackInfo['subject'];?></div>
@@ -31,10 +31,20 @@
                         <div class="info-feed col-xs-6"> <?php echo $feedbackInfo['message'];?></div>
                         <div class="clearfix"></div>
                         <div class="info-label  col-md-2 col-xs-4">Date:</div>
-                        <div class="info-feed col-xs-6"> <?php  echo date("m-d-Y", strtotime($feedbackInfo['date'])) ;?></div>
+                        <div class="info-feed col-xs-6"><?php  echo date("m-d-Y", strtotime($feedbackInfo['date'])) ;?></div>
                         <div class="clearfix"></div>
-                        <div class="info-label  col-md-2 col-xs-4">Feedback:</div>
-                        <div class="info-feed col-xs-6"> <?php  echo ($feedbackInfo['response'] != '') ? $feedbackInfo['response'] : 'No Feedback yet.' ?></div>
+                        <form method="post">
+	                        <div class="info-label col-md-2 col-xs-4">Response:</div>
+	                        <div class="info-feed col-xs-6">
+	                        	<textarea name="response" class="form-control"></textarea>
+	                        </div>
+	                        <div class="clearfix"></div>
+	                        <div class="info-label col-md-2 col-xs-4">&nbsp;</div>
+	                        <div class="info-feed col-xs-6">
+	                        	<input type="submit" class="btn btn-info" value="Save" name="">
+	                        </div>
+                        </form>
+                        <div class="clearfix"></div>
 
 					</div>
 				</div>

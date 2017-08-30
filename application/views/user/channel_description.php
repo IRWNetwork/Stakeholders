@@ -27,9 +27,8 @@ $_SESSION['after_login'] = $_SERVER['REQUEST_URI'];
             </ul>
 			<ul class="list-group no-radius no-border no-bg list-group-lg" style="height: 450px;overflow: scroll;overflow-x: hidden;" id="channel_content_listing">
                	<?php if(count($contents)){ ?>
-				<?php $count=0;foreach($contents as $row){ //echo "<pre>"; print_r($row);?>
+				<?php $count=0;foreach($contents as $row){ ?>
 				<li class="list-group-item">
-					<!-- <div class="pull-right m-l"> <a ><i class="icon-close"></i></a> </div> -->
                     <?php 
                        $url = $this->Common_model->getUrl($row);
                        
@@ -37,21 +36,7 @@ $_SESSION['after_login'] = $_SERVER['REQUEST_URI'];
                        $my_href = 'javascript:void(0)';
                        $item_play = 'item_play';
                        $premium_label = '';
-                       // if ($row->is_premium == 'yes') {
-                       //      $premium_label = 'Premium';
-                       //      if (!($this->ion_auth->logged_in())) {
-                       //          $data_for = '';
-                       //          $my_href = base_url().'user/login';
-                       //          $item_play = '';
-                       //      }
-                       //      else {
-                       //          $data_for = '';
-                       //          $my_href = base_url().'user/channelsubscription/'.$row->user_id;
-                       //          $item_play = '';   
-                       //      }   
-                       // }
-
-					   if($row->type=='Video' || $row->type=='Text'){
+                       if($row->type=='Video' || $row->type=='Text'){
                     ?>
                          <a class="m-r-sm pull-left play_list_song <?php echo $item_play; ?>" type="<?php echo $row->type; ?>" data-for="<?php echo $data_for; ?>" href="<?php echo $my_href; ?>"> <i class="icon-control-play text" style="position: absolute;left: 22px;top: 22px;color:#fff"></i> <i class="icon-control-pause text-active" style="position: absolute;left: 22px;top: 22px;color:#fff"></i>
                         <img src="<?php echo base_url() ."uploads/listing/".$row->picture; ?>" width="30">
@@ -140,6 +125,8 @@ $_SESSION['after_login'] = $_SERVER['REQUEST_URI'];
 		</div>
 		<!-- / right col --> 
 	</div>
+    <input type="hidden" name="limit_count" id="limit_count" value="5">
+    <input type="hidden" name="limit_count" id="max_limit" value="<?php echo $total_rows; ?>">
 </div>
 <script type="text/javascript">
 $("#channel_content_listing").scroll(function() {
@@ -148,20 +135,25 @@ $("#channel_content_listing").scroll(function() {
         //var value = parseInt(document.getElementById('limit_count').value, 10);
         var value = document.getElementById('limit_count').value;
         var max_limit = $("#max_limit").val();
+        debugger;
+            if (max_limit >= value || max_limit == 0 ) {
+                return false;
+            }
             value = isNaN(value) ? 0 : value;
     
-            my_url = BASE_URL+"user/channeldescription_ajax/"+value;
             var id = <?php echo $id; ?>;
+            my_url = BASE_URL+"user/channeldescription_ajax/";
 
             $.ajax({
                 url: my_url,
                 type: "get",
-                data : {id:id},
+                data : {id:id, per_page:value},
                 success: function (response) {
                     if (response != "") {
                         $(".loader_2").show().delay(2000).fadeOut();
                     }
-                    value = value+5;
+                    debugger;
+                    value =  parseInt(value)+5;
                     document.getElementById('limit_count').value = value;
                     setTimeout(function() {
                         $("#channel_content_listing").append(response);

@@ -99,7 +99,13 @@ $activity_log_types = array(
 							"2" => 'Packages',
 							"3" => 'Users',
 						);
-
+define('STRIPE_CLIENT_ID', 'ca_B33H2b60dEqQu5cpCZ8JRABujzZC68O3');//'ca_B33H2b60dEqQu5cpCZ8JRABujzZC68O3');//'ca_B33HB66WwwwMj3t7q5FPcldJI4BomTY5');
+define('STRIPE_API_KEY', '37tP6XmxuWPM7eTEDyA88uW2SO73pfuu');//'37tP6XmxuWPM7eTEDyA88uW2SO73pfuu');//'gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ');
+define('STRIPE_TOKEN_URI', 'https://connect.stripe.com/oauth/token');
+define('STRIPE_AUTHORIZE_URI', 'https://connect.stripe.com/oauth/authorize');
+define('STRIPE_SECRET_KEY',"37tP6XmxuWPM7eTEDyA88uW2SO73pfuu");//"37tP6XmxuWPM7eTEDyA88uW2SO73pfuu", //"gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ",
+define('STRIPE_PUBLISHABLE_KEY',"pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E");//"pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E" //"pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A"
+define('WEBSITE_URL',"http://irwnetwork.com");
 $countries=array(
 			'AF'=>'Afghanistan',
 			'AL'=>'Albania',

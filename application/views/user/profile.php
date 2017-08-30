@@ -46,21 +46,21 @@
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Brand Twitter Followers</label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" name="brand_twitter_followers" placeholder="Brand Twitter Followers" value="<?php echo $user->brand_twitter_followers ?>" class="form-control no-border"  required>										</div>
+										<input type="text" name="brand_twitter_followers" placeholder="Brand Twitter Followers" value="<?php echo $user->brand_twitter_followers ?>" class="form-control " >										</div>
 								</div>
 
 
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Brand Facebook Likes</label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" name="brand_facebook_likes" placeholder="Brand Facebook Likes" value="<?php echo $user->brand_facebook_likes?>" class="form-control no-border"  required>
+										<input type="text" name="brand_facebook_likes" placeholder="Brand Facebook Likes" value="<?php echo $user->brand_facebook_likes?>" class="form-control " >
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Brand Instagram Followers</label>
 									<div class="col-lg-6">
-										<input type="text" class="form-control" name="brand_instagram_followers" placeholder="Brand Instagram Followers" value="<?php echo $user->brand_instagram_followers ?>" class="form-control no-border"  required>
+										<input type="text" name="brand_instagram_followers" placeholder="Brand Instagram Followers" value="<?php echo $user->brand_instagram_followers ?>" class="form-control " >
 									</div>
 								</div>
 
@@ -68,7 +68,7 @@
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Brand Name</label>
 									<div class="col-lg-6">
-										<input class="form-control" type="text" name="brand" value="<?php echo $user->brand_name ?>" placeholder="Brand Name" class="form-control no-border"  required>
+										<input type="text" name="brand" value="<?php echo $user->brand_name ?>" placeholder="Brand Name" class="form-control " >
 									</div>
 								</div>
 
@@ -76,21 +76,21 @@
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Channel Name</label>
 									<div class="col-lg-6">
-										<input class="form-control" type="type" name="channel" value="<?php echo $user->channel_name ?>" placeholder="Channel Name" class="form-control no-border"  required>
+										<input type="type" name="channel" value="<?php echo $user->channel_name ?>" placeholder="Channel Name" class="form-control " >
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Sales Pitch</label>
 									<div class="col-lg-6">
-										<input class="form-control" type="type" name="salespitch" value="<?php echo $user->sales_pitch ?>" placeholder="Sales Pitch" class="form-control no-border"  required>
+										<input type="type" name="salespitch" value="<?php echo $user->sales_pitch ?>" placeholder="Sales Pitch" class="form-control ">
 									</div>
 								</div>
 
 							<div class="form-group">
 								<label class="col-lg-3 control-label">Description</label>
 								<div class="col-lg-6">
-									<textarea class="form-control" name="description" placeholder="Description" class="form-control no-border"  required><?php echo $user->description ?></textarea>
+									<textarea name="description" placeholder="Description" class="form-control "><?php echo $user->description ?></textarea>
 								</div>
 							</div>
 
@@ -98,7 +98,7 @@
 							<div class="form-group">
 								<label class="col-lg-3 control-label">How Were You Monetizing Content Before</label>
 								<div class="col-lg-6">
-									<textarea class="form-control" type="text" name="how_were_you_monitizing_content_before" placeholder="How Were You Monitizing Content Before" value="<?php echo $user->how_were_you_monitizing_content_before ?>" class="form-control no-border"  required><?php echo $user->how_were_you_monitizing_content_before ?></textarea>
+									<textarea type="text" name="how_were_you_monitizing_content_before" placeholder="How Were You Monitizing Content Before" value="<?php echo $user->how_were_you_monitizing_content_before ?>" class="form-control "><?php echo $user->how_were_you_monitizing_content_before ?></textarea>
 								</div>
 							</div>
 
@@ -107,7 +107,7 @@
 								<label class="col-lg-3 control-label">Monitization Background</label>
 								<input type="hidden" name="monitization_old_pic" value="<?php echo $user->monitization_background; ?>">
 								<div class="col-lg-6">
-									<input class="form-control" type="file" name="monitization_background_on_brand" placeholder="Monitization Background on Brand" class="form-control no-border">
+									<input type="file" name="monitization_background_on_brand" placeholder="Monitization Background on Brand" class="form-control ">
 								</div>
 							</div>
 
@@ -123,7 +123,7 @@
 								<label class="col-lg-3 control-label">General Background</label>
 								<input type="hidden" name="general_old_pic" value="<?php echo $user->general_background; ?>">
 								<div class="col-lg-6">
-									<input class="form-control" type="file" name="general_background_on_brand" placeholder="General Background On Brand"  class="form-control no-border">
+									<input type="file" name="general_background_on_brand" placeholder="General Background On Brand"  class="form-control ">
 								</div>
 							</div>
 
@@ -140,7 +140,7 @@
 										<label class="col-lg-3 control-label">Day To Contact</label>
 										<input type="hidden" name="general_old_pic" value="<?php echo $user->general_background; ?>">
 										<div class="col-lg-6">
-											<select class="form-control" type="text" name="day_of_contact" placeholder="Day Of Contact" class="form-control no-border"  required>
+											<select type="text" name="day_of_contact" placeholder="Day Of Contact" class="form-control " >
 												<option value="mon" <?php if($user->day_of_contact == 'mon') echo 'selected' ?> > Monday </option>
 												<option value="tue" <?php if($user->day_of_contact == 'tue') echo 'selected' ?> > Tuesday </option>
 												<option value="wed" <?php if($user->day_of_contact == 'wed') echo 'selected' ?> > Wednesday </option>
@@ -155,7 +155,7 @@
 										<label class="col-lg-3 control-label">Time To Contact</label>
 										<input type="hidden" name="general_old_pic" value="<?php echo $user->general_background; ?>">
 										<div class="col-lg-6">
-											<select class="form-control" type="text" name="day_time_of_contact" placeholder="Day & Time To Contact"  class="form-control no-border"  required>
+											<select type="text" name="day_time_of_contact" placeholder="Day & Time To Contact"  class="form-control ">
 												<option value="morning" <?php if($user->day_time_of_contact == 'morning') echo 'selected' ?> > Morning </option>
 												<option value="afternoon" <?php if($user->day_time_of_contact == 'afternoon') echo 'selected' ?>> Afternoon </option>
 												<option value="evening" <?php if($user->day_time_of_contact == 'evening') echo 'selected' ?>> Evening </option>
@@ -167,7 +167,7 @@
 									<div class="form-group">
 										<label class="col-lg-3 control-label">Channel Price</label>
 										<div class="col-lg-6">
-											<select class="form-control" type="text" name="channel_subscription_price" placeholder="Channel Price in $" class="form-control no-border" >
+											<select type="text" name="channel_subscription_price" placeholder="Channel Price in $" class="form-control " >
 												<option value="1.99" <?php if($user->channel_subscription_price == '1.99') echo "selected" ; ?> >$1.99</option>
 												<option value="2.99" <?php if($user->channel_subscription_price == '2.99') echo "selected" ; ?> >$2.99</option>
 												<option value="3.99" <?php if($user->channel_subscription_price == '3.99') echo "selected" ; ?> >$3.99</option>
@@ -259,7 +259,7 @@
 									<div class="form-group">
 										<label class="col-lg-3 control-label">Routung Number</label>
 										<div class="col-lg-6">
-											<input class="form-control" type="text" name="routing_number" placeholder="Routing Number" value="<?php echo $user->routing_number ?>" class="form-control no-border"  required>
+											<input type="text" name="routing_number" placeholder="Routing Number" value="<?php echo $user->routing_number ?>" class="form-control ">
 										</div>
 									</div>
 
@@ -267,13 +267,11 @@
 									<div class="form-group">
 										<label class="col-lg-3 control-label">Account Number</label>
 										<div class="col-lg-6">
-											<input class="form-control" type="text" name="account_number" placeholder="Account Number" value="<?php echo $user->account_number ?>" class="form-control no-border"  required>
+											<input type="text" name="account_number" placeholder="Account Number" value="<?php echo $user->account_number ?>" class="form-control ">
 										</div>
 									</div>
 
 								<?php } ?>
-
-
 								<?php if($user->banner!=''){?>
 								<div class="form-group">
 									<input type="hidden" name="banner_old_pic" value="<?php echo $user->banner; ?>">

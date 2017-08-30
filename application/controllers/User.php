@@ -10,6 +10,7 @@ class User extends MY_Controller
         $this->load->model('Users_model');
         $this->load->model('Common_model');
         $this->load->model('Content_model');
+        $this->load->model('Analytics_model');
         $this->load->model('Emailtemplates_model');
         $this->load->model('Authorize_model');
         $this->load->library("pagination");
@@ -28,7 +29,7 @@ class User extends MY_Controller
         }
 
         $this->data['page_title'] 	= 'User Login';
-        $this->data['page_heading'] 	= 'User Login';
+        $this->data['page_heading'] = 'User Login';
 
         if($this->input->post()) {
             $rules = array(
@@ -100,7 +101,6 @@ class User extends MY_Controller
 
         $this->load->view('user/login',$this->data);
     }
-
 
     function register($flag=-1){
         if ($this->ion_auth->logged_in()){
@@ -416,25 +416,18 @@ class User extends MY_Controller
                         }else{
                             $success_message = 'Register Successfully';
                         }
-
                         $this->session->set_flashdata(
                             'success',
                             $success_message
                         );
                         redirect("home/");
-
                     }else{
-
                         $this->session->set_flashdata(
                             'error',
                             'Email Already Exist'
                         );
-
                     }
                 }
-
-
-
             }else{
                 $this->session->set_flashdata(
                     'error',
@@ -442,8 +435,6 @@ class User extends MY_Controller
                 );
             }
         }
-
-
         $this->load->view('user/register',$this->data);
     }
 	
@@ -609,6 +600,71 @@ class User extends MY_Controller
 		$this->load->view('user/resetpassword',$this->data);
 	}
 	
+	public function salt(){
+
+		$raw_salt_len = 16;
+
+ 		$buffer = '';
+        $buffer_valid = false;
+
+        if (function_exists('mcrypt_create_iv') && !defined('PHALANGER')) {
+            $buffer = mcrypt_create_iv($raw_salt_len, MCRYPT_DEV_URANDOM);
+            if ($buffer) {
+                $buffer_valid = true;
+            }
+        }
+
+        if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
+            $buffer = openssl_random_pseudo_bytes($raw_salt_len);
+            if ($buffer) {
+                $buffer_valid = true;
+            }
+        }
+
+        if (!$buffer_valid && @is_readable('/dev/urandom')) {
+            $f = fopen('/dev/urandom', 'r');
+            $read = strlen($buffer);
+            while ($read < $raw_salt_len) {
+                $buffer .= fread($f, $raw_salt_len - $read);
+                $read = strlen($buffer);
+            }
+            fclose($f);
+            if ($read >= $raw_salt_len) {
+                $buffer_valid = true;
+            }
+        }
+
+        if (!$buffer_valid || strlen($buffer) < $raw_salt_len) {
+            $bl = strlen($buffer);
+            for ($i = 0; $i < $raw_salt_len; $i++) {
+                if ($i < $bl) {
+                    $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
+                } else {
+                    $buffer .= chr(mt_rand(0, 255));
+                }
+            }
+        }
+
+        $salt = $buffer;
+
+        // encode string with the Base64 variant used by crypt
+        $base64_digits   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        $bcrypt64_digits = './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $base64_string   = base64_encode($salt);
+        $salt = strtr(rtrim($base64_string, '='), $base64_digits, $bcrypt64_digits);
+
+	    $salt = substr($salt, 0, $this->salt_length);
+
+
+		return $salt;
+
+	}
+
+	function checkOldPassword($Oldpassword) {
+		$flag = $this->ion_auth->hash_password_db($this->session->userdata('id'),$Oldpassword);
+		return $flag;
+	}
+
 	public function changepassword() {
 		if (!$this->ion_auth->logged_in()) {
 			redirect(site_url(''), 'refresh');
@@ -626,28 +682,35 @@ class User extends MY_Controller
 
 			if ($this->form_validation->run())
 			{
-				
-				$user = $this->ion_auth->user()->row();
-				// finally change the password
-				$identity = $user->{$this->config->item('identity', 'ion_auth')};
-				
-				$data = array(
-							"password" => $this->input->post('password')
-						);
+				$Oldpassword = $this->input->post('old_password');
+				$oldPasswordFlag = $this->checkOldPassword($Oldpassword);
 
-				$id = $user->id;
-				$change = $this->ion_auth->update($id, $data);
-				if ($change)
-				{
-					//if the password was successfully changed
-					$this->session->set_flashdata('success', "Password updated successfully");
-					//$this->logout();
-					redirect(site_url('user/changepassword'), 'refresh');
+				if ($oldPasswordFlag == 1) {
+					$user = $this->ion_auth->user()->row();
+					// finally change the password
+					$identity = $user->{$this->config->item('identity', 'ion_auth')};
+					
+					$data = array(
+								"password" => $this->input->post('password')
+							);
+
+					$id = $user->id;
+					$change = $this->ion_auth->update($id, $data);
+					if ($change)
+					{
+						//if the password was successfully changed
+						$this->session->set_flashdata('success', "Password updated successfully");
+						//$this->logout();
+						redirect(site_url('user/changepassword'), 'refresh');
+					}
+					else
+					{
+						$this->session->set_flashdata('error', $this->ion_auth->errors());
+						redirect(site_url('user/changepassword') . '/'.$code, 'refresh');
+					}
 				}
-				else
-				{
-					$this->session->set_flashdata('error', $this->ion_auth->errors());
-					redirect(site_url('user/changepassword') . '/'.$code, 'refresh');
+				else {
+					$this->session->set_flashdata('error', 'Old password in incorrect!');
 				}
 			}			
 		}
@@ -712,17 +775,17 @@ class User extends MY_Controller
                     if($braintree_merchant->merchant_account_number!=''){
                         $arr_merchant=array();
                         $arr_merchant['individual'] = array(
-                            'firstName'    => $this->input->post('firstname'),
-                            'lastName'    => $this->input->post('lastname'),
-                            'email'    => $this->input->post('email'),
-                            'dateOfBirth' => $this->input->post('birth_day'),
-                            'phone'    => $this->input->post('phone'),
-                            //'ssn'    => $this->input->post('ssn'),
+                            'firstName'    	=> $this->input->post('firstname'),
+                            'lastName'    	=> $this->input->post('lastname'),
+                            'email'    		=> $this->input->post('email'),
+                            'dateOfBirth' 	=> $this->input->post('birth_day'),
+                            'phone'    		=> $this->input->post('phone'),
+                            //'ssn'    		=> $this->input->post('ssn'),
                             'address' => array(
                                 'streetAddress' => $this->input->post('street_address'),
-                                'locality' => $this->input->post('city'),
-                                'region' => $this->input->post('state'),
-                                'postalCode' => $this->input->post('zip'),
+                                'locality' 		=> $this->input->post('city'),
+                                'region' 		=> $this->input->post('state'),
+                                'postalCode' 	=> $this->input->post('zip'),
                             )
                         );  
                         if ($account=='business') {
@@ -910,7 +973,8 @@ class User extends MY_Controller
 
         //print_r($this->session->all_userdata());
         if($this->input->post()) {
-            if($this->ion_auth->user()->row()->id==3){
+            //if($this->ion_auth->user()->row()->id==3){
+			if($this->ion_auth->in_group(3)){
                 $rules = array(
                     array(
                         'field'   => 'first_name',
@@ -958,22 +1022,17 @@ class User extends MY_Controller
                     );
                 }
             }
-
             $this->form_validation->set_rules($rules);
-
             if ($this->form_validation->run()) {
                 $file_name 		= $this->input->post("embed_code");
-
                 if($_FILES['file']['tmp_name']){
                     $file_name 	= 'file_' . time();
                     $source   	= $_FILES['file'];
                     $file_name 	= $this->Common_model->uploadFileToGoogle($source,$file_name);
                 }
-
-
                 $user_id = $this->ion_auth->user()->row()->id;
                 // finally change the password
-                if($this->ion_auth->user()->row()->id==3){
+                if($this->ion_auth->in_group(3)){
                     $data = array(
                         "first_name" 				   	=> $this->input->post('first_name'),
                         "last_name" 					=> $this->input->post('last_name'),
@@ -982,8 +1041,9 @@ class User extends MY_Controller
                         "video"                         => $file_name,
                         "channel_subscription_price"   	=> $this->input->post('channel_subscription_price')
                     );
+					//$this->updatePackageOFProducer($this->input->post('channel_subscription_price'));
                 }
-                else{
+				else{
                     $data = array(
                         "first_name" 				    => $this->input->post('first_name'),
                         "last_name" 					=> $this->input->post('last_name'),
@@ -996,7 +1056,6 @@ class User extends MY_Controller
                                         str_replace("watch?v=","embed/",$file_name)*/
                     );
                 }
-
                 $file_name ="";
                 $banner1 ="";
                 $banner ="";
@@ -1010,7 +1069,8 @@ class User extends MY_Controller
                 $data['sales_pitch'] = $this->input->post('salespitch');
                 $data['day_of_contact'] = $this->input->post('day_of_contact');
                 $data['day_time_of_contact'] = $this->input->post('day_time_of_contact');
-                $data['channel_subscription_price'] = $this->input->post('channel_subscription_price');
+                //$data['channel_subscription_price'] = $this->input->post('channel_subscription_price');
+				
                 $data['description'] = $this->input->post('description');
                 $data['how_were_you_monitizing_content_before'] = $this->input->post('how_were_you_monitizing_content_before');
                 $data['routing_number'] = $this->input->post('routing_number');
@@ -1106,8 +1166,8 @@ class User extends MY_Controller
         //$this->data['user_ids']     = $this->Users_model->getUserIdByGroupId();
         $chanel_users = $this->Users_model->getChanelUsers();
         $this->data['ContentList']  = $chanel_users;
-        $this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","channel_marketplace");
         //echo "<pre>"; print_r($this->data['ContentList']);exit;
+        $this->data['bannerDetail'] = $this->Content_model->getBannerRowByField("page","channel_marketplace");
         /*echo '<pre>';
         print_r($this->Content_model->getBannerRowByField("page","channel_marketplace"));
         echo '<pre>';
@@ -1124,12 +1184,14 @@ class User extends MY_Controller
             $this->parser->parse('template', $parser);
         }
     }
-    public function channeldescription($id=NULL){
+    
+	public function channeldescription($id=NULL){
         $this->data['page_title']    = "Channel Description";
         $this->data['page_heading']  = "Channel Description";
         $filter = $this->input->get('filter') ? $this->input->get('filter'):'';
         $this->data['channelDetail'] = $this->Users_model->getUserDetailById($id);
         $this->data['contents']      = $this->Content_model->getContentByUserId($id,$filter);
+        //echo "<pre>"; print_r($this->data['contents']);exit;
         $this->data['id'] = $id;
         $this->data['total_rows'] = count($this->data['contents']);
         $this->data['contents'] = array_slice($this->data['contents'], 0, 10);
@@ -1156,10 +1218,9 @@ class User extends MY_Controller
         $config['reuse_query_string']   = true;
 
         $this->pagination->initialize($config);
-        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $page = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
 
         $this->data['contents'] = $this->Content_model->getContentByUserIdLimit($id,$page,$config["per_page"]);
-
         if (count($this->data['contents']) > 0) {
             echo $this->load->view('user/channeldescription_limit',$this->data,TRUE);
         }
@@ -1177,7 +1238,7 @@ class User extends MY_Controller
         //$this->parser->parse('template', $parser);
     }
 
-    public function upgradepackage() {
+    /*public function upgradepackage() {
         if (!$this->ion_auth->logged_in()) {
             redirect(site_url(''), 'refresh');
         }
@@ -1187,57 +1248,76 @@ class User extends MY_Controller
         //$this->init_braintree();
         $channel_info   = $this->Users_model->getChannelSubscribeInfoByChannelId(42);
         $irw_subs_price = $channel_info['channel_subscription_price'];
-        
+		$user_id = $this->ion_auth->user()->row()->id;
+        initialize_Stripe();
         if($this->input->post()) {
-            $user_id = $this->ion_auth->user()->row()->id;
+			$stripe_token  = $this->input->post('stripeToken');
+			//echo $user_id;
+			$customer_id = $this->Users_model->getCustomerIDByChannelID($user_id,42);
+			if($customer_id==''){
+				try {
+					$customer = \Stripe\Customer::create(array(
+									'email' => $this->input->post('stripeEmail'),
+									'source'  => $stripe_token
+								));
+					$customer_id = $customer->id;
+				}catch (Exception $e) {
+					$array = $e->getJsonBody();
+					$this->session->set_flashdata('error', $array['error']['message']);
+					redirect(base_url()."user/upgradepackage/");
+				}
+				$customer_array = array("user_id"=>$user_id,"channel_id"=>42,"stripe_customer_id"=>$customer_id);
+				$this->Users_model->addCustomerIDByChannelID($customer_array);
+			}
+            try {
+				
+				\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+				$result = \Stripe\Subscription::create(array(
+								"customer" => $customer_id,
+								"plan" => "monthly-42",
+								'source'  => $stripe_token
+							));
+				
+			}catch (Exception $e) {
+				$array = $e->getJsonBody();
+				$this->session->set_flashdata('error', $array['error']['message']);
+				redirect(base_url()."user/upgradepackage");
+			}
 
-            $credit_card 		= $this->input->post('credit-card-number');
-            $cvv 				= $this->input->post('cvv');
-            $epiration_month 	= $this->input->post('expiration_month');
-            $epiration_year 	= $this->input->post('expiration_year');
-            initialize_Braintree();
+            if (is_object($result)) {
 
-            $result = Braintree_Transaction::sale(array(
-						"amount" => $irw_subs_price,
-						"creditCard" => array(
-							"number" => $credit_card,
-							"cvv" 	=> $cvv,
-							"expirationMonth" => $epiration_month,
-							"expirationYear" => $epiration_year
-						),
-						"options" => array(
-							"submitForSettlement" => true,
-							"storeInVaultOnSuccess" => true
-						)
-					));
-
-            if ($result->success) {
-				$merchant_responce = json_encode($result);
-                $txn = $result->transaction;
-                if ($txn->paymentInstrumentType == 'credit_card') {
-                    $braintree_token = $txn->creditCardDetails->token;
-                }else if ($txn->paymentInstrumentType == 'paypal_account') {
-                    $braintree_token = $txn->paypalDetails->token;
-                }
-
-                $next_recharge_date = getNextRechargeDate('month');
-                $data_update 		= array(
-                    "braintree_payment_token" 	=> $braintree_token,
-                    "next_recharge_date" 		=> $next_recharge_date,
-                    "is_premium"				=> "yes"
-                );
                 $array_payment_log = array(
-                    "user_id" 			 	=> $user_id,
-                    "channel_id" 		  	=> 42,
-                    "type" 					=> "subscription",
-                    "amount"			  	=> $irw_subs_price,
-                    "date_of_charge" 	  	=> date("Y-m-d"),
-                    "merchant_responce"  	=> $merchant_responce,
-                    "txn_id"              	=> $txn_id,
-                    "status"			  	=> "Complete"
-                );
-                $this->ion_auth->update($user_id,$data_update);
-                $this->Users_model->insertpaymentLogs($array_payment_log);
+					"user_id"     					=> $user_id,
+					"channel_id"     				=> 42,
+					"plan_id"     					=> "monthly-42",
+					"type"     						=> "single",
+					"date_of_charge"    			=> date("Y-m-d"),
+					"merchant_responce" 			=> json_encode($result),
+					'producer_royality_percentage'  => 0,
+					'producer_royality_amount'  	=> 0,
+					'irw_percentage'    			=> 100,
+					'irw_amount'    				=> 1.99,
+					'amount'						=> 1.99
+				);
+
+
+				$insert = array(
+					'user_id'             			=> $user_id,
+					'channel_id'          			=> 42,
+					'channel_name'        			=> "IRW Network",
+					'type'           				=> "single",
+					'date'        					=> date('Y-m-d'),
+					'plan_id'   					=> "monthly-42",
+					'subscription_id'				=> $result->id,
+					'producer_royality_percentage'  => 0,
+					'producer_royality_amount'  	=> 0,
+					'irw_percentage'    			=> 100,
+					'irw_amount'    				=> 1.99,
+					'amount'						=> 1.99
+				);
+				
+				$this->Users_model->insertpaymentLogs($array_payment_log);
+				$this->Users_model->insertChannelSubscriptionDetail($insert);
 
                 $this->session->set_flashdata('success', "Package updated successfully, Now can buy any channel from channel Marketplace.");
                 redirect(base_url()."user/upgradepackage");
@@ -1249,10 +1329,12 @@ class User extends MY_Controller
         }
         $this->data['clientToken']= $this->clientToken;
         $this->data['user'] 		= $this->ion_auth->user()->row();
+		$this->data['officalInfo']   = $this->Users_model->getChannelSubscribeInfoByChannelId("42");
+		$this->data['buyPackage'] = $this->Users_model->checkUserHaveIRWPackage($user_id,42);
 
         $parser['content'] 	= $this->load->view('user/upgradepackage',$this->data,true);
         $this->parser->parse('template', $parser);
-    }
+    }*/
 
     public function upgradepackage_ajax () {
         if (!$this->ion_auth->logged_in()) {
@@ -1332,6 +1414,10 @@ class User extends MY_Controller
         echo $this->load->view('user/upgradepackage',$this->data,true);
 
     }
+	
+	function calculatePercentageOfIRW($totalAmount,$irwAmount){
+		return number_format((100/$totalAmount)*$irwAmount,2);
+	}
 
 
     function channelsubscription($id=NULL) {
@@ -1339,6 +1425,7 @@ class User extends MY_Controller
             redirect(site_url('user/login'), 'refresh');
         }
         $user_row = $this->ion_auth->user()->row();
+		$user_id = $this->ion_auth->get_user_id();
 		initialize_Stripe();
         $this->data['page_title']    = 'Subscrible Channel';
         $this->data['page_heading']  = 'Subscrible Channel';
@@ -1357,141 +1444,65 @@ class User extends MY_Controller
         $this->data['officalInfo']   = $this->Users_model->getChannelSubscribeInfoByChannelId("42");
         $this->data['flag_div']      = false;
 		
-        if($id!='42'){
-            if(isset($user_row->is_premium) && $user_row->is_premium!='yes'){
-                $subs_price = $this->data['channelInfo']['channel_subscription_price']+$this->data['officalInfo']['channel_subscription_price'];
-                $this->data['flag_div']  = true;
-            }
-        }
-        if($id=="42"){
-            if(isset($user_row->is_premium) && $user_row->is_premium!='yes'){
-                $subs_price = $this->data['channelInfo']['channel_subscription_price'];
-            }
-        }
+       
+        $subs_price = $this->data['channelInfo']['channel_subscription_price'];
+           
         $this->data['chanelPrice']   = $subs_price;
-        $user_id = $this->ion_auth->get_user_id();
-
-
+       
         if($this->input->post()) {
-            
-            /*$credit_card 		= $this->input->post('credit-card-number');
-            $cvv 				= $this->input->post('cvv');
-            $epiration_month 	= $this->input->post('expiration_month');
-            $epiration_year 	= $this->input->post('expiration_year');*/
 			$stripe_token  = $this->input->post('stripeToken');
-            //initialize_Braintree();
-
-			$result 			= "";
-			if($id==42){
-				/*$result = Braintree_Transaction::sale(array(
-						"amount" => $subs_price,
-						"creditCard" => array(
-							"number" => $credit_card,
-							"cvv" 	=> $cvv,
-							"expirationMonth" => $epiration_month,
-							"expirationYear" => $epiration_year
-						),
-						"options" => array(
-							"submitForSettlement" => true,
-							"storeInVaultOnSuccess" => true
-						)
-					));*/
+			$customer_id = "";
+			$stripe_plan_id = "";
+			$result = "";
+			
+			$merchant_id = $this->Users_model->getStripeProducerAccountID($id);
+			if($merchant_id==''){
+				redirect(base_url()."user/channelsubscription/".$id."?msg=Invalid producer please contact admin");
+			}else{
+				$irw_percentage = $this->data['channelInfo']['irw_percentage'];
+				$irw_share = number_format(($this->data['channelInfo']['channel_subscription_price']*$irw_percentage)/100,2);
+				
+				//if(isset($user_row->is_premium) && $user_row->is_premium!='yes' ){
+				$customer_id = "";
+				$customer_id = $this->Users_model->getCustomerIDByChannelID($user_id,$id);
+				if($customer_id==''){
 					try {
-						$result = \Stripe\Charge::create(array(
-						  "amount" => ($subs_price*100),
-						  "currency" => "usd",
-						  "source" => $stripe_token,
-						));
+						$customer = \Stripe\Customer::create(array(
+										'email' => $this->input->post('stripeEmail'),
+										'source'  => $stripe_token
+									), array("stripe_account" =>  $merchant_id));
+						$customer_id = $customer->id;
+						$customer_array = array("user_id"=>$user_id,"channel_id"=>$id,"stripe_customer_id"=>$customer_id);
+						$this->Users_model->addCustomerIDByChannelID($customer_array);
 					}catch (Exception $e) {
-					// The card has been declined
 						$array = $e->getJsonBody();
-						//echo $array['error']['message'];
-						//print_r($e);
 						$this->session->set_flashdata('error', $array['error']['message']);
-              			redirect(base_url()."user/channelsubscription/".$id);
+						redirect(base_url()."user/channelsubscription/".$id);
 					}
-			}
-			else{
-				$merchant_id = $this->Users_model->getStripeProducerAccountID($id);
-				if($merchant_id==''){
-					redirect(base_url()."user/channelsubscription/".$id."?msg=Invalid producer please contact admin");
-				}else{
-					//echo "<pre>"; print_r($merchant_id);exit;
-					// $merchant_id = 'janesladders_instant_3q7cmdy4';
-					$irw_percentage = $this->data['channelInfo']['irw_percentage'];
-					$irw_share = number_format(($this->data['channelInfo']['channel_subscription_price']*$irw_percentage)/100,2);
+				}	
+				
+				try {
 					
-					if(isset($user_row->is_premium) && $user_row->is_premium!='yes' ){
-						$irw_share = number_format(($irw_share + $this->data['officalInfo']['channel_subscription_price']),2);
-						/*$result = Braintree_Transaction::sale(array(
-							'merchantAccountId' => $merchant_id,
-							"amount" => $subs_price,
-							"creditCard" => array(
-								"number" => $credit_card,
-								"cvv" => $cvv,
-								"expirationMonth" => $epiration_month,
-								"expirationYear" => $epiration_year
-							),
-							'serviceFeeAmount' => $irw_share,
-							"options" => array(
-								"submitForSettlement" => true,
-								"storeInVaultOnSuccess" => true
-							)
-						));*/
-						try {
-							$result = \Stripe\Charge::create(array(
-							  "amount" => ($subs_price*100),
-							  "currency" => "usd",
-							  "source" => $stripe_token,
-							  "application_fee" => ($irw_share*100),
-							), array("stripe_account" => $merchant_id));
-							//print_r($charge);
-							//echo '<h1>Successfully charged $50.00!</h1>';
-						}catch (Exception $e) {
-						// The card has been declined
-							$array = $e->getJsonBody();
-							//echo $array['error']['message'];
-							//print_r($e);
-							$this->session->set_flashdata('error', $array['error']['message']);
-                			redirect(base_url()."user/channelsubscription/".$id);
-						}
+					$stripe_plan_id = $this->Users_model->getActivePackageStripePlan($id);
+					if($stripe_plan_id){
+						$result = \Stripe\Subscription::create(array(
+						  "customer" 	=> $customer_id,
+						  "plan" 		=> $stripe_plan_id,
+						  "application_fee_percent" => $this->calculatePercentageOfIRW($subs_price,$irw_share),
+						), array("stripe_account" 	=>  $merchant_id));
 					}else{
-						/*$result = Braintree_Transaction::sale(array(
-							'merchantAccountId' => $merchant_id,
-							"amount" => number_format($subs_price,2),
-							"creditCard" => array(
-								"number" => $credit_card,
-								"cvv" => $cvv,
-								"expirationMonth" => $epiration_month,
-								"expirationYear" => $epiration_year
-							),
-							'serviceFeeAmount' => number_format($irw_share,2),
-							"options" => array(
-								"submitForSettlement" => true,
-								"storeInVaultOnSuccess" => true
-							)
-						));*/
-						try {
-							$result = \Stripe\Charge::create(array(
-							  "amount" => ($subs_price*100),
-							  "currency" => "usd",
-							  "source" => $stripe_token,
-							  "application_fee" => ($irw_share*100),
-							), array("stripe_account" => $merchant_id));
-							//print_r($result);
-							//die();
-							//echo '<h1>Successfully charged $50.00!</h1>';
-						}catch (Exception $e) {
-						// The card has been declined
-							$array = $e->getJsonBody();
-							//echo $array['error']['message'];
-							$this->session->set_flashdata('error', $array['error']['message']);
-                			redirect(base_url()."user/channelsubscription/".$id);
-						}
+						$this->session->set_flashdata('error',"Please contact with admin some thing went wrong");
+						redirect(base_url()."user/channelsubscription/".$id);
 					}
+					
+				}catch (Exception $e) {
+					$array = $e->getJsonBody();
+					$this->session->set_flashdata('error', $array['error']['message']);
+					redirect(base_url()."user/channelsubscription/".$id);
 				}
 			}
-            //echo "<pre>"; print_r($result);exit;
+				
+			
 
             if (is_object($result)) {
 
@@ -1502,111 +1513,41 @@ class User extends MY_Controller
                 }
                 $next_recharge_date = date('Y-m-d', $date);
                 
-				if(isset($user_row->is_premium) && $user_row->is_premium!='yes' ){
-                    //$next_recharge_date = getNextRechargeDate('month');
+				
+				
 
-                    //$txn = $result->transaction;
-                    
-                    /*if ($txn->paymentInstrumentType == 'credit_card') {
-                        $braintree_token = $txn->creditCardDetails->token;
-                    }else if ($txn->paymentInstrumentType == 'paypal_account') {
-                        $braintree_token = $txn->paypalDetails->token;
-                    }*/
+				$array_payment_log = array(
+					"user_id"     					=> $user_id,
+					"channel_id"     				=> $id,
+					"plan_id"     					=> $stripe_plan_id,
+					"type"     						=> "single",
+					"date_of_charge"    			=> date("Y-m-d"),
+					"merchant_responce" 			=> json_encode($result),
+					'producer_royality_percentage'  => $producer_royality_percentage,
+					'producer_royality_amount'  	=> $producer_royalty_amount,
+					'irw_percentage'    			=> $irw_percentage,
+					'irw_amount'    				=> $irw_amount,
+					'amount'						=> $subs_price
+				);
 
-                    $data_update   = array(
-                        "next_recharge_date"   	=> $next_recharge_date,
-                        "is_premium"    		=> "yes",
-                        //'braintree_payment_token'   =>  $braintree_token
-                    );
-					
-                    $array_payment_log = array(
-                        "user_id"     					=> $user_id,
-                        "channel_id"     				=> $id,
-                        "type"     						=> "channel",
-                        "amount"     					=> $this->data['officalInfo']['channel_subscription_price'],
-                        "date_of_charge"    			=> date("Y-m-d"),
-                        "merchant_responce" 			=> json_encode($result),
-                        'merchant_account_id'   		=> $merchant_id,
-                        'producer_royality_percentage'  => $producer_royality_percentage,
-                        'producer_royality_amount'  	=> $producer_royalty_amount,
-                        'irw_percentage'    			=> $irw_percentage,
-                        'irw_amount'    				=> $irw_amount,
-                        "status"     					=> "Complete"
-                    );
-
-
-                    $insert = array(
-                        'user_id'             			=> $user_id,
-                        'channel_id'          			=> $id,
-                        'channel_name'        			=> $this->data['officalInfo']['channel_name'],
-                        'amount'              			=> $this->data['officalInfo']['channel_subscription_price'],
-                        'type'           				=> "monthly",
-                        'next_recharge_date'  			=> $next_recharge_date,
-                        'date'        					=> date('Y-m-d'),
-                        'merchant_account_id'   		=> $merchant_id,
-                        'producer_royality_percentage'  => $producer_royality_percentage,
-                        'producer_royality_amount' 		=> $producer_royalty_amount,
-                        'irw_percentage'    			=> $irw_percentage,
-                        'irw_amount'    				=> $irw_amount,
-                        'status'     					=> 'active'
-                    );
-
-                
-
-                    $this->ion_auth->update($user_id,$data_update);
-                    $this->Users_model->insertpaymentLogs($array_payment_log);
-                    $this->Users_model->insertChannelSubscriptionDetail($insert);
-                }
-
-                if($id!="42"){
-
-                    $array_payment_log = array(
-                        "user_id"     					=> $user_id,
-                        "channel_id"     				=> $id,
-                        "type"     						=> "channel",
-                        "amount"     					=> $this->data['channelInfo']['channel_subscription_price'],
-                        "date_of_charge"    			=> date("Y-m-d"),
-                        "merchant_responce" 			=> json_encode($result),
-                        'producer_royality_percentage'  => $producer_royality_percentage,
-                        'producer_royality_amount'  	=> $producer_royalty_amount,
-                        'irw_percentage'    			=> $irw_percentage,
-                        'irw_amount'    				=> $irw_amount,
-                        'merchant_account_id'   		=> $merchant_id,
-                        "status"     					=> "Complete"
-                    );
-
-                    $insert = array(
-                        'user_id'             			=> $user_id,
-                        'channel_id'          			=> $id,
-                        'channel_name'        			=> $this->data['channelInfo']['channel_name'],
-                        'amount'              			=> $this->data['channelInfo']['channel_subscription_price'],
-                        'type'           	  			=> "monthly",
-                        'next_recharge_date'  			=> $next_recharge_date,
-                        'date'        		  			=> date('Y-m-d'),
-                        'merchant_account_id'   		=> $merchant_id,
-                        'producer_royality_percentage'  => $producer_royality_percentage,
-                        'producer_royality_amount'  	=> $producer_royalty_amount,
-                        'irw_percentage'    			=> $irw_percentage,
-                        'irw_amount'    				=> $irw_amount,
-                        'status'     		  			=> 'active'
-                    );
-
-                    //$txn = $result->transaction;
-                    
-                    /*if ($txn->paymentInstrumentType == 'credit_card') {
-                        $braintree_token = $txn->creditCardDetails->token;
-                    }else if ($txn->paymentInstrumentType == 'paypal_account') {
-                        $braintree_token = $txn->paypalDetails->token;
-                    }
-
-                    $data_update   = array(
-                        'braintree_payment_token'   =>  $braintree_token
-                    );*/
-
-                   // $this->ion_auth->update($user_id,$data_update);
-                    $this->Users_model->insertpaymentLogs($array_payment_log);
-                    $this->Users_model->insertChannelSubscriptionDetail($insert);
-                }
+				$insert = array(
+					'user_id'             			=> $user_id,
+					'channel_id'          			=> $id,
+					'channel_name'        			=> $this->data['channelInfo']['channel_name'],
+					'type'           				=> "both",
+					'date'        					=> date('Y-m-d'),
+					'next_recharge_date'			=> $next_recharge_date,
+					'plan_id'   					=> $stripe_plan_id,
+					'subscription_id'				=> $result->id,
+					'producer_royality_percentage'  => $producer_royality_percentage,
+					'producer_royality_amount'  	=> $producer_royalty_amount,
+					'irw_percentage'    			=> $irw_percentage,
+					'irw_amount'    				=> $irw_amount,
+					'amount'						=> $subs_price
+				);
+				$this->Users_model->insertpaymentLogs($array_payment_log);
+				$this->Users_model->insertChannelSubscriptionDetail($insert);
+			
 
                 $this->session->set_flashdata('success', "Channel is subscribed successfully!");
                 redirect(base_url()."user/channelsubscription/".$id);
@@ -1617,10 +1558,10 @@ class User extends MY_Controller
                 redirect(base_url()."user/channelsubscription/".$id);
             }
         }
-		
 		$this->data['flag_div']      = false;
         if($id!='42'){
-            if(isset($user_row->is_premium) && $user_row->is_premium!='yes'){
+            //if(isset($user_row->is_premium) && $user_row->is_premium!='yes'){
+			if($this->Users_model->checkUserHaveIRWPackage($user_id,42)){   // user don't subscribe
                 $this->data['flag_div']  = true;
             }
         }
@@ -1633,7 +1574,6 @@ class User extends MY_Controller
         $parser['content'] = $this->load->view('user/channel_subscription',$this->data,true);
         $this->parser->parse('template', $parser);
     }
-
 
     public function channelsubscription1($id=NULL) {
         if (!$this->ion_auth->logged_in()) {
@@ -1736,7 +1676,6 @@ class User extends MY_Controller
     }
 
     function favorite(){
-
         if (!$this->ion_auth->logged_in()) {
             redirect(site_url('/'), 'refresh');
         }
@@ -1767,8 +1706,7 @@ class User extends MY_Controller
         //$this->parser->parse('template', $parser);
     }
 
-    public function subscribechannel()
-    {
+    public function subscribechannel(){
         $data['page_title'] 	  	= 'Subscription Channel';
         $data['page_heading'] 		= 'Subscription Channel';
         $arr['name']             	= $this->input->get('name') ? $this->input->get('name') : '';
@@ -1786,37 +1724,107 @@ class User extends MY_Controller
         $this->parser->parse('template', $parser);
     }
 
-    public function paymenthistory()
-    {
+    public function paymenthistory(){
 
         $data['page_title'] 	  	= 'Payment History';
         $data['page_heading'] 		= 'Payment History';
         $arr['name']             	= $this->input->get('name') ? $this->input->get('name') : '';
         $config 			   	  	= array();
         $config["base_url"]      	= base_url() . "user/paymenthistory";
-        $config["total_rows"]  		= $this->Users_model->countTotalPaymentLogsRowsByUserId($this->ion_auth->user()->row()->id, $arr);
-        $config["per_page"]     	= 10;
-        $config["uri_segment"]   	= 3;
-        $config['reuse_query_string'] = TRUE;
-
-        $this->pagination->initialize($config);
-        $page 						= ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $data['payment_logs']		= $this->Users_model->getAllPaymentHistoryByUserId($this->ion_auth->user()->row()->id, array(),$page,$config["per_page"]);
-        $data["links"]           	= $this->pagination->create_links();
-        $parser['content']	   		= $this->load->view('user/payment_history_listing',$data,TRUE);
-        $this->parser->parse('template', $parser);
+		
+		$config["per_page"]     	= 10;
+		$config["uri_segment"]   	= 3;
+		$config['reuse_query_string'] = TRUE;
+		$page 						= ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		
+		if($this->ion_auth->in_group(3)){
+			$config["total_rows"]  		= $this->Users_model->countTotalPaymentLogsRowsByChannelId($this->ion_auth->user()->row()->id, $arr);
+			$data['payment_logs']		= $this->Users_model->getAllPaymentHistoryByChannelId($this->ion_auth->user()->row()->id, array(),$page,$config["per_page"]);
+			
+		}else{
+			$config["total_rows"]  		= $this->Users_model->countTotalPaymentLogsRowsByUserId($this->ion_auth->user()->row()->id, $arr);
+			$data['payment_logs']		= $this->Users_model->getAllPaymentHistoryByUserId($this->ion_auth->user()->row()->id, array(),$page,$config["per_page"]);
+		}   
+		$data["links"]           	= $this->pagination->create_links();
+		$parser['content']	   		= $this->load->view('user/payment_history_listing',$data,TRUE);
+		$this->parser->parse('template', $parser);
     }
 
     public function unsubscribechannel(){
         if(!empty($this->input->get('id'))){
-            $this->Users_model->unsubcribeChannelById($this->input->get('id'),array());
-            $this->session->set_flashdata('success', "Channnel Unsubscribe successfully");
-            redirect(base_url()."user/subscribechannel");
+			initialize_Stripe();
+			$subscription_row = $this->Users_model->getSubscriptionRow($this->input->get('id'));
+			$subscription_id = $subscription_row->subscription_id;
+			if($subscription_id!=''){
+				try{
+					\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+					$merchant_id = $this->Users_model->getStripeProducerAccountID($this->ion_auth->get_user_id());
+					$sub = \Stripe\Subscription::retrieve($subscription_id, array("stripe_account" =>  $merchant_id));
+					$sub->cancel();
+					$this->Users_model->unsubcribeChannelById($this->input->get('id'),array());
+					$this->session->set_flashdata('success', "Channnel Unsubscribe successfully");
+					redirect(base_url()."user/subscribechannel");
+				}catch (Exception $e) {
+					$array = $e->getJsonBody();
+					$this->session->set_flashdata('error', $array['error']['message']);
+					
+					redirect(base_url()."user/subscribechannel");
+				}
+			}
+			$this->session->set_flashdata('error', "Invalid Subscription");
+			redirect(base_url()."user/subscribechannel");
         }
         else{
             redirect(base_url()."user/subscribechannel");
         }
     }
+	
+	function updatePackageOFProducer($amount){
+		
+		if (!$this->ion_auth->logged_in()) {
+            redirect(site_url('/'), 'refresh');
+        }
+		initialize_Stripe();
+		$data['user_row'] = $this->ion_auth->user()->row();
+		
+		$user_id = $this->session->userdata('user_id');
+		if($this->Users_model->checkProducerPlanExist($user_id)){
+			$merchant_id = $data['user_row']->stripe_user_id;
+			try {
+				\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+				$package_id = "monthly-".$amount."-".$user_id;
+				$plan = \Stripe\Plan::create(array(
+							"name" 		=> $data['user_row']->channel_name,
+						  	"id" 		=> $package_id,
+						  	"interval" 	=> "month",
+						  	"currency" 	=> "usd",
+						  	"amount" 	=> $amount*100,
+						), array("stripe_account" =>  $merchant_id));
+				$plan_array['user_id'] = $user_id;
+				$plan_array['stripe_plan_id'] = $package_id;
+				$plan_array['type'] = 'single';
+				$plan_array['amount'] = $amount;
+				$plan_array['status'] = 'active';
+				$change = $this->Users_model->addStripePackage($plan_array,$user_id);
+				
+				$this->session->set_flashdata('success', 'Plan Created Successfully');
+			}catch (Exception $e) {
+				$array = $e->getJsonBody();
+				$this->session->set_flashdata('error', $array['error']['message']);
+			}
+		}else{
+			/*try {
+				\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+				$package_id = "monthly-".$user_id;
+				$p = \Stripe\Plan::retrieve($package_id);
+				$p->name = $data['user_row']->channel_name;
+				$p->save();
+			}catch (Exception $e) {
+				$array = $e->getJsonBody();
+				$this->session->set_flashdata('error', $array['error']['message']);
+			}*/
+		}
+	}
 	
 	function connectStrip(){
 		if (!$this->ion_auth->logged_in()) {
@@ -1830,12 +1838,12 @@ class User extends MY_Controller
 	  	if (isset($_GET['code'])) { // Redirect w/ code
 			$code = $_GET['code'];
 			$token_request_body = array(
-		  		'client_secret' => API_KEY,
+		  		'client_secret' => STRIPE_API_KEY,
 		  		'grant_type' => 'authorization_code',
-		  		'client_id' => CLIENT_ID,
+		  		'client_id' => STRIPE_CLIENT_ID,
 		  		'code' => $code,
 			);
-			$req = curl_init(TOKEN_URI);
+			$req = curl_init(STRIPE_TOKEN_URI);
 			curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($req, CURLOPT_POST, true );
 			curl_setopt($req, CURLOPT_POSTFIELDS, http_build_query($token_request_body));
@@ -1852,6 +1860,8 @@ class User extends MY_Controller
 				$user_id = $this->session->userdata('user_id');
 				$change = $this->ion_auth->update($user_id, $additional_data);
 				$this->session->set_flashdata('success', 'Your Stripe account connected successfully');
+				//subscribePlan($user_id,$data['user_row']->channel_subscription_price);
+				$this->updatePackageOFProducer($data['user_row']->channel_subscription_price);
 			}
 	  	} else if (isset($_GET['error'])) { // Error
 			echo $_GET['error_description'];
@@ -1859,15 +1869,87 @@ class User extends MY_Controller
 			$authorize_request_body = array(
 		  		'response_type' => 'code',
 		  		'scope' => 'read_write',
-		  		'client_id' => CLIENT_ID
+		  		'client_id' => STRIPE_CLIENT_ID
 			);
-			$data['url'] = AUTHORIZE_URI . '?' . http_build_query($authorize_request_body);
+			$data['url'] = STRIPE_AUTHORIZE_URI . '?' . http_build_query($authorize_request_body);
 	  	}
 		$parser['content']	   		= $this->load->view('user/connectStrip',$data,TRUE);
 		$this->parser->parse('template', $parser);
 	}
 	
-	function stripereturn(){
-		
+	function createPackage(){
+		$this->updatePackageOFProducer(2.99);
 	}
+
+    public function dashboard() {
+        $data['page_title'] = 'Analytics';
+        $data['page_heading'] = 'Analytics';
+        $content_id = 0;
+        if(!empty($this->input->get('id'))){
+            $content_id = $this->input->get('id');
+            $result = $this->Content_model->checkUserContent($this->input->get('id'));
+            if(count($result) == 0 ){
+                $this->session->set_flashdata(
+                        'error',
+                        "Sorry! you have not permission to see analytics for this content."
+                );
+                redirect(base_url().'content');
+            }
+        }
+
+        if(isset($_GET['date'])){
+            $search_date = $_GET['date'];
+        }else{
+            $search_date = '';
+        }
+
+        $data = array();
+        $data['page_title']     = 'Analytics';
+        $data['page_heading']   = 'Analytics';
+        $data['channel_banner'] = $this->Users_model->getUserbanner();
+        $data['data_analytics_totalPlays'] = $this->Analytics_model->getTotalByDay(0, $content_id, $search_date);
+        $data['analytics_topPlays']         = $this->Analytics_model->getTopByDay(0, $content_id, $search_date);
+        $data['analytics_topCountries'] = $this->Analytics_model->getTopCountries(0, $content_id, $search_date);
+        $date['maxDate']        = $this->Analytics_model->getMaxDateForCountries(0, $content_id);
+        $date['minDate']        = $this->Analytics_model->getMinDateForCountries(0, $content_id);  
+        $data['analytics_topCities'] = $this->Analytics_model->getTopCities(0, $content_id, $search_date);
+        $data['totalPostcast']     = $this->Content_model->getTotalEpisode();
+        $data['totalListens']       = $this->Analytics_model->getTotalListens(0, $content_id);
+        $data['pagesTotal']        = $this->Analytics_model->getUrlReport(0, $content_id); 
+        $data['total_plays']         = 0;
+        //print_r($date);die();
+    
+        foreach( $data['data_analytics_totalPlays'] as $field=> $value){
+            $value['date'] = date('Y-m-d',strtotime($value['date'].' -1 months '));
+            $data['data_analytics_totalPlays'][$field]['date'] =  str_replace("-",",",$value['date']);
+            $data['total_plays'] += $value['count'];
+        } 
+
+        $user_id = $this->ion_auth->user()->row()->id;
+        $channel_name = $this->Users_model->getChannelNameById($user_id);
+        
+        $data['analytics_totalPlays'] = $this->Analytics_model->getTotalByDayOfProducer($user_id);
+        if ($this->input->get('content_id')) {
+            $contentId = $this->input->get('content_id');
+            
+            $data['byEpisode'] = $this->Users_model->byEpisode($contentId);
+        }
+        else {
+            $data['byEpisode'] = array(
+                            'episodeDates' => array(),
+                            'episodeCount'  => array(),
+                        );
+        }
+        $data['contentOfProducer'] = $this->Users_model->getContentOfProducer();
+        $data['weekAnalytics'] = $this->Users_model->weekAnalytics();
+        $data['monthAnalytics'] = $this->Users_model->monthAnalytics();
+
+        $data['totalSubscribers'] = $this->Users_model->totalSubscribers();
+        $data['totalRevenue'] = $this->Users_model->totalRevenue();
+        //echo "<pre>"; print_r($data['contentOfProducer']);exit;
+
+
+        $parser['content'] = $this->load->view('user/analytics',$data,TRUE);
+        $this->parser->parse('template', $parser);
+    }
 }

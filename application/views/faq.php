@@ -107,3 +107,16 @@ $(document).ready(function(){
         color: #454444;
     }
 </style>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/colorbox.css" type="text/css" />
+<script src="<?php echo base_url()?>assets/js/jquery.colorbox.js"></script> 
+<script type="text/javascript">
+$(document).ready(function(){
+	setTimeout(function(){
+		$.colorbox({
+			iframe:true,
+			innerWidth:"50%",
+			innerHeight:"70%",
+			href: "<?php echo base_url()?>home/pagePopup?page=faq",
+		});
+	},4000);
+});

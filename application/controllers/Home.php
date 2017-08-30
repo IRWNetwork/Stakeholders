@@ -12,6 +12,17 @@ class Home extends MY_Controller
 		$this->load->model('Events_model');
 		//$this->load->library('gcloud/gcloud.php');
     }
+
+    public function addContentPlayTime() {
+		$id = $this->input->post('id');
+		$listen_time = $this->input->post('listen_time');
+
+		$listen_time = preg_replace("/^([\d]{1,2})\:([\d]{2})$/", "00:$1:$2", $listen_time);
+		sscanf($listen_time, "%d:%d:%d", $hours, $minutes, $seconds);
+		$time_seconds = $hours * 3600 + $minutes * 60 + $seconds;
+		
+		$this->Content_model->updateListentime($id, $time_seconds);
+	}
 	
 	public function home2(){
 		$this->data['page_title'] 	= 'Home';
@@ -91,6 +102,7 @@ class Home extends MY_Controller
         $arr['name']           = $search;
 		$config 			   = array();
         $config["base_url"]    = base_url() . "products/search";
+        $this->data['popup_check']  = $this->Preferences_model->popup_check('show_popup');
         $config["total_rows"]  = $this->Content_model->countTotalRows($arr);
 
 
@@ -315,8 +327,19 @@ class Home extends MY_Controller
 		$this->session->set_userdata(array('websiteloaded'=>'yes'));
 		$this->data['page_title'] 	 = 'Popup';
 		$this->data['page_heading']   = 'Popup';
-		$this->data['popup_content']  = base64_decode($this->Preferences_model->getValue('popup_content'));
-		$this->load->view('popup',$this->data);		
+		$this->data['popup_content']  = base64_decode($this->Preferences_model->getValuePopup('popup_content'));
+		$this->data['popup_check']  = $this->Preferences_model->popup_check('show_popup');
+		$this->load->view('popup',$this->data);
+	}
+
+	function pagePopup() {
+		$this->load->model('Preferences_model');
+		$this->session->set_userdata(array('websiteloaded'=>'yes'));
+		$this->data['page_title'] 	 = 'Popup';
+		$this->data['page_heading']   = 'Popup';
+		echo $this->data['popup_content']  = base64_decode($this->Preferences_model->getValuePopupAllPages($_GET['page']));exit;
+		$this->data['popup_check']  = $this->Preferences_model->popup_check('show_popup');
+		$this->load->view('popup',$this->data);
 	}
 	
 	public function showchart(){

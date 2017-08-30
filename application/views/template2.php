@@ -157,7 +157,8 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 <meta name="twitter:description" content="<?php echo $dataRow['description'];?>">
 <meta name="twitter:image:src" content="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture']?>">
 <meta property="og:title" content="<?php echo $dataRow['title'];?>">
-<meta property="og:image" content="<?php echo base_url() ?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>">
+<meta property="og:image" content="<?php echo WEBSITE_URL ?>/uploads/listing/thumb_469_<?php echo $dataRow['picture']?>">
+<meta property="og:image:secure_url" content="<?php echo base_url() ?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>" />
 <meta property="og:url" content="<?php echo current_url();?>">
 <meta property="og:type" content="article"/>
 <meta property="og:description" content="<?php echo $dataRow['description'];?>">

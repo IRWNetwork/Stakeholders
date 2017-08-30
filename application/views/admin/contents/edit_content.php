@@ -1,4 +1,5 @@
-<link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
+<?php //echo "<pre>"; print_r($contentRow);exit; ?>
+<link rel="stylesheet" media="all" type="text/css" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url()?>assets/css/jquery-ui-timepicker-addon.css" />
 <div class="app-content-body ">
 	<div class="bg-light lter b-b wrapper-md">
@@ -13,6 +14,24 @@
 						<?php $this->load->view('admin/common/messages');?>
 						<form class="bs-example form-horizontal" name="frm" method="post" enctype="multipart/form-data">
 							<div class="col-md-12">
+								<div class="form-group">
+									<label class="col-lg-3 control-label">Producer</label>
+									<div class="col-lg-6">
+										<select name="producer_id" class="form-control m-b">
+											<option value="">Select A Producer</option>
+											<?php foreach ($channels as $key => $value) : ?>
+												<option value="<?php echo $value['id']; ?>">
+													<?php echo $value['channel_name']; ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+										<?php if(isset($contentRow['user_id'])){?>
+										<script type="text/javascript">
+											document.frm.producer_id.value='<?php echo $contentRow['user_id']?>';
+										</script>
+										<?php }?>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-lg-3 control-label">Title</label>
 									<div class="col-lg-6">
@@ -198,7 +217,7 @@ tinymce.init({
 		$(this).addClass('disabled');
 	});
 </script>
-<script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url()?>assets/js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){

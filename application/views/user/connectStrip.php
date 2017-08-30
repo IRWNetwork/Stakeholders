@@ -11,7 +11,7 @@
                         <?php $this->load->view('common/messages');?><br />
 						<p>IRW Network is proud to offer Stripe as our payment platform, which allows us to automatically calculate and distribute royalties from the payment processor level. Click Below button to connect with Stripe so you can get paid from your content!</p>
                         <?php if($user_row->stripe_user_id!=''){?><p class="alert alert-success">You already Connect Stripe Account</p><?php }?>
-                        <?php if($url){?>
+                        <?php if($url && $user_row->stripe_user_id==''){?>
                         <a href="<?php echo $url;?>"><img src="<?php echo base_url()?>assets/images/stripe.png" /></a>
                         <?php }?>
                     </div>

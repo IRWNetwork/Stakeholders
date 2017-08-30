@@ -16,14 +16,15 @@
 
 					    <tr class="headings">
 							<th>&nbsp;</th>
-							<th>Channel Name</th>
-                            <th> Payment Type</th>
-							<th>Price</th>
-                            <td>Transaction ID</td>
-							<td>Card Number</td>
+                            <?php if($this->ion_auth->in_group(3)){?>
+                            <th>Purchased By</th>
+                            <?php }else{?>
+                            <th>Channel Name</th>
+                            <?php }?>
+							<th>Total Amount</th>
+							<th>IRW Amount</th>
+							<th>Producer Royality</th>
 							<th>Purchase Date</th>
-							<th>Status</th>
-                            <th>Resourse Type</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -32,32 +33,18 @@
 							if(count($payment_logs)>0){
 							foreach($payment_logs as $row){
 
-								$response = str_replace('xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd"', '', $row->merchant_responce);
-								$str = ltrim($response, '?');
-								$xml = simplexml_load_string($str);
-								$json = json_encode($xml);
-								$data = json_decode($json);
-
-								/*echo '<pre>';
-								print_r($data);
-								echo '</pre>';*/
 						?>
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
-							<td><?php if($row->channel_id!=0){ echo $row->channel_name ;}
-								else{      echo "IRW";   }?></td>
-                            <td><?php echo $row->type?></td>
-							<td><?php echo $row->amount?>$</td>
-                            <td><?php echo $data->transactionResponse->transId; ?></td>
-                            <td><?php echo $data->transactionResponse->accountNumber; ?></td>
-							<td><?php echo $row->date_of_charge?></td>
-							<td><?php echo $row->status?></td>
-							<td><?php echo $data->transactionResponse->accountType; ?></td>
-                            <!--<td><?php /*// if($data->transaction->_attributes->paymentInstrumentType=='credit_card'){ */?>
-                                <img src="<?php /*// echo $data->transaction->_attributes->creditCard->imageUrl; */?>" width="40px">
-                                <?php /*// }else{ */?>
-                                <img src="<?php /*// echo $data->transaction->_attributes->paypal->imageUrl; */?>" width="40px">
-                                <?php /*// }*/?></td>-->
+                            <?php if($this->ion_auth->in_group(3)){?>
+                            <td><?php echo $this->Users_model->getUserName($row->user_id);?></td>
+                            <?php }else{?>
+							<td><?php $c_row = $this->Users_model->getChannelNameById($row->user_id); echo $c_row['brand_name']?></td>
+                            <?php }?>
+							<td>$<?php echo $row->amount?></td>
+                            <td>$<?php echo $row->irw_amount; ?></td>
+                            <td>$<?php echo $row->producer_royality_amount; ?></td>
+							<td><?php echo date('m/d/Y',strtotime($row->date_of_charge));?></td>
 						</tr>
 						<?php }}else{?>
 						<tr>

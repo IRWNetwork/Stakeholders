@@ -18,7 +18,8 @@
 							<th>Channel Name</th>
 							<th>Price</th>
 							<th>Purchase Date</th>
-							<th>Expire Date</th>
+							<th>Duration</th>
+                            <th>Status</th>
                             <th class=" no-link last"><span class="nobr">Action</span></th>
 						</tr>
 					</thead>
@@ -31,10 +32,15 @@
 						<tr class="odd pointer">
 							<td><?php echo $i++;?></td>
 							<td><?php echo $row->channel_name ;?></td>
-							<td><?php echo $row->amount?>$</td>
+							<td>$<?php echo $row->amount?></td>
 							<td><?php echo $row->date?></td>
-							<td><?php echo $row->next_recharge_date?></td>
-                            <td class=" last" nowrap="nowrap"><a href="<?php echo base_url()?>user/unsubscribechannel?id=<?php echo $row->channel_id?>" onClick="return confirm('Are you sure to unsubscribe this channel ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Unsubscribe </a></td>
+							<td>1 Month</td>
+                            <td><?php echo $row->status?></td>
+                            <td class=" last" nowrap="nowrap">
+                            	<?php if($row->status=='active'){?>
+                            	<a href="<?php echo base_url()?>user/unsubscribechannel?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to unsubscribe this channel ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Unsubscribe </a>
+                                <?php }?>
+                            </td>
 						</tr>
 						<?php }}else{?>
 						<tr>

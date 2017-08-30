@@ -197,6 +197,8 @@ $(document).ready(function(){
 	<input type="hidden" name="limit_count" id="max_limit" value="<?php echo $total_rows; ?>">
 	
 </div>
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/colorbox.css" type="text/css" />
+<script src="<?php echo base_url()?>assets/js/jquery.colorbox.js"></script> 
 <script type="text/javascript">
 $(window).scroll(function() {
 
@@ -236,5 +238,15 @@ if ($(window).scrollTop() + $(window).height() == $(document).height()) {
 	   else{
 	   		return false;
 	   }
-});	
+});
+$(document).ready(function(){
+	setTimeout(function(){
+		$.colorbox({
+			iframe:true,
+			innerWidth:"50%",
+			innerHeight:"70%",
+			href: "<?php echo base_url()?>home/pagePopup?page=podcasts",
+		});
+	},4000);
+});
 </script>

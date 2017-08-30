@@ -51,7 +51,7 @@ class Feedback_model extends CI_Model
 	
 	public function getInfoById($id){
 		$this->db->where('feed_back.id',$id);
-		$this->db->select('users.first_name, users.last_name, feed_back.subject, feed_back.message, feed_back.date, feed_back.is_read');
+		$this->db->select('users.first_name, users.last_name, feed_back.subject, feed_back.message, feed_back.date, feed_back.is_read, feed_back.response');
 		$this->db->from('users');
         $this->db->join('feed_back','users.id = feed_back.user_id','INNER');
 		$query = $this->db->get();
@@ -74,6 +74,25 @@ class Feedback_model extends CI_Model
 		return true;
 	}
 
-	
+	public function saveResponse($id, $data) {
+		$this->db->where('id', $id);
+		$this->db->update('feed_back', $data);
+		return true;
+	}
+
+	public function getResponsedFeedback() {
+		$this->db->where('feed_back.is_read', 1);
+		$this->db->select('feed_back.*, users.first_name, users.last_name');
+		$this->db->from('feed_back');
+		$this->db->join('users','users.id= feed_back.user_id');
+		//$this->db->from('feed_back');
+		$query = $this->db->get();
+		if($query->num_rows())
+		{
+			$result = $query->result();
+			return $result;
+		}
+		return array();
+	}
 }
 ?>

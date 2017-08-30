@@ -32,7 +32,7 @@ class Content extends CI_Controller
 		$config['reuse_query_string'] = TRUE;
 
         $this->pagination->initialize($config);
-        $page 					= ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
+        $page = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
 		$data['contents']	   = $this->Content_model->getAllDataByUserId($this->ion_auth->user()->row()->id, array(),$page,$config["per_page"],$arr['name']);
 		$data["links"]         = $this->pagination->create_links();
 		
@@ -208,9 +208,8 @@ class Content extends CI_Controller
 				$file_name 		= "";
 				$picture_name	= "";
 				
-				
-				$is_premium = ($this->input->post('is_premium')!='') ? $this->input->post('is_premium') : "";
-				$is_featured = ($this->input->post('is_featured')!='') ? $this->input->post('is_featured') : "";
+				//$is_premium = ($this->input->post('is_premium')!='') ? $this->input->post('is_premium') : "";
+				//$is_featured = ($this->input->post('is_featured')!='') ? $this->input->post('is_featured') : "";
 				
 				$id = $this->input->get('id');
 				$data	= array(
@@ -222,8 +221,8 @@ class Content extends CI_Controller
 								"meta_keywords"		=> $this->input->post('meta_keywords'),
 								"meta_description"	=> $this->input->post('meta_description'),
 								"show_date"			=> changeDateTimeToSQLDateTime($this->input->post('show_date')),
-								"is_premium" 		=> $is_premium,
-								"is_featured" 		=> $is_featured,
+								//"is_premium" 		=> $is_premium,
+								//"is_featured" 		=> $is_featured,
 							);
 				
 				if($_FILES['file']['tmp_name']){

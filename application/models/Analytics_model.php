@@ -45,42 +45,38 @@ class Analytics_model extends CI_Model
 		///echo 'SELECT COUNT(*) AS count, date FROM '.$this->tablename.' '.$where.'  GROUP BY date ORDER BY date';
 		///echo $this->db->last_query();
 		/// die();
-		 if($query->num_rows())
-				{
-					return $query->result_array();
-				}
+		if($query->num_rows()){
+			return $query->result_array();
+		}
 		return array();
 	}
 
 	function getTotalByDayOfProducer($user_id) {
-			if ($user_id == 0) {
-				$where = '';
-			}
-			else {
-				$where = " AND author_id = '".$user_id."'";
-			}
-			
-			$sql = 'SELECT analytics.type_id,analytics.date, contents.title
-	          FROM analytics,contents where analytics.type_id=contents.id '  .$where.'
-	           GROUP BY analytics.date ORDER BY analytics.date DESC';
-	          $query1 = $this->db->query($sql);
-	          $result = $query1->result_array();
-	          foreach ($result as $key => $value) {
-	          	$inSite = "select count(*) as inSite from analytics  where not_embed = 0 AND date = '".$value['date']."'";
-				$inSite = $this->db->query($inSite);
-	          	$inSiteResult = $inSite->row_array();
-	          	$result[$key]['inSite'] = $inSiteResult['inSite'];
-
-
-	          	$offSite = "select count(*) as offSite from analytics  where not_embed = 1 AND date = '".$value['date']."'";
-				$offSite = $this->db->query($offSite);
-	          	$offSiteResult = $offSite->row_array();
-	          	$result[$key]['offSite'] = $offSiteResult['offSite'];
-	          }
-	          //echo "<pre>"; print_r($result);exit;
-		
-			return $result;
+		if ($user_id == 0) {
+			$where = '';
 		}
+		else {
+			$where = " AND author_id = '".$user_id."'";
+		}
+		
+		$sql = 'SELECT analytics.type_id,analytics.date, contents.title FROM analytics,contents where analytics.type_id=contents.id '  .$where.' GROUP BY analytics.date ORDER BY analytics.date DESC';
+		$query1 = $this->db->query($sql);
+		$result = $query1->result_array();
+		foreach ($result as $key => $value) {
+			$inSite = "select count(*) as inSite from analytics  where not_embed = 0 AND date = '".$value['date']."'";
+			$inSite = $this->db->query($inSite);
+			$inSiteResult = $inSite->row_array();
+			$result[$key]['inSite'] = $inSiteResult['inSite'];
+			
+			
+			$offSite = "select count(*) as offSite from analytics  where not_embed = 1 AND date = '".$value['date']."'";
+			$offSite = $this->db->query($offSite);
+			$offSiteResult = $offSite->row_array();
+			$result[$key]['offSite'] = $offSiteResult['offSite'];
+		}
+		//echo "<pre>"; print_r($result);exit;
+		return $result;
+	}
 
 	function getList($user_id) {
 		if ($user_id == 0) {
@@ -90,9 +86,7 @@ class Analytics_model extends CI_Model
 			$where = " AND author_id = '".$user_id."'";
 		}
 		
-		$sql = 'SELECT analytics.type_id,analytics.date, contents.title
-          FROM analytics,contents where analytics.type_id=contents.id '  .$where.'
-           GROUP BY analytics.date ORDER BY analytics.date DESC';
+		$sql = 'SELECT analytics.type_id,analytics.date, contents.title FROM analytics,contents where analytics.type_id=contents.id '  .$where.' GROUP BY analytics.date ORDER BY analytics.date DESC';
           $query1 = $this->db->query($sql);
           $result = $query1->result_array();
           foreach ($result as $key => $value) {
@@ -178,11 +172,7 @@ class Analytics_model extends CI_Model
 		else{
 			$where = "where author_id = '".$user_id."'";
 		}
-		
 		//$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
-
-
-
 		if($search_date == ''){
 			$query = $this->db->query('SELECT COUNT(*) AS count, country FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count');
 		}else{
@@ -193,16 +183,11 @@ class Analytics_model extends CI_Model
 			//$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  episode, date ORDER BY date');
 		}
 
-
-
-
-
 		//echo $this->db->last_query();
-		 //die();
-		 if($query->num_rows())
-				{
-					return $query->result_array();
-				}
+		//die();
+		if($query->num_rows()){
+			return $query->result_array();
+		}
 		return array();
 	}
 	function getMaxDateForCountries($user_id=0, $content_id = 0){
@@ -225,11 +210,10 @@ class Analytics_model extends CI_Model
         //echo 'SELECT max(id) AS end, date FROM '.$this->tablename.' where author_id = '.$this->ion_auth->user()->row()->id.' limit 1';
 		 //echo $this->db->last_query();		
 		 //die();
-		 if($query->num_rows())
-				{
-					$row = $query->result_array();
-					return $row[0];
-				}
+		if($query->num_rows()){
+			$row = $query->result_array();
+			return $row[0];
+		}
 		return array();
 	}
 	
@@ -253,11 +237,10 @@ class Analytics_model extends CI_Model
 
 		 //echo $this->db->last_query();		
 		 //die();
-		 if($query->num_rows())
-				{
-					$row = $query->result_array();
-					return $row[0];
-				}
+	 	if($query->num_rows()){
+			$row = $query->result_array();
+			return $row[0];
+		}
 		return array();
 	}
 	
@@ -292,18 +275,12 @@ class Analytics_model extends CI_Model
 			$query = $this->db->query('SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  country ORDER BY count');
 			///$query = $this->db->query('SELECT COUNT(*) AS count, date, episode FROM '.$this->tablename.' '.$where.' AND YEAR(date) = '.$year.' AND MONTH(date)= '.$month.' GROUP BY  episode, date ORDER BY date');
 		}
-
-
-
-
 		//echo 'SELECT COUNT(*) AS count, city FROM '.$this->tablename.' '.$where.' GROUP BY  country ORDER BY count';
 		 //echo $this->db->last_query();
 		 //die();
-
-		if($query->num_rows())
-				{
-					return $query->result_array();
-				}
+		if($query->num_rows()){
+			return $query->result_array();
+		}
 		return array();
 	}
 	
@@ -327,11 +304,10 @@ class Analytics_model extends CI_Model
 
 		 //echo $this->db->last_query();
 		 //die();
-		 if($query->num_rows())
-				{
-					$row = $query->result_array();
-					return $row[0];
-				}
+		if($query->num_rows()){
+			$row = $query->result_array();
+			return $row[0];
+		}
 		return array();
 	}
 	
@@ -339,7 +315,6 @@ class Analytics_model extends CI_Model
 		if($user_id==0){
 			$user_id = $this->ion_auth->user()->row()->id;
 		}
-		
 		if($content_id != 0){
 			if($this->ion_auth->get_users_groups()->row()->id == 1){
 				$where = "where  type_id= '".$content_id."'";
@@ -352,16 +327,12 @@ class Analytics_model extends CI_Model
 			$where = "where author_id = '".$user_id."'";
 		}
 		$query = $this->db->query('SELECT COUNT(*) AS total, referral_path FROM '.$this->tablename.' '.$where.' GROUP BY  referral_path');
-
 		 //echo $this->db->last_query();		
 		 //die();
-		 if($query->num_rows())
-				{
-					
-					return $query->result_array();
-				}
+		if($query->num_rows()){
+			return $query->result_array();
+		}
 		return array();
 	}
-	
 }
 ?>

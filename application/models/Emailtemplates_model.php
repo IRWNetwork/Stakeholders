@@ -159,7 +159,7 @@
 			$config['smtp_timeout'] = '60';
 			$config['mailtype'] = "html";
 			$config['starttls']  = FALSE;
-			 $config['newline']  = "\r\n";
+			$config['newline']  = "\r\n";
 			$this->email->initialize($config);
 		}
 		$fromemail='cs@irwnetwork.com';//$from_email

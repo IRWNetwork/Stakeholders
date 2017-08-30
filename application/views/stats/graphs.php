@@ -43,7 +43,7 @@
 		<div style="text-align:center"><img src="<?php echo base_url()?>assets/images/logo-old.png" style="width:150px" /></div>
 	<div style="line-height:23px; padding-top:5px">IRW Network is committed to statistical accuracy of your analytics. We realize this is an issue with other podcast players and platforms, so for your convenience and comfort, feel free to contact our advertiser relations team directly at <a href="mailto:AdRelations@IRWNetwork.com">AdRelations@IRWNetwork.com</a> for any clarity you might need. We appreciate you partnering with our platform and look forward to helping your brand shine!</div>
 	</div>
-	<div class="panel panel-default">
+	<!--<div class="panel panel-default">
 		<div class="table-responsive">
 			<div class="col-md-12">
 				<div id="Total_Plays" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -66,7 +66,7 @@
 				<div id="gender_analytics" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 	<div class="panel-default">
 		<div class="col-md-6" >
 			<h3> Top Countries <span class="small"> <?php // print_r ($maxDate['date']);?> - <?php //print_r( $minDate['date']);?> </span> </h3>
@@ -122,28 +122,13 @@
 					</tr>
 					<tr></tr>
 					<tr>
-						<td>Episodes:</td>
+						<td>Total Contents</td>
 						<td><?php echo $totalPostcast['total'];?></td>
 					</tr>
 					<tr></tr>
 					<tr>
-						<td>Listens:</td>
+						<td>Total Listen</td>
 						<td><?php echo $totalListens['total'];?></td>
-					</tr>
-					<tr></tr>
-					<tr>
-						<td>Comments:</td>
-						<td>11</td>
-					</tr>
-					<tr></tr>
-					<tr>
-						<td>Followings:</td>
-						<td>616</td>
-					</tr>
-					<tr></tr>
-					<tr>
-						<td>Ratings:</td>
-						<td>96</td>
 					</tr>
 				</tbody>
 			</table>
@@ -152,7 +137,7 @@
     
 	<div class="panel-default">
 		<div class="col-md-12" >
-			<h3> Top 20 Referrals <span class="small"> 30-12-2016 – 05-01-2017 </span> </h3>
+			<h3> Top 20 Referrals <span class="small"></span> </h3>
 			<div class="scroll" style="max-height: 16em; overflow-y: scroll;">
 				<table class="table table-bordered " style="background-color:#fff;">
 					<tbody>

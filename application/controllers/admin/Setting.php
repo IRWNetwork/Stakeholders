@@ -90,6 +90,81 @@ class Setting extends CI_Controller
 		$this->parser->parse('admin/template', $parser);
 	}
 
+	public function popupSettings() {
+		$data['page_title']    = 'Popup Settings';
+		$data['page_heading']  = 'Popup Settings';
+
+		$data['popup_check']  = $this->Preferences_model->popup_check('show_popup');
+		$data['all_popups']  = $this->Preferences_model->get_all_popups();
+		//echo "<pre>"; print_r($data['all_popups']);exit;
+		$parser['content']      = $this->load->view('admin/popup_settings.php',$data,TRUE);
+		$this->parser->parse('admin/template', $parser);
+	}
+
+	public function editPopup($id) {
+		$data['page_title']    = 'Edit Popup';
+		$data['page_heading']  = 'Edit Popup';
+
+		if ($this->input->post()) {
+			$data = array(
+				'title'	=> $this->input->post('title'),
+				'page'	=> $this->input->post('page'),
+				'value'	=> base64_encode($this->input->post('value')),
+				'status'	=> 0
+			);
+
+			$this->Preferences_model->editPopup($id, $data);
+			$this->session->set_flashdata(
+							'success',
+					"Updated Successfully"
+			);
+			redirect(base_url()."admin/setting/popupSettings");
+		}	
+		$data['popup_data'] = $this->Preferences_model->getPopupById($id);
+		$parser['content'] = $this->load->view('admin/add_edit_popup',$data,TRUE);
+		$this->parser->parse('admin/template', $parser);	
+	}
+
+	public function addPopup() {
+		$data['page_title']    = 'Add Popup';
+		$data['page_heading']  = 'Add Popup';
+
+		if ($this->input->post()) {
+			$data = array(
+				'title'	=> $this->input->post('title'),
+				'page'	=> $this->input->post('page'),
+				'value'	=> base64_encode($this->input->post('value')),
+				'status'	=> 0
+			);
+			$this->Preferences_model->addPopup($data);
+			$this->session->set_flashdata(
+							'success',
+					"Added Successfully"
+			);
+			redirect(base_url()."admin/setting/popupSettings");
+		}
+
+		$parser['content']      = $this->load->view('admin/add_edit_popup',$data,TRUE);
+		$this->parser->parse('admin/template', $parser);
+	}
+
+	public function selectPage() {
+		$page = $this->input->post('page');
+		$data['all_popups']  = $this->Preferences_model->get_all_popups_by_page($page);
+		echo $this->load->view('admin/popup_settings_ajax',$data,TRUE);
+	}
+
+	public function updatePopupSettings() {
+		$showPopup = $this->Preferences_model->showPopup($this->input->post('show_popup'));
+		echo $showPopup;
+	}
+
+	public function selectPopup() {
+		
+		$selectPopup = $this->Preferences_model->selectPopup($this->input->post('id'), $this->input->post('page'));
+		echo $selectPopup;
+	}
+
 
 
 }// end class

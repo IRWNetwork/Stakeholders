@@ -80,15 +80,34 @@ function initialize_Stripe(){
 	require_once(APPPATH.'/third_party/vendor/autoload.php');
 	
 	$stripe = array(
-	  "secret_key"      => "37tP6XmxuWPM7eTEDyA88uW2SO73pfuu", //"gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ",
-	  "publishable_key" => "pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E" //"pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A"
+	  "secret_key"      => STRIPE_SECRET_KEY,//"gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ",//"37tP6XmxuWPM7eTEDyA88uW2SO73pfuu", //"gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ",
+	  "publishable_key" => STRIPE_PUBLISHABLE_KEY//"pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A"//"pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E" //"pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A"
 	);
 	
-	\Stripe\Stripe::setApiKey($stripe['secret_key']);
-	define('CLIENT_ID', 'ca_B33H2b60dEqQu5cpCZ8JRABujzZC68O3');//'ca_B33HB66WwwwMj3t7q5FPcldJI4BomTY5');
-	define('API_KEY', '37tP6XmxuWPM7eTEDyA88uW2SO73pfuu');//'gn8Lj9EW1y0ncta5ul40Tr7hDvY5OsXQ');
-	define('TOKEN_URI', 'https://connect.stripe.com/oauth/token');
-	define('AUTHORIZE_URI', 'https://connect.stripe.com/oauth/authorize');
+	\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+}
+
+function subscribePlan($pid,$amount){
+	try {
+		\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+		
+		$plan = \Stripe\Plan::create(array(
+		  "name" => "Plan for ",
+		  "id" => "monthly-".$pid,
+		  "interval" => "month",
+		  "currency" => "usd",
+		  "amount" => $amount,
+		));
+		print_r($plan);
+		die('adf');
+	}catch (Exception $e) {
+		// The card has been declined
+		$array = $e->getJsonBody();
+		//echo $array['error']['message'];
+		//print_r($e);
+		$this->session->set_flashdata('error', $array['error']['message']);
+	}
+
 }
 
 function get_random_auth_code()

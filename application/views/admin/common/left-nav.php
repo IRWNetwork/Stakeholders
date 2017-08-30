@@ -48,7 +48,7 @@
                     <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-video-camera"></i><span>Feedback</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/feedback"> <span>Feedback</span> </a> </li>
-						
+							<li> <a href="<?php echo base_url()?>admin/feedback/responsed"> <span>Resolved</span> </a> </li>
 						</ul>
 					</li>
 
@@ -98,7 +98,7 @@
 						</ul>
 					</li>
                     
-					<li> 
+					<!-- <li> 
 						<a href class="auto">
 							<span class="pull-right text-muted">
 								<i class="fa fa-fw fa-angle-right text"></i>
@@ -111,8 +111,8 @@
 							<li> <a href="<?php echo base_url()?>admin/zones"><span>Zones</span></a></li>
 							<li> <a href="<?php echo base_url()?>admin/zones/add_zones"> <span>Add Zone</span></a></li>
 						</ul>
-					</li>
-					<li> 
+					</li> -->
+					<!-- <li> 
 						<a href class="auto">
 							<span class="pull-right text-muted">
 								<i class="fa fa-fw fa-angle-right text"></i>
@@ -125,14 +125,15 @@
 							<li> <a href="<?php echo base_url()?>admin/advertisers"><span>Advertisers</span></a></li>
 							<li> <a href="<?php echo base_url()?>admin/advertisers/add_advertisers"> <span>Add Advertisers</span></a></li>
 						</ul>
-					</li>
+					</li> -->
                     
                     <li> <a href class="auto"> <span class="pull-right text-muted"> <i class="fa fa-fw fa-angle-right text"></i> <i class="fa fa-fw fa-angle-down text-active"></i> </span> <i class="fa fa-flask" aria-hidden="true"></i><span>Setting</span> </a>
 						<ul class="nav nav-sub dk">
 							<li> <a href="<?php echo base_url()?>admin/setting/edit_social"> <span>Edit Social</span> </a> </li>
-                            <li> <a href="<?php echo base_url()?>admin/setting/edit_popup"> <span>Edit PopUp</span> </a> </li>
+                            <!-- <li> <a href="<?php echo base_url()?>admin/setting/edit_popup"> <span>Edit PopUp</span> </a>  --></li>
                             <li> <a href="<?php echo base_url()?>admin/setting/edit_feedback_email_notice"> <span>Edit Notice Email</span> </a> </li>
-                            <li> <a href="<?php echo base_url()?>admin/setting/payment_preferences"> <span>Preferences</span> </a> </li>
+                            <!-- <li> <a href="<?php echo base_url()?>admin/setting/payment_preferences"> <span>Preferences</span> </a> </li> -->
+                            <li> <a href="<?php echo base_url()?>admin/setting/popupSettings"> <span>Popup Settings</span> </a> </li>
 						</ul>
 					</li>
                     

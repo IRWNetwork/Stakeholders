@@ -43,7 +43,6 @@ $(document).ready(function(){
 	});
 });
 </script>
-
 <div class="hbox hbox-auto-xs hbox-auto-sm"> 
 	<!-- main -->
 	<div class="col wrapper-lg">
@@ -166,12 +165,12 @@ $(document).ready(function(){
 		</div>
 
 
-		<!-- till here--->
+		<!-- till here-->
 
 
 		<div style="clear:both"></div>
 		<br />
-		<h3 class="font-thin m-t-n-xs m-b">Recommended for you</h3>
+		<h3 class="font-thin m-t-n-xs m-b">Latest Content</h3>
 		<div class="row row-sm">
 			<?php 
 				$count=0; 
@@ -327,7 +326,7 @@ $(document).ready(function(){
 <script type="text/javascript">
 
 <?php
-	if(!isset($_COOKIE['popup_check'])){
+	if(!isset($_COOKIE['popup_check']) && $popup_check != "no"){
 ?>
 
 $(document).ready(function(){

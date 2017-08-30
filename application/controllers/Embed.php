@@ -87,7 +87,7 @@ class Embed extends MY_Controller
 			$data['episode']	   = $content_row['title'];
 			$data['author_id']	 = $content_row['user_id'];
 			$data['date']		  = date("Y-m-d");
-			$this->Analytics_model->saveAnalytics($data);
+			//$this->Analytics_model->saveAnalytics($data);
 
 		}
 		else{
@@ -95,10 +95,9 @@ class Embed extends MY_Controller
 			die();
 		}
 		$this->data['id'] = $id;
-		//echo "<pre>"; print_r($content_row);die();
-		$this->data['dataRow']		= $content_row;
-		$this->data['page_heading']   = $content_row['title'];
-		$parser['content']			=  $this->load->view('embed_code_view',$this->data);
+		$this->data['dataRow'] = $content_row;
+		$this->data['page_heading'] = $content_row['title'];
+		$parser['content'] = $this->load->view('embed_code_view',$this->data);
 	}
 
 	public function savePlayAnalytics($id) {

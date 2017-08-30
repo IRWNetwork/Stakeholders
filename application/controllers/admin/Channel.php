@@ -417,8 +417,9 @@ class Channel extends CI_Controller
 	public function editcontent()
 	{	
 		//echo "<pre>"; print_r($_POST);exit;
-		$data['page_title'] 	= 'Edit User';
+		$data['page_title']    = 'Edit User';
 		$data['page_heading']  = 'Edit User';
+		
 		if($this->input->post()) {
 			if($this->input->post('type')=='3'){
 				$rules = array(
@@ -482,64 +483,28 @@ class Channel extends CI_Controller
 			$this->form_validation->set_rules($rules);
 
 			if ($this->form_validation->run()){
-				//echo 'hi';exit;
+				$userData = array(
+								'first_name' => $this->input->post('first_name'),
+								'last_name' => $this->input->post('last_name'),
+								'email' => $this->input->post('email'),
+								'username' => $this->input->post('email'),
+							);	
 				if($this->input->post('type')=='3'){
-					if ($this->input->post('password') && $this->input->post('password') != '') {
-
-						$userData = array(
-							'first_name'   => $this->input->post('first_name'),
-							'last_name' 	=>  $this->input->post('last_name'),
-							'email' 	=>  $this->input->post('email'),
-							'username' 	=>  $this->input->post('email'),
-							'brand_name'   =>  $this->input->post('brand'),
-							'channel_name' =>  $this->input->post('channel'),
-							'description'  =>  $this->input->post('description'),
-							'producer_royalty' =>  $this->input->post('producer_royalty'),
-							'irw_percentage' =>  $this->input->post('irw_percentage'),
-							'password'	=>	   $this->ion_auth_model->hash_password($this->input->post('password')),
-							"sorting"      =>  (int)$this->input->post('sorting'),
-	                        "is_deleted"   =>  (int)$this->input->post('is_deleted'),
-	                        "content_block"   =>  (int)$this->input->post('content_block'),
-							'channel_subscription_price' =>  floatval($this->input->post('channel_price'))
-						);
-					}
-					else {
-						$userData = array(
-						'first_name'   => $this->input->post('first_name'),
-						'last_name' 	=>  $this->input->post('last_name'),
-						'email' 	=>  $this->input->post('email'),
-						'username' 	=>  $this->input->post('email'),
-						'brand_name'   =>  $this->input->post('brand'),
-						'channel_name' =>  $this->input->post('channel'),
-						'description'  =>  $this->input->post('description'),
-						"sorting"      =>  (int)$this->input->post('sorting'),
-						'producer_royalty' =>  $this->input->post('producer_royalty'),
-						'irw_percentage' =>  $this->input->post('irw_percentage'),
-                        "is_deleted"   =>  (int)$this->input->post('is_deleted'),
-                        "content_block"   =>  (int)$this->input->post('content_block'),
+					$userData = array(
+						'brand_name'   		=>  $this->input->post('brand'),
+						'channel_name' 		=>  $this->input->post('channel'),
+						'description'  		=>  $this->input->post('description'),
+						'producer_royalty' 	=>  $this->input->post('producer_royalty'),
+						'irw_percentage' 	=>  $this->input->post('irw_percentage'),
+						"sorting"      		=>  (int)$this->input->post('sorting'),
+						"is_deleted"   		=>  (int)$this->input->post('is_deleted'),
+						"content_block"   	=>  (int)$this->input->post('content_block'),
 						'channel_subscription_price' =>  floatval($this->input->post('channel_price'))
 					);
-					}
 				}
-				else{
-					
-					if ($this->input->post('password') && $this->input->post('password') != '') {
-						$userData = array(
-							'first_name'   => $this->input->post('first_name'),
-							'last_name' 	=>  $this->input->post('last_name'),
-							'email' 	=>  $this->input->post('email'),
-							'username' 	=>  $this->input->post('email'),
-							'password'   => $this->ion_auth_model->hash_password($this->input->post('password')),
-						);
-					}
-					else {
-						$userData = array(
-							'first_name' => $this->input->post('first_name'),
-							'last_name' => $this->input->post('last_name'),
-							'email' => $this->input->post('email'),
-							'username' => $this->input->post('email'),
-						);	
-					}	
+				
+				if ($this->input->post('password') && $this->input->post('password') != '') {
+					$userData['password'] =	$this->ion_auth_model->hash_password($this->input->post('password'));
 				}
 				
 				if(isset($_FILES['picture']) and $_FILES['picture']['name']!=''){
@@ -561,36 +526,120 @@ class Channel extends CI_Controller
 						$this->ion_auth->reset_password($this->input->post('email'),$this->input->post('password'));
 					}
 					//$group_name = array($this->input->post('type')-1);
+					if($this->input->post('type')=='3'){
+						if($this->Users_model->checkStripPlanForProducerWithAmount($this->input->post('channel_subscription_price'),$this->input->get('id'))){
+							$this->updatePackageOFProducer($this->input->post('channel_price'),$this->input->get('id'));
+						}
+					}
+					
 					$this->Users_model->update($userData, $this->input->get('id')); 
 					//$this->Phpbb->user_add($identity,$identity,$password);
-					
-					
 					$this->session->set_flashdata(
 						'success',
 						'Updated Successfully'
 					);
-					redirect("admin/channel");
-					
+					redirect("admin/channel");					
 				}else{
 					$this->session->set_flashdata(
 						'error',
 						'Email Already Exist'
 					);
 				}
-
-				}
-				else{
+			}else{
 				$this->session->set_flashdata(
-						'error',
-						'Please enter all details'
-					);
-				}
+					'error',
+					'Please enter all details'
+				);
 			}
+		}
 
 		$data['usersRow'] 	= $this->Users_model->getRow($this->input->get('id'));
 		//echo "<pre>";print_r($data['usersRow']);die();
         $parser['content']		= $this->load->view('admin/channels/edit_channel',$data,TRUE);
         $this->parser->parse('admin/template', $parser);
+	}
+	
+	function updatePackageOFProducer($amount,$user_id){
+		initialize_Stripe();
+		$data['user_row'] = $this->Users_model->getRow($user_id);
+		$user_id = $data['user_row']->id;
+		$package_id = "";
+		$merchant_id = $data['user_row']->stripe_user_id;
+		$package_id = "monthly-".$amount."-".$user_id;
+		if($this->Users_model->checkStripPlanForProducerWithAmount($amount,$user_id)){
+			try {
+				\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+				$plan = \Stripe\Plan::create(array(
+							"name" 		=> $data['user_row']->channel_name,
+							"id" 		=> $package_id,
+							"interval" 	=> "month",
+							"currency" 	=> "usd",
+							"amount" 	=> $amount*100,
+						), array("stripe_account" =>  $merchant_id));
+				$plan_array['user_id'] = $user_id;
+				$plan_array['stripe_plan_id'] = $package_id;
+				$plan_array['type'] = 'single';
+				$plan_array['amount'] = $amount;
+				$plan_array['status'] = 'active';
+				
+				$change = $this->Users_model->addStripePackage($plan_array,$user_id);
+				$users = $this->Users_model->getAllSubscribeUsersByChannelID($user_id);
+				
+				foreach($users as $row){
+					try {
+						\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+						$subscription = \Stripe\Subscription::retrieve($row->subscription_id, array("stripe_account" =>  $merchant_id));
+						$itemID = $subscription->items->data[0]->id;
+						$result = \Stripe\Subscription::update($row->subscription_id, array(
+							"items" => array(
+								array(
+									"id" 	=> $itemID,
+									"plan" 	=> $package_id,
+								),
+							),
+							"prorate" => false,
+						), array("stripe_account" =>  $merchant_id));
+						$irw_amount 			  = number_format(($amount * $row->irw_percentage)/100,2);
+						$producer_royality_amount = number_format(($amount * $row->producer_royality_percentage)/100,2);
+						$update_user_package = array("plan_id"=>$package_id,"producer_royality_amount"=>$producer_royality_amount,"irw_amount"=>$irw_amount);
+						$this->Users_model->updatePackageOfUser($update_user_package,$row->id);
+					}catch (Exception $e) {
+						$array = $e->getJsonBody();
+						$this->session->set_flashdata('error', $array['error']['message']);
+					}
+				}
+				$this->session->set_flashdata('success', 'Plan Created Successfully');
+			}catch (Exception $e) {
+				$array = $e->getJsonBody();
+				$this->session->set_flashdata('error', $array['error']['message']);
+			}
+		}else{
+			$users = $this->Users_model->getAllSubscribeUsersByChannelID($user_id);
+			foreach($users as $row){
+				try {
+					\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+					$subscription = \Stripe\Subscription::retrieve($row->subscription_id, array("stripe_account" =>  $merchant_id));
+					$itemID = $subscription->items->data[0]->id;
+					$result = \Stripe\Subscription::update($row->subscription_id, array(
+						"items" => array(
+							array(
+								"id" 	=> $itemID,
+								"plan" 	=> $package_id,
+							),
+						),
+						"prorate" => false,
+					), array("stripe_account" =>  $merchant_id));
+					$irw_amount 			  = number_format(($amount * $row->irw_percentage)/100,2);
+					$producer_royality_amount = number_format(($amount * $row->producer_royality_percentage)/100,2);
+					$update_user_package = array("plan_id"=>$package_id,"producer_royality_amount"=>$producer_royality_amount,"irw_amount"=>$irw_amount);
+					$this->Users_model->updatePackageOfUser($update_user_package,$row->id);
+				}catch (Exception $e) {
+					$array = $e->getJsonBody();
+					$this->session->set_flashdata('error', $array['error']['message']);
+				}
+			}
+			$this->session->set_flashdata('success', 'User Subscription updated');
+		}
 	}
 
 	public function deletecontent($id) {

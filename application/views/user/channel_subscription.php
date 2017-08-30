@@ -34,7 +34,7 @@ $(document).ready(function(){
 					<div class="panel-heading font-bold">Channel Subscription!</div>
 					<div class="panel-body">
 						<?php $this->load->view('admin/common/messages');?>
-						<?php if($alreadyBuy && $this->session->flashdata('success')==''){?>
+						<?php if($alreadyBuy){?>
 						<div>You Are already Subscribe this channel.</div>
 						<?php }else{?>
 							<!--<form action="#" method="post" class="grid card-form">-->
@@ -48,14 +48,6 @@ $(document).ready(function(){
 										$subscription_amount+=$channelInfo['channel_subscription_price'];
 										?>/Month
 									</div>
-									<?php if($flag_div){?>
-										<div class="col-md-2">
-											<img style="width: 50px;" src="<?php echo base_url()."uploads/profile_pic/".(($officalInfo['picture'])?$officalInfo['picture']:"default-thumbnail.jpg")?>" class=" img-responsive"/>
-											$<?php echo $officalInfo['channel_subscription_price'];
-											$subscription_amount+=$officalInfo['channel_subscription_price'];
-											?>/Month
-										</div>
-									<?php } ?>
 								</div>
 
 								<div class="row">
@@ -65,15 +57,15 @@ $(document).ready(function(){
 										</div>
 								   </div>
 								</div>
-
 								<input type="hidden" name="chargable_amount" value="<?php echo $subscription_amount;?>" />
 								<form  method="post">
                                 	<?php //pk_F34Z9EEL7zPhz6gqqzUWutn0zGV6A;?>
                                 	<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                                          data-key="pk_ZlhI4yEbDZfAzCn1bdsXwColDSg0E"
+                                          data-key="<?php echo STRIPE_PUBLISHABLE_KEY?>"
                                           data-description="Access for a month"
                                           data-amount="<?php echo $subscription_amount*100;?>"
-                                          data-locale="auto"></script>
+                                          data-locale="auto"
+                                          data-label="Subscribe"></script>
                                 </form>
 								<?php /*?><?php
 								if(!empty($card_number)){

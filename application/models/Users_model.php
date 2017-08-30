@@ -21,7 +21,539 @@ class Users_model extends CI_Model
 		return array();
 	}
 	
+	function addStripePackage($data,$user_id){
+		$this->db->insert('stripe_plans',$data);
+		$id = $this->db->insert_id();
+		
+		$query = "update stripe_plans set status='disable' where id<>$id and user_id=$user_id";
+		$this->db->query($query);
+		return $id;
+	}
 	
+	function getActivePackageStripePlan($id){
+		$this->db->where("user_id",$id);
+		$this->db->where("status",'active');
+		$query = $this->db->get('stripe_plans');
+		if($query->num_rows()){
+			$row = $query->row();
+			return $row->stripe_plan_id;
+		}
+		return false;
+	}
+	
+	function checkUserHaveIRWPackage($id,$cid){
+		$query = "select * from channel_subscription where (user_id='".$id."' and channel_id='".$cid."') or (user_id='".$id."' and type='both') and status='active'";
+		$query = $this->db->query($query);
+		if($query->num_rows()>0)
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	function getCustomerIDByChannelID($id,$cid){
+		$this->db->where("user_id",$id);
+		$this->db->where("channel_id",$cid);
+		$query = $this->db->get('customer_stripe_accounts');
+		//echo $this->db->last_query();
+		if($query->num_rows())
+		{
+			$row = $query->row();
+			return $row->stripe_customer_id;
+		}
+		return "";
+	}
+	
+	function addCustomerIDByChannelID($data){
+		$this->db->insert('customer_stripe_accounts',$data);
+		return $this->db->insert_id();
+	}
+	
+	public function checkProducerPlanExist($id){
+		$this->db->where("user_id",$id);
+		$query = $this->db->get('stripe_plans');
+		//echo $this->db->last_query();
+		if($query->num_rows()>0)
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	public function getAllSubscribeUsersByChannelID($id){
+		$this->db->where("channel_id",$id);
+		$query = $this->db->get('channel_subscription');
+		if($query->num_rows()>0)
+		{
+			return $query->result();
+		}
+		return false;
+	}
+	
+	function updatePackageOfUser($data,$id){
+		$this->db->where('id', $id);
+		$this->db->update('channel_subscription', $data);
+	}
+	
+	public function getUserAnalytics() {
+		
+      	$registeredUsers = "select count(*) as registeredUsers from users_groups where group_id = 2";
+		$registeredUsers = $this->db->query($registeredUsers);
+		$registeredUsers = $registeredUsers->row_array();
+      	$registeredUsers = $registeredUsers['registeredUsers'];
+
+      	$registeredProducers = "select count(*) as registeredProducers from users_groups where group_id = 3";
+		$registeredProducers = $this->db->query($registeredProducers);
+      	$registeredProducers = $registeredProducers->row_array();
+      	$registeredProducers = $registeredProducers['registeredProducers'];
+
+      	$totalRevenue = "select SUM(irw_amount) as irwRevenue, SUM(producer_royality_amount) as producerRoyaltyRevenue from payment_logs";
+		$totalRevenue = $this->db->query($totalRevenue);
+      	$totalRevenue = $totalRevenue->row_array();
+      	$allData = array(
+      		'registeredUsers' => $registeredUsers,
+      		'registeredProducers' => $registeredProducers,
+      		'totalRevenue' => $totalRevenue,
+      	);
+      	
+      	return $allData;
+	}
+	public function getAnalyticsOfWeek () {
+		$weekPodcasts = "SELECT date, count
+        from
+        (
+            select date, count(*) AS count
+            from analytics
+            where date BETWEEN date_add(curdate(), interval -6 day) AND curdate() AND type='Podcasts'
+            group by date
+            union all
+            select curdate(), 0
+            union all
+            select date_add(curdate(), interval -1 day), 0
+            union all
+            select date_add(curdate(), interval -2 day), 0
+            union all
+            select date_add(curdate(), interval -3 day), 0
+            union all
+            select date_add(curdate(), interval -4 day), 0
+            union all
+            select date_add(curdate(), interval -5 day), 0
+            union all
+            select date_add(curdate(), interval -6 day), 0
+        ) x
+        group by date
+        order by date";
+		$weekPodcasts = $this->db->query($weekPodcasts);
+		$weekPodcasts = $weekPodcasts->result();
+		$podcastArray = array();
+		
+		foreach($weekPodcasts as $key => $value) {
+			$podcastArray[$key] = $value->count;
+		}
+		
+
+		$weekVideos = "SELECT date, count
+        from
+        (
+            select date, count(*) AS count
+            from analytics
+            where date BETWEEN date_add(curdate(), interval -6 day) AND curdate() AND type='Video'
+            group by date
+            union all
+            select curdate(), 0
+            union all
+            select date_add(curdate(), interval -1 day), 0
+            union all
+            select date_add(curdate(), interval -2 day), 0
+            union all
+            select date_add(curdate(), interval -3 day), 0
+            union all
+            select date_add(curdate(), interval -4 day), 0
+            union all
+            select date_add(curdate(), interval -5 day), 0
+            union all
+            select date_add(curdate(), interval -6 day), 0
+        ) x
+        group by date
+        order by date";
+		$weekVideos = $this->db->query($weekVideos);
+		$weekVideos = $weekVideos->result();
+		
+		$videoArray = array();
+		
+		foreach($weekVideos as $key => $value) {
+			$videoArray[$key] = $value->count;
+		}
+		
+		$weekArticles = "SELECT date, count
+        from
+        (
+            select date, count(*) AS count
+            from analytics
+            where date BETWEEN date_add(curdate(), interval -6 day) AND curdate() AND type='Article'
+            group by date
+            union all
+            select curdate(), 0
+            union all
+            select date_add(curdate(), interval -1 day), 0
+            union all
+            select date_add(curdate(), interval -2 day), 0
+            union all
+            select date_add(curdate(), interval -3 day), 0
+            union all
+            select date_add(curdate(), interval -4 day), 0
+            union all
+            select date_add(curdate(), interval -5 day), 0
+            union all
+            select date_add(curdate(), interval -6 day), 0
+        ) x
+        group by date
+        order by date";
+		$weekArticles = $this->db->query($weekArticles);
+		$weekArticles = $weekArticles->result();
+		
+		$articlesArray = array();
+		
+		foreach($weekArticles as $key => $value) {
+			$articlesArray[$key] = $value->count;
+		}
+		//echo "<pre>"; print_r($articlesArray);exit;
+		//$podcastArray = asort($podcastArray);
+		$allAnalytics = array(
+			'weekPodcasts'	=> array_reverse($podcastArray),
+			'weekVideos'	=> array_reverse($videoArray),
+			'weekArticles'	=> array_reverse($articlesArray),
+		);
+		return $allAnalytics;
+	}
+
+	public function weekAnalytics() {
+		$producerId = $this->ion_auth->get_user_id();
+
+		$weekPodcastsClick = "SELECT date, count
+									from
+									(
+									  select date, count(*) AS count
+									  from analytics
+									  where date BETWEEN date_add(curdate(), interval -6 day) AND curdate() AND type='Podcasts' AND author_id='$producerId'
+									  group by date
+									  union all
+									  select curdate(), 0
+									  union all
+									  select date_add(curdate(), interval -1 day), 0
+									  union all
+									  select date_add(curdate(), interval -2 day), 0
+									  union all
+									  select date_add(curdate(), interval -3 day), 0
+									  union all
+									  select date_add(curdate(), interval -4 day), 0
+									  union all
+									  select date_add(curdate(), interval -5 day), 0
+									  union all
+									  select date_add(curdate(), interval -6 day), 0
+									) x
+									group by date
+									order by date";
+		$weekPodcastsClick = $this->db->query($weekPodcastsClick);
+		$weekPodcastsClick = $weekPodcastsClick->result();
+		//echo $this->db->last_query();exit;
+		$podcastArrayClick = array();
+		foreach($weekPodcastsClick as $key => $value) {
+			$podcastArrayClick[$key] = $value->count;
+		}
+		//echo "<pre>"; print_r($podcastArrayClick);exit;
+
+
+		$weekVideos = "SELECT date, count
+						from
+						(
+						  select date, count(*) AS count
+						  from analytics
+						  where date BETWEEN date_add(curdate(), interval -6 day) AND curdate() AND type='Video' AND author_id='$producerId'
+						  group by date
+						  union all
+						  select curdate(), 0
+						  union all
+						  select date_add(curdate(), interval -1 day), 0
+						  union all
+						  select date_add(curdate(), interval -2 day), 0
+						  union all
+						  select date_add(curdate(), interval -3 day), 0
+						  union all
+						  select date_add(curdate(), interval -4 day), 0
+						  union all
+						  select date_add(curdate(), interval -5 day), 0
+						  union all
+						  select date_add(curdate(), interval -6 day), 0
+						) x
+						group by date
+						order by date";
+		$weekVideos = $this->db->query($weekVideos);
+		$weekVideos = $weekVideos->result();
+		//echo "<pre>"; print_r($weekVideos);exit;
+		$videoArrayClick = array();
+		foreach($weekVideos as $key => $value) {
+			$videoArrayClick[$key] = $value->count;
+		}
+		
+		$weekArticles = "SELECT date, count
+						from
+						(
+						  select date, count(*) AS count
+						  from analytics
+						  where date BETWEEN date_add(curdate(), interval -6 day) AND curdate() AND type='Article' AND author_id='$producerId'
+						  group by date
+						  union all
+						  select curdate(), 0
+						  union all
+						  select date_add(curdate(), interval -1 day), 0
+						  union all
+						  select date_add(curdate(), interval -2 day), 0
+						  union all
+						  select date_add(curdate(), interval -3 day), 0
+						  union all
+						  select date_add(curdate(), interval -4 day), 0
+						  union all
+						  select date_add(curdate(), interval -5 day), 0
+						  union all
+						  select date_add(curdate(), interval -6 day), 0
+						) x
+						group by date
+						order by date";
+		$weekArticles = $this->db->query($weekArticles);
+		$weekArticles = $weekArticles->result();
+		
+		$articlesArrayClick = array();
+		foreach($weekArticles as $key => $value) {
+			$articlesArrayClick[$key] = $value->count;
+		}
+		
+		$allAnalyticsClicks = array(
+			'weekPodcastsClick'	=> array_reverse($podcastArrayClick),
+			'weekVideosClick'	=> array_reverse($videoArrayClick),
+			'weekArticlesClick'	=> array_reverse($articlesArrayClick),
+		);
+		//echo "<pre>"; print_r($allAnalyticsClicks);exit;
+		return $allAnalyticsClicks;
+	}
+
+	public function monthAnalytics() {
+		$producerId = $this->ion_auth->get_user_id();
+
+		$monthPodcastsClick = "SELECT  Months.m AS date, COUNT(analytics.date) AS count FROM 
+		(
+		    SELECT 1 as m 
+		    UNION SELECT 2 as m 
+		    UNION SELECT 3 as m 
+		    UNION SELECT 4 as m 
+		    UNION SELECT 5 as m 
+		    UNION SELECT 6 as m 
+		    UNION SELECT 7 as m 
+		    UNION SELECT 8 as m 
+		    UNION SELECT 9 as m 
+		    UNION SELECT 10 as m 
+		    UNION SELECT 11 as m 
+		    UNION SELECT 12 as m
+		) as Months
+		LEFT JOIN analytics  on Months.m = MONTH(analytics.date)  AND analytics.author_id='$producerId' AND analytics.type='Podcasts'
+		GROUP BY
+		    Months.m";
+		$monthPodcastsClick = $this->db->query($monthPodcastsClick);
+		$monthPodcastsClick = $monthPodcastsClick->result();
+		//echo $this->db->last_query();exit;
+		//echo "<pre>"; print_r($monthPodcastsClick);exit;
+		$podcastArrayMonth = array();
+		foreach($monthPodcastsClick as $key => $value) {
+			$podcastArrayMonth[$key] = $value->count;
+		}
+
+
+		$monthvideosClick = "SELECT  Months.m AS date, COUNT(analytics.date) AS count FROM 
+		(
+		    SELECT 1 as m 
+		    UNION SELECT 2 as m 
+		    UNION SELECT 3 as m 
+		    UNION SELECT 4 as m 
+		    UNION SELECT 5 as m 
+		    UNION SELECT 6 as m 
+		    UNION SELECT 7 as m 
+		    UNION SELECT 8 as m 
+		    UNION SELECT 9 as m 
+		    UNION SELECT 10 as m 
+		    UNION SELECT 11 as m 
+		    UNION SELECT 12 as m
+		) as Months
+		LEFT JOIN analytics  on Months.m = MONTH(analytics.date)  AND analytics.author_id='$producerId' AND analytics.type='Video'
+		GROUP BY
+		    Months.m";
+		$monthvideosClick = $this->db->query($monthvideosClick);
+		$monthvideosClick = $monthvideosClick->result();
+		//echo $this->db->last_query();exit;
+		//echo "<pre>"; print_r($monthPodcastsClick);exit;
+		$videoArrayMonth = array();
+		foreach($monthvideosClick as $key => $value) {
+			$videoArrayMonth[$key] = $value->count;
+		}
+
+
+		$monthArticlesClick = "SELECT  Months.m AS date, COUNT(analytics.date) AS count FROM 
+		(
+		    SELECT 1 as m 
+		    UNION SELECT 2 as m 
+		    UNION SELECT 3 as m 
+		    UNION SELECT 4 as m 
+		    UNION SELECT 5 as m 
+		    UNION SELECT 6 as m 
+		    UNION SELECT 7 as m 
+		    UNION SELECT 8 as m 
+		    UNION SELECT 9 as m 
+		    UNION SELECT 10 as m 
+		    UNION SELECT 11 as m 
+		    UNION SELECT 12 as m
+		) as Months
+		LEFT JOIN analytics  on Months.m = MONTH(analytics.date)  AND analytics.author_id='$producerId' AND analytics.type='Article'
+		GROUP BY
+		    Months.m";
+		$monthArticlesClick = $this->db->query($monthArticlesClick);
+		$monthArticlesClick = $monthArticlesClick->result();
+		//echo $this->db->last_query();exit;
+		//echo "<pre>"; print_r($monthArticlesClick);exit;
+		$articleArrayMonth = array();
+		foreach($monthArticlesClick as $key => $value) {
+			$articleArrayMonth[$key] = $value->count;
+		}
+
+		$allAnalyticsMonth = array(
+			'monthPodcastsClick' => $podcastArrayMonth,
+			'monthVideosClick'	=> $videoArrayMonth,
+			'monthArticlesClick' => $articleArrayMonth,
+		);
+		//echo "<pre>"; print_r($allAnalyticsClicks);exit;
+		return $allAnalyticsMonth;
+	}
+
+	public function totalSubscribers() {
+		$producerId = $this->ion_auth->get_user_id();
+		$allSubscribers = "SELECT count(*) AS subscribers from channel_subscription WHERE channel_subscription.channel_id = ". $producerId;
+		$allSubscribers = $this->db->query($allSubscribers);
+		$allSubscribers = $allSubscribers->row_array();
+		//echo "<pre>"; print_r($allSubscribers);exit;
+		return $allSubscribers;
+	}
+
+	public function getContentOfProducer() {
+		$producerId = $this->ion_auth->get_user_id();
+
+		$allContent = "Select * from contents WHERE user_id = ". $producerId;
+		$allContent = $this->db->query($allContent);
+		$allContent = $allContent->result();
+		//echo "<pre>"; print_r($allContent);exit;
+		return $allContent;
+	}
+
+
+	public function byEpisode($id) {
+		$byEpisode = "SELECT count(*) as COUNT, date from analytics where type_id='$id' GROUP BY date ORDER BY date";
+		$byEpisode = $this->db->query($byEpisode);
+		$byEpisode = $byEpisode->result();
+		$allAnalyticsDate = array();
+		foreach($byEpisode as $key => $value) {
+			$allAnalyticsDate[$key]= $value->date;
+		}
+		$allAnalyticsCount = array();
+		foreach($byEpisode as $key => $value) {
+			$allAnalyticsCount[$key] = $value->COUNT;
+		}
+
+		$allAnalyticsEpisode = array(
+			'episodeDates' => $allAnalyticsDate,
+			'episodeCount'	=> $allAnalyticsCount,
+		);
+		//echo "<pre>"; print_r($allAnalyticsEpisode);exit;
+		return $allAnalyticsEpisode;
+	}
+
+	public function totalRevenue() {
+		$producerId = $this->ion_auth->get_user_id();
+
+		$totalRevenue = "SELECT SUM(amount) as totalRevenue, sum(irw_amount) as irw_amount, sum(producer_royality_amount) as producer_amount from channel_subscription WHERE channel_id=". $producerId;
+		$totalRevenue = $this->db->query($totalRevenue);
+		$totalRevenue = $totalRevenue->row_array();
+		//echo "<pre>"; print_r($totalRevenue);exit;
+		return $totalRevenue;	
+	}
+
+	public function getAnalyticsOfWeekClicked() {
+		$weekPodcastsClick = "SELECT COUNT(*) AS count, date from analytics WHERE date > DATE(NOW()) - INTERVAL 7 DAY AND type='Podcasts' group BY date ORDER BY date DESC";
+		$weekPodcastsClick = $this->db->query($weekPodcastsClick);
+		$weekPodcastsClick = $weekPodcastsClick->result();
+		$podcastArrayClick = array();
+		
+		for ($pi = 6; $pi >= 0; $pi--) {
+			if (isset($weekPodcastsClick[$pi])) {
+				
+				if ($weekPodcastsClick[$pi]->date == date('Y-m-d', strtotime('-'.$pi.' days'))) {
+					$podcastArrayClick[$pi] = $weekPodcastsClick[$pi]->count;
+				}
+				else {
+					$podcastArrayClick[$pi] = 0;
+				}
+			}
+			else {
+				$podcastArrayClick[$pi] = 0;
+			}
+		}
+		//echo "<pre>"; print_r($podcastArrayClick);exit;
+
+		$weekVideos = "SELECT COUNT(*) AS count, date from analytics WHERE date > DATE(NOW()) - INTERVAL 7 DAY AND type='Video' group BY date ORDER BY date DESC";
+		$weekVideos = $this->db->query($weekVideos);
+		$weekVideos = $weekVideos->result();
+		
+		$videoArrayClick = array();
+		for ($pi = 6; $pi >= 0; $pi--) {
+			if (isset($weekVideos[$pi])) {
+				
+				if (date('Y-m-d', strtotime($weekVideos[$pi]->date)) == date('Y-m-d', strtotime('-'.$pi.' days'))) {
+					$videoArrayClick[$pi] = $weekVideos[$pi]->count;
+				}
+				else {
+					$videoArrayClick[$pi] = 0;
+				}
+			}
+			else {
+				$videoArrayClick[$pi] = 0;
+			}
+		}
+
+		$weekArticles = "SELECT COUNT(*) AS count, date from analytics WHERE date > DATE(NOW()) - INTERVAL 7 DAY AND type='Article' group BY date ORDER BY date DESC";
+		$weekArticles = $this->db->query($weekArticles);
+		$weekArticles = $weekArticles->result();
+		
+		$articlesArrayClick = array();
+		for ($pi = 6; $pi >= 0; $pi--) {
+			if (isset($weekArticles[$pi])) {
+				
+				if (date('Y-m-d', strtotime($weekArticles[$pi]->date)) == date('Y-m-d', strtotime('-'.$pi.' days'))) {
+					$articlesArrayClick[$pi] = $weekArticles[$pi]->count;
+				}
+				else {
+					$articlesArrayClick[$pi] = 0;
+				}
+			}
+			else {
+				$articlesArrayClick[$pi] = 0;
+			}
+		}
+
+		$allAnalyticsClicks = array(
+			'weekPodcastsClick'	=> ($podcastArrayClick),
+			'weekVideosClick'	=> array_reverse($videoArrayClick),
+			'weekArticlesClick'	=> array_reverse($articlesArrayClick),
+		);
+		//echo "<pre>"; print_r($allAnalyticsClicks);exit;
+		return $allAnalyticsClicks;
+	}
+
 	public function get_user_detail_by_email($email){
 		return $this->db->from($this->tablename)->where(array('email' => $email))->get()->row_array();
 	}
@@ -51,8 +583,8 @@ class Users_model extends CI_Model
 	public function getUserName($id){
 		$query  = "SELECT * from users where id= '$id'";
 		$result = $this->db->query($query);
-		$row    = $result->result();
-		return $row[0]->firstname." ".$row[0]->lastname;
+		$row    = $result->row();
+		return $row->first_name." ".$row->last_name;
 	}
 
 	public function getAllAdmins() {
@@ -791,7 +1323,7 @@ class Users_model extends CI_Model
             where users_groups.group_id = '3' and users.is_deleted != '1' 
             group by contents.user_id , contents.type order by users.sorting desc
         ");*/
-        $chanel_users = $this->db->query("SELECT users.id, users.channel_subscription_price, users.channel_name, users.picture,users_groups.user_id,contents.user_id, contents.type, count(contents.id) as TOTAL FROM `users`
+        $chanel_users = $this->db->query("SELECT users.id, users.channel_subscription_price,users.stripe_user_id, users.channel_name, users.picture,users_groups.user_id,contents.user_id, contents.type, count(contents.id) as TOTAL FROM `users`
 left join users_groups on (users.id=users_groups.user_id)
 left join contents on (users.id = contents.user_id)
 where users_groups.group_id = '3' and users.is_deleted!='1' and is_approved=1
@@ -894,6 +1426,16 @@ group by users.channel_name order by users.sorting desc");
 		}
 		return ''; //by default
 	}
+	
+	public function checkStripPlanForProducerWithAmount($amount,$user_id){
+		$this->db->where('user_id',$user_id);
+		$this->db->where('amount',$amount);
+		$query = $this->db->get('stripe_plans');
+		if($query->num_rows()>0){
+			return false;
+		}
+		return true;
+	}
 
     
 	public function getAllUsersByType($user_type) {
@@ -966,8 +1508,6 @@ group by users.channel_name order by users.sorting desc");
 		}
 		return array();
 	}
-
-
 	
 	public function getCountNonApprovedProducers($data) {
 		$this->db->select('users_groups.group_id');
@@ -1049,7 +1589,6 @@ group by users.channel_name order by users.sorting desc");
 		}
 		return array();
 	}
-	
 	public function insertChannelSubscriptionDetail($data){
 		$this->db->insert('channel_subscription',$data);
 		//echo $this->db->last_query();
@@ -1060,7 +1599,7 @@ group by users.channel_name order by users.sorting desc");
 		$this->db->where('channel_id',$id);
 		$this->db->where('status','active');
 		$this->db->where('user_id',$this->ion_auth->get_user_id());
-		$this->db->where('next_recharge_date >=',date('Y-m-d'));
+		//$this->db->where('next_recharge_date >=',date('Y-m-d'));
 		$query = $this->db->get('channel_subscription');
 		//echo $this->db->last_query();
 		//die();
@@ -1139,6 +1678,16 @@ group by users.channel_name order by users.sorting desc");
 		return $query->num_rows();
 	}
 	
+	public function countTotalPaymentLogsRowsByChannelId($user_id,$data)
+	{
+		$where = "  1=1 ";	
+		$where.=" and channel_id='". $user_id."'";
+		$this->db->where($where,NULL,false);
+		$this->db->from('payment_logs');
+		$query  =   $this->db->get();
+		return $query->num_rows();
+	}
+	
 	public function getAllPaymentHistoryByUserId($user_id,$data,$start,$limit){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
@@ -1152,7 +1701,6 @@ group by users.channel_name order by users.sorting desc");
 		$this->db->from('users');
 		$this->db->join('payment_logs','users.id = payment_logs.channel_id','right outer');
 		$query  =   $this->db->get();
-		//echo $this->db->last_query();
 		if($query->num_rows())
 		{
 			return $query->result();
@@ -1160,15 +1708,40 @@ group by users.channel_name order by users.sorting desc");
 		return array();
 	}
 	
+	public function getAllPaymentHistoryByChannelId($user_id,$data,$start,$limit){
+		$this->db->limit($limit, $start);
+		$this->db->order_by('id','desc');
+		$where = "  1=1 ";	
+		$where.=" and channel_id='". $user_id."'";
+		$this->db->where($where,NULL,false);
+		$this->db->from('payment_logs');
+		$query  =   $this->db->get();
+		if($query->num_rows())
+		{
+			return $query->result();
+		}
+		return array();
+	}
+	
+	function getSubscriptionRow($id){
+		$this->db->where("id",$id);
+		$this->db->where('user_id',$this->ion_auth->get_user_id());
+		$query = $this->db->get('channel_subscription');
+		if($query->num_rows()>0){
+			return $query->row();	
+		}
+		return array();
+	}
+	
 	public function unsubcribeChannelById($id,$data){
 		$data['status'] = 'inactive';
-		$this->db->where('channel_id',$id);
+		$this->db->where('id',$id);
 		$this->db->where('user_id',$this->ion_auth->get_user_id());
 		$this->db->update('channel_subscription',$data);
 		return true;
 	}
 	public function getUserbanner(){
-		$this->db->select(' banner');
+		$this->db->select('banner');
 		$this->db->where('id',$this->ion_auth->get_user_id());
 		$query = $this->db->get('users');
 		//echo $this->db->last_query();
@@ -1250,6 +1823,22 @@ group by users.channel_name order by users.sorting desc");
 		$this->db->where('id',$id);
 		$this->db->update('channel_subscription',$data);
 		return true;
+	}
+	
+	function getChannelSubscriptionDetailBySubscriptionID($sid){
+		$this->db->where("subscription_id",$sid);
+		$query = $this->db->get('channel_subscription');
+
+		if($query->num_rows()){
+			$row = $query->row();
+			return $row;
+		}
+		return array();
+	}
+	
+	function updateSubscriptionDetail($data,$id){
+		$this->db->where('id', $id);
+		$this->db->update('channel_subscription', $data);
 	}
 
 }//end class

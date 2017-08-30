@@ -23,6 +23,7 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 <script type="text/javascript">
+var currentplayingAudioId = ''; 
 var BASE_URL = '<?php echo base_url()?>';
 $(document).ready(function(){
 	$(document).on('click', '.play_list_song', function() {
@@ -115,6 +116,18 @@ $(document).on('click', '.playSong', function() {
 		var song = $(this).attr('data-song');
 		var id = $(this).attr('data-id');
 		var image = $(this).attr("data-image");
+		if (currentplayingAudioId != '') {
+			var listen_time = $(".sm2-inline-time").text();
+			
+			my_url = BASE_URL+"home/addContentPlayTime";
+			$.ajax({
+				url: my_url,
+				data : {id:id,listen_time:listen_time},
+				type: "post",
+				success: function (response) {
+				}
+			});
+		}
 		//var base_url = window.location.origin;
 		
 		var current_song_image = '<img src='+BASE_URL+'/uploads/listing/thumb_153_'+image+' class="img-small r r-2x"/>';
@@ -122,6 +135,7 @@ $(document).on('click', '.playSong', function() {
 		$(".song-img").append(current_song_image);
 		
 		$(".song-name h3").text(title);
+		currentplayingAudioId = id;
 		addSong(song,title,id);
 		saveAnalytics(id);
 	});
@@ -184,8 +198,8 @@ $(document).on('click', '.sm2-playlist-wrapper .sm2-playlist-bd li', function() 
 <meta name="twitter:image:src" content="<?php echo base_url() ?>uploads/listing/<?php echo $dataRow['picture']?>">
 <meta property="og:title" content="<?php echo $dataRow['title'];?>">
 <meta property="og:image" content="<?php echo base_url() ?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>">
-<meta property="og:url" content="<?php echo current_url();?>">
-<meta property="og:type" content="article"/>
+<meta property="og:url" content="<?php echo current_url();?>?id=<?php echo $dataRow['id']?>">
+<meta property="og:type" content="article">
 
 <meta property="og:description" content="<?php echo strip_tags($dataRow['description']);?>">
 <?php }?>

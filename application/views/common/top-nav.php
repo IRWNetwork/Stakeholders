@@ -66,16 +66,21 @@
 					<ul class="dropdown-menu animated fadeInRight w">
 						<li> <a href="<?php echo base_url()?>user/profile">Profile</a> </li>
 						<?php if ($this->session->userdata('userGroup') != 4) { ?>
-	                        <li> 
-	                        	<a href="<?php echo base_url()?>user/upgradepackage">Become Permium User</a>
+	                        <li>
+	                        	<a href="<?php echo base_url()?>user/dashboard">Dashboard</a>
 	                        </li>
+	                        <!-- <li> 
+	                        	<a href="<?php echo base_url()?>user/upgradepackage">Become Permium User</a>
+	                        </li> -->
 	                        <li>
 	                        	<a href="<?php echo base_url()?>user/paymenthistory">Payment History </a>
 	                        </li>
+                            <?php if ($this->session->userdata('userGroup') != 2) { ?>
 	                        <li>
 	                        	<a href="<?php echo base_url()?>user/subscribechannel">Your Subscriptions
 	                        	</a>
 	                        </li> 
+                            <?php }?>
                         <li>
                         	<a href="<?php echo base_url()?>feedback">Feedback</a>
                         </li>

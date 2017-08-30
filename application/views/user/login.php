@@ -19,7 +19,7 @@
 				<div class="text-center m-t m-b"><a href="<?php echo base_url()?>user/forgotpassword">Forgot password?</a></div>
 				<div class="line line-dashed"></div>
 				<p class="text-center"><small>Do not have an account?</small></p>
-				<a href="<?php echo base_url()?>user/type" class="btn btn-lg btn-default btn-block">Create an account</a>
+				<a href="<?php echo base_url()?>user/register/1" class="btn btn-lg btn-default btn-block">Create an account</a>
 			</form>
 		</div>
 		<div class="text-center" ng-include="'tpl/blocks/page_footer.html'">

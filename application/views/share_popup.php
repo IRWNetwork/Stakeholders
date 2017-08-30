@@ -1,5 +1,5 @@
 <div class="modal-dialog">
-	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></button>
 	<div class="modal-content">
 		<div class="modal-body">
 			<div class="request-quote">
@@ -27,13 +27,14 @@
 						<input type="text" id="popup_textbox" value="<?php echo $url;?>" placeholder="<?php echo $url;?>" class="share-dialog__copiable">
 						<ul class="link-holder">
 							<li>
-								<a href="javascript:void(0)" onclick='window.open("http://www.facebook.com/share.php?u=<?php echo $url?>&title=<?php echo str_replace("'", "", $dataRow['title']);?>&picture=<?php echo base_url()?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>", "sharer", "toolbar=0,status=0,width=548,height=325")'> <button type="submit" class="btn">Facebook</button></a>
+								<a href="javascript:void(0)" onclick='window.open("https://www.facebook.com/share.php?u=<?php echo $url?>&title=<?php echo str_replace("'", "", $dataRow['title']);?>&picture=<?php echo base_url()?>uploads/listing/thumb_469_<?php echo $dataRow['picture']?>", "sharer", "toolbar=0,status=0,width=548,height=325")'> <button type="submit" class="btn">Facebook</button></a>
 							</li>
 							<li>
-								<a class="btn" href="http://twitter.com/intent/tweet?text=<?php echo $dataRow['title']; ?>+<?php echo $url?>" >Twitter</a>
+								<!-- <a class="btn" href="http://twitter.com/intent/tweet?text=<?php echo $dataRow['title']; ?>+<?php echo $url?>" >Twitter</a> -->
+								<a class="btn" href="http://twitter.com/intent/tweet?url=<?php echo $url; ?>&text=<?php echo urlencode($dataRow['title'])?>" >Twitter</a>
 							</li>
                             <li>
-								<a href="javascript:void(0)" onclick="show_code();" > <button type="submit" class="btn">Embeded</button></a>
+								<a href="javascript:void(0)" onclick="show_code();" > <button type="submit" class="btn">Embed Code</button></a>
 							</li>
 							<!--<li>
 								<button type="submit" class="btn">Embed</button>

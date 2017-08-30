@@ -29,10 +29,28 @@ class Content extends CI_Controller
         $config["per_page"]     	= 10;
         $config["uri_segment"]  	= 3;
 		$config['reuse_query_string'] = TRUE;
-		
         $this->pagination->initialize($config);
-        $page 		           = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-		$data['contents']	   = $this->Content_model->getAllDataForAdmin(array(),$page,$config["per_page"],$arr['name']);
+        $page = ($this->input->get('per_page')) ? $this->input->get('per_page') : 0;
+		$data['contents'] = $this->Content_model->getAllDataForAdmin(array(),$page,$config["per_page"],$arr['name']);
+        $data["listen_count"] = $this->Content_model->listen_count();
+	        foreach ($data['contents']  as $key => $value) {
+	        //echo "<pre>"; print_r($value);exit;
+	        $filterBy = $value->id;
+	        $xyz = array_filter($data["listen_count"], function ($var) use ($filterBy) {
+	            if ($var->type_id == $filterBy) {
+	                return $var;
+	            }
+	        });
+	        if(!empty($xyz) && count($xyz) > 0) {
+	        	foreach ($xyz as $value) {
+	        		$data['contents'][$key]->listenCount = $value->count;
+	        	}
+	        }
+	        else {
+	        	$data['contents'][$key]->listenCount = 0;
+	        }
+    	}
+		//echo $config["total_rows"] .' '. count($data['contents']);exit;
 		//echo "<pre>"; print_r($data['contents']);exit;
 		$data["links"]         = $this->pagination->create_links();
 		if($this->input->get('msg')){
@@ -176,6 +194,8 @@ class Content extends CI_Controller
 	{
 		$data['page_title'] 	= 'Add Content';
 		$data['page_heading'] 	= 'Add Content'; // testing
+		$data['channels'] 	= $this->Content_model->getAllChannels();
+
 		if($this->input->post()) {
 			//echo "<pre>"; print_r($_POST);exit;
 			$rules = array(
@@ -198,6 +218,11 @@ class Content extends CI_Controller
                      'field'   => 'description',
                      'label'   => 'Description',
                      'rules'   => 'trim|required'
+                ),
+                array(
+                     'field'   => 'producer_id',
+                     'label'   => 'Producer',
+                     'rules'   => 'required'
                 )
             );
 			
@@ -277,7 +302,7 @@ class Content extends CI_Controller
 								"is_featured" 		=> $is_featured,
 								"file_url" 			=> $file_name,
 								"picture" 			=> $picture_name,
-								"user_id"	  		=> $this->ion_auth->user()->row()->id
+								"user_id"	  		=> $this->input->post('producer_id')
 							);
 				$result = $this->Content_model->save($data);
 				if($result){
@@ -314,7 +339,7 @@ class Content extends CI_Controller
 	{
 		$data['page_title'] 	= 'Edit Content';
 		$data['page_heading'] 	= 'Edit Content';
-		
+		$data['channels'] 	= $this->Content_model->getAllChannels();
 		$data['contentRow'] 	= $this->Content_model->getRow($this->input->get('id'));
 
 		$oldFileUrl = $data['contentRow']['file_url'];
@@ -335,6 +360,11 @@ class Content extends CI_Controller
                      'field'   => 'description',
                      'label'   => 'Description',
                      'rules'   => 'trim|required'
+                ),
+                array(
+                     'field'   => 'producer_id',
+                     'label'   => 'Producer',
+                     'rules'   => 'required'
                 )
             );
 			
@@ -370,6 +400,7 @@ class Content extends CI_Controller
 								"embed_code"		=> $this->input->post('embed_code'),
 								"meta_keywords"		=> $this->input->post('meta_keywords'),
 								"meta_description"	=> $this->input->post('meta_description'),
+								"user_id"			=> $this->input->post('producer_id'),
 								"is_premium" 		=> $is_premium,
 								"is_featured" 		=> $is_featured,
 							);

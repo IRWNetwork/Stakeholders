@@ -12,6 +12,12 @@
 						<form class="bs-example form-horizontal" method="post">
 							<div class="col-md-12">
 								<div class="form-group">
+									<label class="col-lg-3 control-label">Old Password</label>
+									<div class="col-lg-6">
+										<input type="password" class="form-control" name="old_password" placeholder="Old Password">
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="col-lg-3 control-label">Password</label>
 									<div class="col-lg-6">
 										<input type="password" class="form-control" name="password" placeholder="Password">

@@ -19,6 +19,17 @@ class Content_model extends CI_Model
 		return array();
 	}
 	
+	function updateListentime($id, $time_seconds) {
+		$this->db->where('id',$id);
+		$query = $this->db->get('contents');
+		$contentRow = $query->row();
+		$oldTime = $contentRow->play_time;
+		$newTime = $oldTime+$time_seconds;
+		
+		$data = array('play_time' => $newTime);
+		$this->db->where('id', $id);
+		$this->db->update('contents', $data); 
+	}
 	function getAllContents(){
 		$this->db->where('file<>','');
 		$query = $this->db->get('contents');
@@ -93,6 +104,15 @@ class Content_model extends CI_Model
 		
 	}
 	
+	public function getAllChannels() {
+		$query = $this->db->select('users.first_name, users.last_name, users.id, users.channel_name , users_groups.group_id');
+		$query = $this->db->from('users');
+        $query = $this->db->join('users_groups', 'users.id = users_groups.user_id');
+		$query = $this->db->where('users_groups.group_id', 3);
+        $query = $this->db->get('contents');
+        $results = $query->result_array();
+        return $results;
+	}
 	public function getPlaylistSongs($user_id,$playlist_id){
 				
 		$query = "select * from playlists_songs, contents where 1 and playlists_songs.song_id=contents.id and playlists_songs.user_id=$user_id order by playlists_songs.id desc";
@@ -202,6 +222,7 @@ class Content_model extends CI_Model
 		return array();
 	}
 	public function getContentByUserId($id,$filter){
+		$this->db->order_by('id','desc');
 		if($filter!=''){
 			$this->db->where('type',$filter);
 		}
@@ -262,20 +283,28 @@ class Content_model extends CI_Model
 		}
 		return array();
 	}
+
+	public function listen_count() {
+		$query = 'Select type_id, count(*) as count from analytics GROUP BY type_id';
+		$query = $this->db->query($query);
+		return $query->result();
+	}
 	
 	public function countTotalRowsForAdmin($data)
 	{
 		$where = "  1=1 ";	
 		if(isset($data['name']) && $data['name']!=''){
-			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
+			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
 		if(isset($data['type']) && $data['type']!=''){
-			$where.=" and type='". $data['type']."'";
+			$where.=" and contents.type='". $data['type']."'";
 		}
 		$this->db->where($where,NULL,false);
 		$this->db->select('contents.*');
 		$this->db->from('contents');
-		$query  =   $this->db->get();
+		$this->db->join('users', 'contents.user_id = users.id','INNER');
+
+		$query = $this->db->get();
 		//echo $this->db->last_query();exit;
 		return $query->num_rows();
 	}
@@ -475,6 +504,7 @@ class Content_model extends CI_Model
 					$myFileName = explode('?', $myFileName);
 					$myFileName = $myFileName[0];
 					//echo $myFileName;exit;
+					$myFileName = urldecode($myFileName);
 					$this->load->library('Gcloud');
 					$file_name = $this->gcloud->deleteFile($myFileName);
 
