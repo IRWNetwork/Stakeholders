@@ -38,8 +38,8 @@
 							<td><?php echo $i++;?></td>
                             <?php if($this->ion_auth->in_group(3)){?>
                             <td><?php echo $this->Users_model->getUserName($row->user_id);?></td>
-                            <?php }else{?>
-							<td><?php $c_row = $this->Users_model->getChannelNameById($row->user_id); echo $c_row['brand_name']?></td>
+                            <?php }else{ ?>
+							<td><?php $c_row = $this->Users_model->getChannelNameById($row->channel_id); echo $c_row['channel_name']?></td>
                             <?php }?>
 							<td>$<?php echo $row->amount?></td>
                             <td>$<?php echo $row->irw_amount; ?></td>

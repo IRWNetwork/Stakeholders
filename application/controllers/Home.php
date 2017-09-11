@@ -143,8 +143,7 @@ class Home extends MY_Controller
 
         if (isset($_POST['flag'])) {
 			echo $this->load->view('refund_policy',$this->data,TRUE);
-		}
-		else {
+		}else {
 			$parser['content'] = $this->load->view('refund_policy',$this->data,TRUE);
 	        $this->parser->parse('template', $parser);
 		}
@@ -158,8 +157,7 @@ class Home extends MY_Controller
 
         if (isset($_POST['flag'])) {
 			echo $this->load->view('contact_irw',$this->data,TRUE);
-		}
-		else {
+		}else {
 			$parser['content'] = $this->load->view('contact_irw',$this->data,TRUE);
 	        $this->parser->parse('template', $parser);
 		}
@@ -177,8 +175,7 @@ class Home extends MY_Controller
 		
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('playvideo_ajax',$this->data,TRUE);
-		}
-		else {
+		}else {
 			$parser['content'] = $this->load->view('playvideo',$this->data,TRUE);
 	        $this->parser->parse('template', $parser);
 		}
@@ -209,8 +206,7 @@ class Home extends MY_Controller
 		$this->data['featuredcontent']	= $this->Content_model->getFeaturedData(array());
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('article-detail-ajax',$this->data,TRUE);
-		}
-		else {
+		}else {
 			$parser['content'] =  $this->load->view('article-detail',$this->data,TRUE);
 	        $this->parser->parse('template', $parser);
 		}
@@ -251,17 +247,13 @@ class Home extends MY_Controller
 			$user_id 		= $this->ion_auth->user()->row()->id;
 			$playlistid		= $this->input->post('playlistid');
 			$song_id 		= $this->input->post('songid');
-		
 			$array = array("user_id"=>$user_id,"playlist_id"=>$playlistid,"song_id"=>$song_id);
-			
 			if($this->Content_model->checkSongInPlaylist($song_id,$user_id,$playlistid)){	
 				$this->Content_model->saveSongToPlaylist($array);
 				echo json_encode(array("msg"=>'Song added to playlist successfully'));
 			}else{
 				echo json_encode(array("msg"=>'Song already added in playlist'));
 			}
-			
-			
 		}else{
 			echo json_encode(array("msg"=>"Please login to add song in playlist"));
 		}
@@ -294,8 +286,7 @@ class Home extends MY_Controller
 		
 		if (isset($_POST['flag'])) {
 			echo $this->load->view('map/map-view',$this->data,TRUE);
-		}
-		else {
+		}else {
 			$parser['content']	=  $this->load->view('map/map-view',$this->data,TRUE);
 	        $this->parser->parse('template', $parser);
 		}
@@ -304,10 +295,7 @@ class Home extends MY_Controller
 	public function get_events_by_categories(){
 		$events 	= $this->input->post('events');
 		$producers 	= $this->input->post('producers');
-
-		
 		$events = $this->Events_model->getAllEventsByCategories($events,$producers);
-		
 		$new_array = array();
 		foreach($events as $event){
 
@@ -316,8 +304,6 @@ class Home extends MY_Controller
 			$new_array[] = $event;
 
 		}
-		
-		
 		echo json_encode($new_array);
 	}
 	
@@ -449,9 +435,7 @@ class Home extends MY_Controller
 						}
                      }
            $html .="</ul>";
-		   echo $html;
-		   
+		   echo $html;  
 		}
-		
 	}
 }

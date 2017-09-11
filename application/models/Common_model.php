@@ -349,6 +349,24 @@ class Common_model extends CI_Model
 		}
 	}
 
+	public function uploadCsv($name,$path,$field_name){
+		$config['upload_path']   = $path; //'uploads/data/';
+		$config['allowed_types'] = 'csv';
+		$config['max_size'] 	 = '10000000';
+		$config['file_name']     = $name;
+
+		$this->load->library('upload', $config);
+		if ($this->upload->do_upload($field_name)){
+
+
+			$image_details  = $this->upload->data();
+			$file_name 	= $image_details['file_name'];
+			return $file_name;
+		}else{
+			return false;
+		}
+	}
+
 	public function uploadFileToGoogle($source,$file_name){
 		$allowed_types = 'mkv|ogv|ogg|m4v|wmv|avi|mp3|flv|mp4|doc|docx|pdf|csv|ppt|pptx|jpeg|jpg|png|JPG|JPEG|PNG|rv|wav|mpeg|mpg|mov|avi|mp3|mp4|Svlc|m4a';
 		$allowed_types = explode('|',$allowed_types);

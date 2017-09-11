@@ -1758,7 +1758,7 @@ class User extends MY_Controller
 			if($subscription_id!=''){
 				try{
 					\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
-					$merchant_id = $this->Users_model->getStripeProducerAccountID($this->ion_auth->get_user_id());
+					$merchant_id = $this->Users_model->getStripeProducerAccountID($subscription_row->channel_id);
 					$sub = \Stripe\Subscription::retrieve($subscription_id, array("stripe_account" =>  $merchant_id));
 					$sub->cancel();
 					$this->Users_model->unsubcribeChannelById($this->input->get('id'),array());

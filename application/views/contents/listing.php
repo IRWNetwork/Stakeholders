@@ -35,6 +35,7 @@
 							<th>Type</th>
 							<th>Is Premium</th>
 							<th>Featured</th>
+                            <th>Status</th>
 							<th class=" no-link last"><span class="nobr">Action</span></th>
 						</tr>
 					</thead>
@@ -54,7 +55,15 @@
 							<td><?php echo $row->type?></td>
 							<td><?php echo ($row->is_premium == 'yes') ?  'Yes' : 'No' ?></td>
 							<td><?php echo ($row->is_featured == 'yes') ? 'Yes' : 'No' ?></td>
-							<td class=" last" nowrap="nowrap"> <a href="<?php echo base_url()?>stats/analytics?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-flask"></i>Analytics</a> <a href="<?php echo base_url()?>content/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>content/delete?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to delete this product ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete </a></td>
+                            <td><?php echo $row->status;?></td>
+							<td class=" last" nowrap="nowrap">
+                            	<?php if($row->status=='published'){?>
+                            	<a href="<?php echo base_url()?>content/updateContentStatus?id=<?php echo $row->id?>&status=draft" class="btn btn-info btn-xs"><i class="fa fa-thumbs-down"></i>Draft</a>	
+                                <?php }else{?>
+                                <a href="<?php echo base_url()?>content/updateContentStatus?id=<?php echo $row->id?>&status=published" class="btn btn-info btn-xs"><i class="fa fa-thumbs-up"></i>Publish</a>	
+                                <?php }?>
+                            	<a href="<?php echo base_url()?>stats/analytics?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-flask"></i>Analytics</a> <a href="<?php echo base_url()?>content/editcontent?id=<?php echo $row->id?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> <a href="<?php echo base_url()?>content/delete?id=<?php echo $row->id?>" onClick="return confirm('Are you sure to delete this product ?')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> Delete </a>
+                        	</td>
 						</tr>
 						<?php }}else{?>
 						<tr>

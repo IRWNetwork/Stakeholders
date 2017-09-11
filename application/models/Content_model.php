@@ -211,6 +211,13 @@ class Content_model extends CI_Model
 		return true;
 	}
 	
+	public function updateContentByProducerAndID($data,$id,$user_id){
+		$this->db->where('id',$id);
+		$this->db->where('user_id',$user_id);
+		$this->db->update('contents',$data);
+		return true;
+	}
+	
 	public function getRow($id){
 		$sSQL   =   $this->db->where("id",$id);
 		$query  =   $this->db->get('contents');
@@ -258,7 +265,7 @@ class Content_model extends CI_Model
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
 		//$where = "  1=1 ";
-		$where = "  1=1 and is_featured !='yes'";
+		$where = "  1=1 and is_featured !='yes' and status='published'";
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
@@ -292,7 +299,7 @@ class Content_model extends CI_Model
 	
 	public function countTotalRowsForAdmin($data)
 	{
-		$where = "  1=1 ";	
+		$where = "  1=1 and status='published'";	
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
@@ -312,7 +319,7 @@ class Content_model extends CI_Model
 	public function getAllDataForAdmin($data,$start,$limit,$key=''){
 		$this->db->limit($limit, $start);
 		$this->db->order_by('id','desc');
-		$where = "  1=1 ";	
+		$where = "  1=1 and status='published'";	
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
@@ -368,7 +375,7 @@ class Content_model extends CI_Model
 	public function getFeaturedData($data){
 		$this->db->limit(3, 0);
 		$this->db->order_by('id','desc');
-		$where = "  1=1 and is_featured='yes'";
+		$where = "  1=1 and is_featured='yes' and status='published'";
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (contents.title like '%".$data['name']."%' or contents.description like '%".$data['name']."%')";
 		}
@@ -400,6 +407,7 @@ class Content_model extends CI_Model
 			$this->db->where("type",$data['type']);
 		}
 		$this->db->where('show_date <=',date('Y-m-d'));
+		$this->db->where('status','published');
 		$this->db->select('contents.*, users.channel_name');
 		$this->db->from('users');
 		$this->db->join('contents','users.id = contents.user_id','INNER');
@@ -418,7 +426,7 @@ class Content_model extends CI_Model
 	
 	public function countTotalRows($data)
 	{
-		$where = "  1=1 ";	
+		$where = "  1=1 and status='published'";	
 		if(isset($data['name']) && $data['name']!=''){
 			$where.=" and (title like '%".$data['name']."%' or description like '%".$data['name']."%')";
 		}
@@ -497,28 +505,28 @@ class Content_model extends CI_Model
 			$rows =  $query->result();
 			//echo "<pre>"; print_r($rows);exit;
 			foreach($rows as $row){
-				if ($row->file_url != '') {
-
-					$my_url_parts = explode('/', $row->file_url);
-					$myFileName = $my_url_parts[9];
-					$myFileName = explode('?', $myFileName);
-					$myFileName = $myFileName[0];
-					//echo $myFileName;exit;
-					$myFileName = urldecode($myFileName);
-					$this->load->library('Gcloud');
-					$file_name = $this->gcloud->deleteFile($myFileName);
-
+				if($row->content_type=='web'){
+					if ($row->file_url != '') {
+						$my_url_parts = explode('/', $row->file_url);
+						$myFileName = $my_url_parts[9];
+						$myFileName = explode('?', $myFileName);
+						$myFileName = $myFileName[0];
+						//echo $myFileName;exit;
+						$myFileName = urldecode($myFileName);
+						$this->load->library('Gcloud');
+						$file_name = $this->gcloud->deleteFile($myFileName);
+	
+					}
+					@unlink('uploads/listing/'.$row->picture);
+					@unlink('uploads/listing/thumb_400_'.$row->picture);
+					@unlink('uploads/listing/thumb_469_'.$row->picture);
+					@unlink('uploads/listing/thumb_153_'.$row->picture);
+					@unlink('uploads/listing/thumb_50_'.$row->picture);
 				}
-				@unlink('uploads/listing/'.$row->picture);
-				@unlink('uploads/listing/thumb_400_'.$row->picture);
-				@unlink('uploads/listing/thumb_469_'.$row->picture);
-				@unlink('uploads/listing/thumb_153_'.$row->picture);
-				@unlink('uploads/listing/thumb_50_'.$row->picture);
-
 				//Delete google cloud file here
 				//@unlink('uploads/files/'.$row->file);
 				$this->db->where('id', $row->id);
-				$this->db->delete('contents');
+				$this->db->delete('contents');				
 			}	
 		}
 	}

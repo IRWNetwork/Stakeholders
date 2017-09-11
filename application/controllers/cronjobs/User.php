@@ -12,7 +12,7 @@ class User extends CI_Controller
 		$this->load->model('Authorize_model');
     }
 	
-	function renewPackage(){
+	function renewPackage($type="prod"){
 		//mail("atifrehman34@gmail.com","subject","testing");
 		initialize_Stripe();
 		// Set your secret key: remember to change this to your live secret key in production
@@ -20,10 +20,18 @@ class User extends CI_Controller
 		\Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 		// Retrieve the request's body and parse it as JSON
 		$payload = @file_get_contents("php://input");
+		$this->db->insert("data_logs",array("data"=>json_encode($payload)));
 		$sig_header = $_SERVER["HTTP_STRIPE_SIGNATURE"];
 		$event = null;
-		try {
+		
+		if($type=='live'){
+			$endpoint_secret = "whsec_mM8PbO967xTvkR90oUazHYuU58802gPO";
+		}else{
 			$endpoint_secret = "whsec_nuxv9aCToTIYijfPv1mG2binazdFCOrN";//"whsec_p2xIOqQjpFFzTkkQ5S2ySzVlUKd5BONZ";//"whsec_nuxv9aCToTIYijfPv1mG2binazdFCOrN";
+		}
+		
+		try {
+			
 			$event = \Stripe\Webhook::constructEvent($payload, $sig_header, $endpoint_secret);
 		  	if (isset($event) && $event->type == "invoice.payment_failed") {
 				$subscription_id = $event->data->object['lines']['subscriptions'][0]['id'];
@@ -34,22 +42,23 @@ class User extends CI_Controller
 			}else if(isset($event) && $event->type == "invoice.payment_succeeded"){
 				$subscription_id = $event->data->object['lines']['subscriptions'][0]['id'];
 				$channel_row = $this->Users_model->getChannelSubscriptionDetailBySubscriptionID($subscription_id);
-				
-				$array_payment_log = array(
-					"user_id"     					=> $channel_row->user_id,
-					"channel_id"     				=> $channel_row->channel_id,
-					"plan_id"     					=> $channel_row->plan_id,
-					"type"     						=> "single",
-					"date_of_charge"    			=> date("Y-m-d"),
-					"merchant_responce" 			=> json_encode($event),
-					'producer_royality_percentage'  => $channel_row->producer_royality_percentage,
-					'producer_royality_amount'  	=> $channel_row->producer_royality_amount,
-					'irw_percentage'    			=> $channel_row->irw_percentage,
-					'irw_amount'    				=> $channel_row->irw_amount,
-					'amount'						=> $channel_row->amount,
-					'subscription_id'				=> $subscription_id
-				);
-				$this->Users_model->insertpaymentLogs($array_payment_log);				
+				if($channel_row){
+					$array_payment_log = array(
+						"user_id"     					=> $channel_row->user_id,
+						"channel_id"     				=> $channel_row->channel_id,
+						"plan_id"     					=> $channel_row->plan_id,
+						"type"     						=> "single",
+						"date_of_charge"    			=> date("Y-m-d"),
+						"merchant_responce" 			=> json_encode($event),
+						'producer_royality_percentage'  => $channel_row->producer_royality_percentage,
+						'producer_royality_amount'  	=> $channel_row->producer_royality_amount,
+						'irw_percentage'    			=> $channel_row->irw_percentage,
+						'irw_amount'    				=> $channel_row->irw_amount,
+						'amount'						=> $channel_row->amount,
+						'subscription_id'				=> $subscription_id
+					);
+					$this->Users_model->insertpaymentLogs($array_payment_log);
+				}
 			}
 		} catch(\UnexpectedValueException $e) {
 		  	// Invalid payload

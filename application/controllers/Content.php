@@ -19,16 +19,15 @@ class Content extends CI_Controller
     
 	public function index()
 	{
-		
-		$data['page_title'] 	  = 'Content';
+		$data['page_title'] 	= 'Content';
 		$data['page_heading'] 	= 'Content';
-		$arr['name']             = $this->input->post('name') ? $this->input->post('name') : '';
-		$arr['portalUsers']	  = $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
-		$config 			   	  = array();
-        $config["base_url"]      = base_url() . "content";
+		$arr['name']            = $this->input->post('name') ? $this->input->post('name') : '';
+		$arr['portalUsers']	  	= $this->input->get('portalUsers') ? $this->input->get('portalUsers') : 'no';
+		$config 			   	= array();
+        $config["base_url"]     = base_url() . "content";
         $config["total_rows"]  	= $this->Content_model->countTotalRowsByUserIdForAccountListing($this->ion_auth->user()->row()->id, $arr);
-        $config["per_page"]      = 10;
-        $config["uri_segment"]   = 2;
+        $config["per_page"]     = 10;
+        $config["uri_segment"]  = 2;
 		$config['reuse_query_string'] = TRUE;
 
         $this->pagination->initialize($config);
@@ -39,10 +38,75 @@ class Content extends CI_Controller
         $parser['content']	   = $this->load->view('contents/listing',$data,TRUE);
         $this->parser->parse('template', $parser);
 	}
+	
+	function updateContentStatus(){
+		$id = $this->input->get('id');
+		$data = array("status"=>$this->input->get('status'));
+		$this->Content_model->updateContentByProducerAndID($data,$id,$this->ion_auth->user()->row()->id);
+		$this->session->set_flashdata('success',"Updated Successfully");
+		redirect(base_url()."content");
+	}
+	
 	public function convert_images() {
 		$results = $this->Common_model->convert_images();
-		//$this->load->library('image_lib');
-		
+		//$this->load->library('image_lib');	
+	}
+
+	public function addContentByCsv() {
+
+		$data['page_title'] 	= 'Upload CSV';
+		$data['page_heading'] 	= 'Upload CSV';
+
+		if (isset($_FILES['csv']['tmp_name'])) {
+
+			$file_name 	= 'file_' . time();
+			$path       	= 'uploads/csv_data/';
+			$file_name 	= $this->Common_model->uploadFile($file_name,$path,'csv');
+			
+			$file = fopen(base_url()."uploads/csv_data/".$file_name,"r");
+
+			while (($line = fgetcsv($file)) !== FALSE) {
+				$picture_name = '';
+				if ($line[4] && $line[4] != '') {
+					$picture_name = 'file_' . time().".jpg";
+					$url = str_replace('www.dropbox.com', 'dl.dropboxusercontent.com', $line[4]);
+					$full_picture_path = "uploads/listing/".$picture_name;
+					file_put_contents($full_picture_path, file_get_contents($url));
+					$this->Common_model->generateThumb($full_picture_path,array(400,400),"thumb_400_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(469,469),"thumb_469_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(153,153),"thumb_153_".$picture_name);
+					$this->Common_model->generateThumb($full_picture_path,array(50,50),"thumb_50_".$picture_name);
+				}
+			  	$data = array(
+					"title" 			=> $line[0],
+					"type"				=> $line[1],
+					"show_date"			=> '',
+					"is_premium" 		=> $line[2],
+					"is_featured"   	=> $line[3],
+					"picture" 	   		=> $picture_name,
+					"file_url" 			=> str_replace('www.dropbox.com', 'dl.dropboxusercontent.com', $line[5]),
+					"description" 		=> $line[6],
+					"meta_keywords"		=> $line[7],
+					"meta_description"	=> $line[8],
+					"video_type"		=> 'file',
+					"embed_code"		=> '',
+					'content_type'		=> 'dropbox',
+					'status'			=> 'draft',
+					"user_id"	   		=> $this->ion_auth->user()->row()->id
+				);
+				//echo "<pre>"; print_r($data);exit;
+				$result = $this->Content_model->save($data);
+	  		}
+	  		fclose($file);
+					
+			$this->session->set_flashdata(
+					'success',
+					"Added Successfully"
+			);
+			redirect(base_url()."content");
+		}
+		$parser['content'] = $this->load->view('contents/upload_csv',$data,TRUE);
+        $this->parser->parse('template', $parser);
 	}
 	
 	public function addcontent()

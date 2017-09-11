@@ -106,6 +106,7 @@
                             <!--<li> <a href="<?php echo base_url()?>user/payment_report">Royalities</a> </li>-->
 
                             <li> <a href="<?php echo base_url()?>stats/analytics_list">Analytics List</a></li>
+                            <li> <a href="<?php echo base_url()?>content/addContentByCsv">Batch Upload</a></li>
 
                             <!--<li> <a href="<?php echo base_url()?>user/bankingInformation">Banking information</a></li>-->
                             <li> <a href="<?php echo base_url()?>user/connectStrip">Connect Stripe for payment</a></li>
